@@ -1,0 +1,86 @@
+12-02-18
+*(X) Generar entradas y salidas de banco y caja
+*(X) En transferir saldo agregar campo concepto
+*(X) Revisar ajuste de caja:
+	- En caja muestra 2000, en cierre muestra 1000 y en pdf muestra 1000
+*(X) Abrir cajas solo si estan entre una fecha de la ultima caja cerrada y hoy.
+//Se necesita abrir cajas del pasado, para revision. Se abren cajas desde hoy hacia atras.
+
+*(X) Transferencia entre la misma entidad no debe ser posible y muestra datos erroneos
+*(X) Opciones -> limpiar base de datos:
+	- Limpia compras, ventas, caja, inventarios, produccion, (posiblemente requerimientos).
+*(X) Al cerrar caja la pantalla principal se limpia y pasa todo a pantalla secundaria. (si es intencional esto no es necesario y se puede quitar la pantalla secundaria, dejar solo el boton de ver pdf)
+*(X) Caja no registra bien las compras porque los calculos son erroneos, resta negativo.
+*(X) En factura de compra se debe tomar el valor de la base imponible de la compra no el de parámetros.
+*(X) Abrir compras, ventas y produccion con la misma fecha de la caja, si no hay caja abierta debe pedir que se abra una caja. Si selecciona una caja cerrada para observar no debe permitir hacer ningun tipo de operacion.
+*(X) Reporte no debe mostrar la fecha repetidamente, con ponerla arriba es suficiente.
+*(X) Arreglar numeracion por puntos y comas.
+*(X) Ingredientes desaparecen de recetas cuando se eliminan los registros de existencias
+
+- (X)cuando selecciono otra fecha del banco de venezuela que se mantenga en banco de venezuela
+- (X)cambiar cierre de caja por cierre del dia y lo mismo con abrir dia
+- (X) no se puede abrir una caja si no se cierra una anterior
+- (X) cree Iniciar Cajas en ajustes
+- (X) Eliminar Ajustar saldo
+- (X) quitar opcion de restart DB a usuarios solo admin
+- (X) agregar edicion en banco
+- (X) banco solo admin
+- (x) admin no edita usuarios, el usuario se edita el mismo
+- (X) cuando se cierre caja no se puede mostrar Dar Entrada ni Dar Salida
+
+/*********/
+ALTER TABLE `dependencias` DROP FOREIGN KEY `dependencias_ibfk_2`; ALTER TABLE `dependencias` ADD CONSTRAINT `dependencias_ibfk_2` FOREIGN KEY (`dep_produccion`) REFERENCES `produccion`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+subir primero todo dentro de caja excepto eso
+luego cada carpeta de las views excepto caja
+luego todos dentro de app->http
+
+
+24-02-18
+-(X) Ingresar una nueva compra, compra no esta funcionando en caja, manda los saldos a 0
+-(X) ingrese el codigo o nombre del proveedor
+-(X) al seleccionar el proveedor mostrar coincidencias con nombre
+-(X) codigo de proveedor no puede ser igual al nombre y debe ser generado por el sistema P123456
+
+/*SE DEBE ENTRAR EN EL SISTEMA Y CORREGIR MANUALMENTE LOS CODIGOS DE PROVEEDORES Y CLIENTES PARA QUE REFLEJEN EL NUEVO FORMATO*/
+
+-(X) codigo de cliente no puede ser igual al nombre y debe ser generado por el sistema C123456
+-(O) no borrar proveedor, solo enviar a papelera
+-(X) inventario de materia prima - cardex-> existencia y costo actual
+-(X) cardex del producto no muestra cantidades al dia
+-(X) boton cerrar dia que solo aparezca en caja
+
+
+
+- (X) si no le pongo observaciones a proveedor no te deja pasar. obligatorio codigo nombre rif y direccion
+- (X) mensaje de caja cerrada cambiarlo por dia cerrado
+
+
+
+
+
+05/03/18
+- (x) administrador puede eliminar usuarios pero no editarlos
+- (x) finalizar compra debe tener validación para confirmar compra
+- (?) no me registra la compra a credito por cuentas por pagar, mezcla las facturas
+- (?) hay mezcla compra a credito con compra a contado en caja 30/01 se mezclaron las facturas
+- (?) registro una salida de 1.5m y registro un traslado de saldo 1.5m de caja a banco de venezuela, se fue a otra caja e intento compra y solto error por ser una caja cerrada, cuando volvio a caja anterior habia borrado traslado.
+
+07/03/18
+- (?) En banco de venezuela del 31-01 tenia 11.500.000 y cerre caja, el 01-02 comnzo con saldo 0
+- (x) Se pueden registrar compras a crédito bajo un dia que tiene caja cerrada (de entrada no me debe dejar hacer ninguna operacion sobre un dia cerrado)
+
+- (X) El saldo en lista de proveedores no se corresponde con el saldo dentro de cuentas x pagar de proveedor (tambien ocurre con ctasxcobrar)
+- (X) Si el valor de un item es definido por la cantidad de producto creado en una receta, debo poner dentro de receta un checkbox que defina lo anterior y me pregunte una relacion bajo la cual se tratará ese item en funcion a la produccion final.
+- (X) Reemplazar ver factura de los pagos y abonos que se han hecho (no de las compras) por Ver Pago y mostrar si es en caja, banco, etc.
+- (X) Ver factura en cuentas por pagar de una compra no muestra la factura, da error.
+- (X) Reiniciar bases de datos debe seguidamente mostrar el formulario para iniciar una caja, quitar la opcion de iniciar caja de ajustes.
+
+Extras
+- (X) Dar chance a escribir concepto dentro de pago de cuentas por cobrar y pagar
+- (X) boton de eliminar registro en caja del día abierto, si se compro mal, revertir la compra y eliminar el registro en caja.
+- (X) Mover a papelera debe poderse hacer dentro de caja solamente (actualmente en compra) y solo para el día en curso. No para cajas cerradas. No seria mover a papelera sino Revertir Transacción. 
+NOTA: puede ser necesario revertir tambien compras y ventas a credito
+- (X) boton de actalizar costo en parametros cuando se crea compra
+- En inventario de materia prima y producciones se debe agregar un boton de ajuste de inventario que permita modificar la cantidad de materia prima dejando asiento en cardex
+- Si se abona a una cuenta x pagar deberia mostrar el remanente por pagar de la ultima cuenta

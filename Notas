@@ -1,0 +1,154 @@
+Notas
+
+/*
+modificando parametros para que pueda alojar el ratio de los items de produccion C, ej. las cajas de 12 y 6 unidades.
+
+modificaciones a base de datos:
+ALTER TABLE `parametros` ADD `par_ratio` INT NULL DEFAULT NULL AFTER `par_default`;
+ALTER TABLE `requerimientos` ADD `req_ratio` INT NULL DEFAULT NULL AFTER `req_default`;
+ALTER TABLE `cardexmp` ADD `car_compra_id` INT UNSIGNED NOT NULL AFTER `car_valor_actual`;
+ALTER TABLE `cardexmp` ADD `car_costo` DECIMAL(25,4) NOT NULL;
+ALTER TABLE `produccion` ADD `pro_lote` INT UNSIGNED NOT NULL AFTER `pro_mano_obra`;
+ALTER TABLE `produccion` CHANGE `pro_lote` `pro_lote` INT(10) UNSIGNED NULL DEFAULT NULL;
+ALTER TABLE `recetas` ADD `rec_unidad` VARCHAR(255) NOT NULL AFTER `rec_proc`;
+
+ALTER TABLE `cardexmp` CHANGE `comp_doc` `comp_doc` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL, CHANGE `car_compra_id` `car_compra_id` INT(10) UNSIGNED NULL DEFAULT NULL;
+ALTER TABLE `cardexmp` ADD `car_concepto` VARCHAR(255) NULL DEFAULT NULL AFTER `car_compra_id`;
+ALTER TABLE `cardexmp` ADD `car_fecha` DATE NULL DEFAULT NULL AFTER `car_concepto`;
+ALTER TABLE `produccion` ADD `pro_concepto` VARCHAR(255) NULL DEFAULT NULL AFTER `pro_lote`;
+ALTER TABLE `compras` ADD `comp_cred_cont` ENUM('contado','credito') NULL AFTER `comp_monto`;
+
+CREATE TABLE IF NOT EXISTS `cajabanco` (
+`id` int(10) unsigned NOT NULL,
+  `cb_entidad` varchar(255) NOT NULL,
+  `cb_monto` decimal(25,4) NOT NULL,
+  `cb_debe_haber` enum('DEBE','HABER') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `cajabanco` ADD PRIMARY KEY (`id`);
+ALTER TABLE `cajabanco` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE IF NOT EXISTS `cuentasxpagar` (
+`id` int(10) unsigned NOT NULL,
+  `cta_prov_codigo` varchar(255) NOT NULL,
+  `cta_monto` decimal(25,4) NOT NULL,
+  `cta_concepto` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `cuentasxpagar` ADD PRIMARY KEY (`id`);
+ALTER TABLE `cuentasxpagar` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `cuentasxpagar` ADD `cta_compra_id` INT UNSIGNED NOT NULL AFTER `cta_concepto`;
+ALTER TABLE `cajabanco` ADD `cb_compra_id` INT UNSIGNED NOT NULL AFTER `cb_monto`;
+ALTER TABLE `cajachica` ADD `cc_compra_id` INT UNSIGNED NOT NULL AFTER `cc_monto`;
+ALTER TABLE `cajachica` ADD `cc_fecha` DATETIME NOT NULL ;
+ALTER TABLE `cajabanco` ADD `cb_fecha` DATETIME NOT NULL ;
+*/
+
+CONTINUACION
+/*
+ALTER TABLE `cajabanco` ADD `cb_saldo` DECIMAL(25,4) NOT NULL AFTER `cb_fecha`;
+
+ALTER TABLE `cajabanco` CHANGE `cb_monto` `cb_monto` DECIMAL(25,4) NULL DEFAULT NULL, CHANGE `cb_compra_id` `cb_compra_id` INT(10) UNSIGNED NULL DEFAULT NULL, CHANGE `cb_debe_haber` `cb_debe_haber` ENUM('DEBE','HABER') CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `cajabanco` ADD `cb_concepto` VARCHAR(255) NULL DEFAULT NULL AFTER `cb_saldo`;
+
+INSERT INTO `gavca`.`cajabanco` (`id`, `cb_entidad`, `cb_monto`, `cb_compra_id`, `cb_debe_haber`, `cb_fecha`, `cb_saldo`, `cb_concepto`, `created_at`, `updated_at`) VALUES (NULL, 'Banco Banesco', NULL, NULL, 'DEBE', '2018-01-04 07:32:35', '0', 'Inicio de Caja', '2018-01-04 07:32:48', '2018-01-04 07:32:54');
+
+INSERT INTO `gavca`.`cajabanco` (`id`, `cb_entidad`, `cb_monto`, `cb_compra_id`, `cb_debe_haber`, `cb_fecha`, `cb_saldo`, `cb_concepto`, `created_at`, `updated_at`) VALUES (NULL, 'Banco de Venezuela', NULL, NULL, 'DEBE', '2018-01-04 07:32:35', '0', 'Inicio de Caja', '2018-01-04 07:32:48', '2018-01-04 07:32:54');
+
+INSERT INTO `gavca`.`cajabanco` (`id`, `cb_entidad`, `cb_monto`, `cb_compra_id`, `cb_debe_haber`, `cb_fecha`, `cb_saldo`, `cb_concepto`, `created_at`, `updated_at`) VALUES (NULL, 'Banco Provincial', NULL, NULL, 'DEBE', '2018-01-04 07:32:35', '0', 'Inicio de Caja', '2018-01-04 07:32:48', '2018-01-04 07:32:54');
+
+INSERT INTO `gavca`.`cajabanco` (`id`, `cb_entidad`, `cb_monto`, `cb_compra_id`, `cb_debe_haber`, `cb_fecha`, `cb_saldo`, `cb_concepto`, `created_at`, `updated_at`) VALUES (NULL, 'Banco Mercantil', NULL, NULL, 'DEBE', '2018-01-04 07:32:35', '0', 'Inicio de Caja', '2018-01-04 07:32:48', '2018-01-04 07:32:54');
+
+INSERT INTO `gavca`.`cajabanco` (`id`, `cb_entidad`, `cb_monto`, `cb_compra_id`, `cb_debe_haber`, `cb_fecha`, `cb_saldo`, `cb_concepto`, `created_at`, `updated_at`) VALUES (NULL, 'Caja Chica', NULL, NULL, 'DEBE', '2018-01-04 07:32:35', '0', 'Inicio de Caja', '2018-01-04 07:32:48', '2018-01-04 07:32:54');
+
+ALTER TABLE `cajabanco` ADD `cb_activo` INT(1) NOT NULL DEFAULT '1' AFTER `cb_concepto`;
+
+ALTER TABLE `saldocaja` ADD `sc_entidad` VARCHAR(255) NOT NULL AFTER `id`;
+
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE TABLE IF NOT EXISTS `clientes` (
+`id` int(10) unsigned NOT NULL,
+  `cli_codigo` varchar(255) NOT NULL,
+  `cli_nombre` varchar(255) NOT NULL,
+  `cli_rif` varchar(255) NOT NULL,
+  `cli_direccion` varchar(255) NOT NULL,
+  `cli_contacto` varchar(255) NOT NULL,
+  `cli_condiciones` varchar(255) NOT NULL,
+  `cli_saldo` decimal(25,4) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+ALTER TABLE `clientes` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `cli_codigo` (`cli_codigo`);
+ALTER TABLE `clientes` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE TABLE IF NOT EXISTS `ventas` (
+`id` int(10) unsigned NOT NULL,
+  `cli_codigo` varchar(255) NOT NULL,
+  `ven_fecha` date NOT NULL,
+  `ven_factura` varchar(255) NOT NULL,
+  `ven_condicion` varchar(255) NOT NULL,
+  `rec_nombre` varchar(255) NOT NULL,
+  `ven_costo` decimal(25,4) NOT NULL,
+  `ven_cantidad` int(10) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `ventas` ADD PRIMARY KEY (`id`);
+ALTER TABLE `ventas` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE TABLE IF NOT EXISTS `totalesventas` (
+`id` int(10) unsigned NOT NULL,
+  `ven_factura` varchar(255) NOT NULL,
+  `ven_total` decimal(25,4) NOT NULL,
+  `ven_iva` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `totalesventas` ADD PRIMARY KEY (`id`);
+ALTER TABLE `totalesventas` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE TABLE IF NOT EXISTS `cuentasxcobrar` (
+`id` int(10) unsigned NOT NULL,
+  `cta_cli_codigo` varchar(255) NOT NULL,
+  `cta_monto` decimal(25,4) DEFAULT NULL,
+  `cta_concepto` varchar(255) DEFAULT NULL,
+  `cta_venta_id` int(10) unsigned NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+ALTER TABLE `cuentasxcobrar` ADD PRIMARY KEY (`id`);
+ALTER TABLE `cuentasxcobrar` MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+
+*/
+/*
+NOTAS:
+el sistema debe tener sentido cronológico al momento de ingresar datos, debido a que si se ingresan compras aleatoriamente, por ejemplo, estas compras se registarán en su respectivo día dentro de caja, por lo tanto, esa caja en particular 
+*/
+
+
+
+FALTA::::: PAPELERAS DE RECICLAJE DE RECETAS, PRODUCCIONES	
+FALTA::::: varias compras se pueden realizar con el mismo documento de factura.
+FALTA::::: necesito mostrar la factura de compra realizada.
+FALTA::::: en cardex puedo reconocer cuales registros son producciones y cuales no del mismo modo en que lo esta haciendo la lista de producciones
+
+Correcciones a base de datos en GAVCA
+* Agregado par_cost_updated a tabla parametros - timestamp default null
+
+//SECUNDARIOS (EVITAR POSIBLES FALLOS)
+
+//pasar la creacion de la compra al boton de finish de materiaprima.blade.php, para hacerlo puedo pasar los datos que se ingresaron en el formulario anterior a ese form como campos hidden

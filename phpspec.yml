@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: gavca
+        psr4_prefix: gavca
+        src_path: app
