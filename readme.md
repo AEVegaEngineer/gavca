@@ -5,4 +5,4 @@ Actualmente en etapa de pruebas y despliegue para la empresa Géneros Alimentici
 
 ### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
