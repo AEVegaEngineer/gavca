@@ -32,6 +32,8 @@ class AjusteController extends Controller
     {
         DB::statement("UPDATE `proveedors` SET `prov_saldo` = 0 WHERE 1");
         DB::statement("UPDATE `clientes` SET `cli_saldo`=0 WHERE 1");
+        DB::statement("DELETE FROM `cajabanco` WHERE 1");
+        DB::statement("DELETE FROM `saldocaja` WHERE 1");
         DB::statement("DELETE FROM `compras` WHERE 1");
         DB::statement("DELETE FROM `ventas` WHERE 1");
         DB::statement("DELETE FROM `cajabanco` WHERE 1");

@@ -125,6 +125,7 @@ class VentaController extends Controller
             $costo = produccion::where('id',$id)->first()->pro_costo;
             array_push($costos, $costo);
         }
+
         return view('venta.facturando',compact('cli_codigo','ven_fecha','ven_factura','ven_condicion','produccionc','costos','banco_o_caja','banco'));
     }
 
@@ -171,6 +172,16 @@ class VentaController extends Controller
                         'ven_cantidad' => $request['ven_cantidad'][$key],
                         'ven_entidad' => $entidad,
                     ]); 
+                    //cardex
+                    produccion::create([
+                        'pro_fecha' => $request['ven_fecha'],
+                        'rec_nombre' => $request["rec_nombre"][$key],
+                        'pro_etapa' => 'PC',
+                        'pro_costo' => 0,
+                        'pro_produccion' => $request['ven_cantidad'][$key],
+                        'pro_mano_obra' => 0,
+                        'pro_concepto' => 'Venta bajo factura: '.$request['ven_factura'].' de fecha '.$request['ven_fecha'],
+                    ]);
                 }
                 /*Resto la cantidad comprada de la existencia de producciones*/
                 $existencia = produccionc::where('rec_nombre',$request["rec_nombre"][$key])->first()->pro_produccion;
@@ -215,12 +226,10 @@ class VentaController extends Controller
                 }else if($banco_o_caja == 'banco'){
                     $entidad = $banco;
                 }
-                $transaccion = cajabanco::where('cb_entidad', $entidad)
+                $saldo = cajabanco::where('cb_entidad', $entidad)
                     ->whereDate('cb_fecha','=',$request['ven_fecha'])
-                    ->max('id');             
-                    
-                $saldo = cajabanco::where('id',$transaccion)->first();                
-
+                    ->latest()->first();           
+                                   
                 if($saldo === null)
                     $saldo = 0;
                 else
@@ -232,10 +241,10 @@ class VentaController extends Controller
                     'cb_fecha' => $request['ven_fecha'],
                     'cb_monto' => $request['totMasIva'],
                     'cb_saldo' => $saldo+$request['totMasIva'],
-                    'cb_venta_id' => $request['ven_factura'],
+                    'cb_venta_id' => $venta_id,
                     'cb_concepto' => 'Venta',
                 ]);                
-            }
+            }           
             
             $totalesventas = totalventa::paginate(15);
             $elementos = venta::All();
@@ -267,12 +276,12 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($factura)
+    public function show($id)
     {
-        //$ventas = venta::where('ven_factura',$factura)->get();
+        $factura = venta::where('id',$id)->pluck('ven_factura');
         $ventas = venta::leftJoin('totalesventas', 'totalesventas.ven_factura', '=', 'ventas.ven_factura')
-        ->where('totalesventas.ven_factura',$factura)
-        ->get();
+        ->where('ventas.ven_factura',$factura)
+        ->get();        
         return view('venta.show',compact('ventas','factura'));
     }
 
@@ -309,12 +318,14 @@ class VentaController extends Controller
     {
         //
     }
-    public function revertir($factura)
+    public function revertir($id)
     {
-        $venta = venta::where('ven_factura',$factura)->first();
+
+        $venta = venta::where('id',$id)->first();
+        $factura = venta::where('id',$id)->pluck('ven_factura');
         //calculo el monto de la venta
         $elementos = venta::where('ven_factura',$factura)->get();
-        $monto_venta = cajabanco::where('cb_venta_id',$factura)->first()->cb_monto;
+        $monto_venta = cajabanco::where('cb_venta_id',$id)->first()->cb_monto;
         
         //obtengo la razon de la venta y la entidad aqui ya que la necesitare para ambos casos
         $cred_cont = $venta->ven_condicion;
@@ -338,7 +349,6 @@ class VentaController extends Controller
             $cb_debe_haber = 'HABER';
             $cb_concepto = 'Reembolso por eliminación de venta bajo factura: '.$venta->ven_factura.' de fecha '.date('Y-m-d', strtotime($venta->ven_fecha));
             $cb_saldo = $saldo-$monto_venta;
-            $statusChangeTo = 0;
             $link = '/caja';
             $message = 'Venta y movimientos de inventario revertidos correctamente, fondos restaurados a la respectiva caja.';
             if($cred_cont == 'credito')
@@ -362,7 +372,9 @@ class VentaController extends Controller
                 ]);
             }
             venta::where('ven_factura',$factura)
-                ->update(['ven_activo' => $statusChangeTo]);
+                ->update(['ven_activo' => 0]);
+            cajabanco::where('cb_venta_id',$id)
+                ->update(['cb_activo' => 0]);
             //agrego de nuevo la cantidad de producto que se tomó del inventario para vender y agrego tambien a cardex de producto
             foreach ($elementos as $key => $value) {
                 //inventario
@@ -372,9 +384,9 @@ class VentaController extends Controller
                     $cantidad = $producto->pro_produccion;            
                 else
                     $cantidad = 0;
-                $nueva_cantidad = $cantidad+$value->ven_cantidad;
+                $nueva_cantidad = $cantidad+$value->ven_cantidad;                
                 produccionc::where('rec_nombre',$value->rec_nombre)
-                    ->update(['pro_produccion',$nueva_cantidad]);
+                    ->update(['pro_produccion' => $nueva_cantidad]);
                 //cardex
                 produccion::create([
                     'pro_fecha' => date('Y-m-d', strtotime($venta->ven_fecha)),

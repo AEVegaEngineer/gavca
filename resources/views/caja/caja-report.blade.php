@@ -27,20 +27,21 @@
                 $t_saldo = $record->cb_saldo;
                 if($record->cb_debe_haber == "DEBE"){
                     $t_entra += $record->cb_monto;
-                    echo '<td>'.$record->cb_monto.'</td><td></td>';
+                    echo '<td align="right">'.number_format ( $record->cb_monto , $decimals = 2 , "," , "." ).'</td><td></td>';
                 }else if($record->cb_debe_haber == "HABER"){
                     $t_sale += $record->cb_monto;
-                    echo '<td></td><td>'.$record->cb_monto.'</td>';
+                    echo '<td></td><td align="right">'.number_format ( $record->cb_monto , $decimals = 2 , "," , "." ).'</td>';
                 }
                 ?>
-                <td>{{$record->cb_saldo}}</td>              
+
+                <td align="right"><?php echo number_format ( $record->cb_monto , $decimals = 2 , "," , "." ); ?></td>              
             </tr>
             @endforeach 
             <tr>
                 <td><b>TOTAL</b></td>
-                <td><b>{{$t_entra}}</b></td>
-                <td><b>{{$t_sale}}</b></td>
-                <td><b>{{$t_saldo}}</b></td>
+                <td align="right"><b><?php echo number_format ( $t_entra , $decimals = 2 , "," , "." ); ?></b></td>
+                <td align="right"><b><?php echo number_format ( $t_sale , $decimals = 2 , "," , "." ); ?></b></td>
+                <td align="right"><b><?php echo number_format ( $t_saldo , $decimals = 2 , "," , "." ); ?></b></td>
             </tr>
         </table>
      <script src="js/jquery.min.js"></script> 

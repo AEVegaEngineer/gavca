@@ -80,16 +80,16 @@
 				<td align="right">
 					<?php if($record->cb_compra_id !== null){ ?>
 					<div class="btn-group">
-						{!!link_to_route('compra.show', $title = 'Ver Factura', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}
 						<?php if($caja_actual == Session::get('caja_fecha') && $record->comp_activo != 0){ ?>
+						{!!link_to_route('compra.show', $title = 'Ver Factura', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}						
 						{!!link_to_route('compra.trash', $title = 'Revertir Compra', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
 						<?php } ?>
 				    </div>
 					<?php } ?>
 					<?php if($record->cb_concepto == 'Venta'){ ?>
 					<div class="btn-group">
-						{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}
-						<?php if($caja_actual == Session::get('caja_fecha') && $record->ven_activo != 0){ ?>
+						<?php if($caja_actual == Session::get('caja_fecha') && $record->cb_activo != 0){ ?>
+						{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}						
 						{!!link_to_route('venta.revertir', $title = 'Revertir Venta', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
 						<?php } ?>
 					</div>

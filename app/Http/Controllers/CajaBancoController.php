@@ -71,11 +71,13 @@ class CajaBancoController extends Controller
      */
     public function abrir(Request $request)
     {        
+        $caja;
         if(isset($request["entidad"])){
             $caja = $request["entidad"];
         }else{
             $caja = 'Caja Chica';
         }
+        //para determinar si escojo un dia en el futuro
         $hoy = Carbon::today()->toDateString();
         
 
@@ -85,11 +87,9 @@ class CajaBancoController extends Controller
         $last_closed = cajabanco::where('cb_activo',0)
             ->whereDate('cb_fecha','=',$diaAnterior)
             ->first();
-        $flag;
+        $flag = true;
         if($last_closed === null)
             $flag = false;
-        else
-            $flag = true;
 
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
@@ -109,17 +109,16 @@ class CajaBancoController extends Controller
         //si mi fecha seleccionada es 1 dia mayor a last_closed o menor paso.
         if($request["caja_fecha"] <= $hoy && $flag){
             session(['caja_fecha' => $request["caja_fecha"]]);   
-            //\Session::flash('caja_fecha', $request["caja_fecha"]);
             $saldo_existe = saldocaja::where('sc_entidad',$caja)
                 ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-                ->first();                   
+                ->latest()
+                ->first(); 
             $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
                 ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
                 ->where('cajabanco.cb_entidad',$caja)
                 ->whereDate('cb_fecha', '=',session('caja_fecha'))
                 ->orderBy('cajabanco.id','asc')
-                ->where('cb_activo',1)
-                ->get();
+                ->get();  
             $bancos = banco::All();
             return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'));
         }else{
@@ -184,10 +183,13 @@ class CajaBancoController extends Controller
     public function store(Request $request)
     {
         //borrando datos erroneos de compras
+        
         DB::table('cajabanco')
             ->where('cb_saldo', '=', 0)
             ->where('cb_concepto', '!=', 'Inicio de caja')
-            ->delete();        
+            ->where('cb_concepto', '!=', 'Cierre de caja')
+            ->delete();    
+               
         cajabanco::create([
             'cb_entidad' => $request["entidad"],
             'cb_debe_haber' => 'DEBE',
@@ -250,10 +252,13 @@ class CajaBancoController extends Controller
     public function show($caja)
     {
         //borrando datos erroneos de compras
+        
         DB::table('cajabanco')
             ->where('cb_saldo', '=', 0)
             ->where('cb_concepto', '!=', 'Inicio de caja')
+            ->where('cb_concepto', '!=', 'Cierre de caja')
             ->delete();
+            
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
         {
@@ -293,13 +298,17 @@ class CajaBancoController extends Controller
     public function cerrarcaja($entidad, $fecha)
     {
         //borrando datos erroneos de compras
+        
         DB::table('cajabanco')
             ->where('cb_saldo', '=', 0)
             ->where('cb_concepto', '!=', 'Inicio de caja')
+            ->where('cb_concepto', '!=', 'Cierre de caja')
             ->delete();
+
+        //itera a través de las entidades y cierra todas las cajas
         $bancos = banco::All();
         $entidades = array(array("entidad" => "Caja Chica"));
-        $mezcla = array_merge($entidades, $bancos->toArray()); 
+        $mezcla = array_merge($entidades, $bancos->toArray());
 
         foreach ($mezcla as $key => $value) {
             if($key == 0)
@@ -329,6 +338,14 @@ class CajaBancoController extends Controller
             ]);
             $ref = new Carbon($fecha);
             $diaDespues = $ref->addDay()->toDateString();
+            cajabanco::create([
+                'cb_entidad' => $entidad,
+                'cb_debe_haber' => 'HABER',
+                'cb_fecha' => $fecha,
+                'cb_concepto' => 'Cierre de caja',
+                'cb_activo' => 0,
+                'cb_saldo' => $saldo,
+            ]);
             cajabanco::create([
                 'cb_entidad' => $entidad,
                 'cb_debe_haber' => 'HABER',

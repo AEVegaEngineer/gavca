@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Compra con documento de factura Nro.{{$factura}}</h2>
+		<h2 class="form-signin-heading">Venta con documento de factura Nro.{{$factura}}</h2>
 		<table class="table">
 			<thead>
 				<th>Fecha de compra</th>

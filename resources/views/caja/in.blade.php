@@ -11,12 +11,12 @@
 	</div>
 	<div class="row margenBotLg">
 		<div class="col-md-12">
-			<div class="col-md-4 col-xs-12">		    
-				{!!Form::text('monto', null, ['class'=>'form-control','placeholder' => 'Ingrese el monto aquí'])!!}
-			</div>
 			<div class="col-md-8 col-xs-12">		    
 				{!!Form::text('concepto', null, ['class'=>'form-control','placeholder' => 'Ingrese el concepto aquí'])!!}
 			</div>
+			<div class="col-md-4 col-xs-12">		    
+				{!!Form::number('monto', null, ['class'=>'form-control','placeholder' => 'Ingrese el monto aquí'])!!}
+			</div>			
 		</div>
 	</div>
 	<div class="row">

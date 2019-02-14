@@ -193,7 +193,7 @@ class CompraController extends Controller
             $n = 0;
             //itero para buscar el numero
             for ($i=0; $i < 99999; $i++) { 
-                $pattern = "P";
+                $patron = "P";
                 //cuento digitos
                 $n = 0; 
                 $floor = $i;           
@@ -206,16 +206,15 @@ class CompraController extends Controller
                 $limit = 5-$n;
                 //return $limit;
                 for ($j=0; $j < $limit; $j++) { 
-                    $pattern = $pattern."0";
+                    $patron = $patron."0";
                 }            
                 //concateno el patron con el numero
-                $code = $pattern.$i;  
+                $code = $patron.$i;  
                 //si no hay ningun numero como este registrado sal del loop y registre
                 $proveedor = proveedor::where('prov_codigo', '=', $code)->first();
                 if ($proveedor === null) {
                     break;
-                }
-                
+                }                
             }
             return $code;
         }        
@@ -254,8 +253,13 @@ class CompraController extends Controller
      */
     public function store(CompraCreateRequest $request)
     {
-        //Elimino compras hechas a medias
+        //Elimino compras hechas a medias        
         DB::table('compras')->where('comp_monto', '=', null)->delete();
+        DB::table('cajabanco')
+            ->where('cb_concepto', '!=', 'Inicio de caja')
+            ->where('cb_concepto', '!=', 'Cierre de caja')
+            ->where('cb_monto', '=', null)
+            ->delete();
         //necesito borrar los inputs erroneos, por si el usuario hecha para atras y quiere sobreescribir
         $compra_existe = compra::where('comp_doc',$request['comp_doc'])
             ->where('comp_proveedor',$request['comp_proveedor'])
@@ -290,7 +294,9 @@ class CompraController extends Controller
                 $dia_actual = new Carbon($request['comp_fecha']);
                 $existencia = cajabanco::where('cb_entidad',$entidad)
                     ->whereDate('cb_fecha','=',$dia_actual->toDateString())
-                    ->first();                
+                    ->latest()
+                    ->first();
+                //$existencia = cajabanco::where('id',$existencia_id)->first();         
                 
                 if($existencia===null){                   
                     //return $dia_actual->subDay()->toDateString();

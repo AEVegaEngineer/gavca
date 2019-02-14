@@ -1,12 +1,29 @@
 $(document).ready(function() {
 	//Ejecuta el script al cargar la pagina	
 	
-	$( 'input[name^=ven_cantidad]' ).each(function(index) {		
+	$( 'input[name^=ven_cantidad]').each(function(index) {		
 		$(this).keyup(function(){
 			var total = 0;
 			/*multiplica costo por cantidad y lo pone en columna de suma*/
 			var cantidad = $(this).val();
-			var costo = $('#ven_costo'+index+'').val();
+			var costo = $('input[name^=ven_costo]').eq( index ).val();
+			$('#suma'+index+'').html(cantidad*costo);
+			/*totalizando*/
+			
+			$( 'td[id^=suma]' ).each(function() {
+				total += parseFloat($(this).html());
+			});
+			$('#total').text(total);
+			calcularIva();
+			TotalMasIva();
+		});
+	});
+	$( 'input[name^=ven_costo]').each(function(index) {		
+		$(this).keyup(function(){
+			var total = 0;
+			/*multiplica costo por cantidad y lo pone en columna de suma*/
+			var cantidad = $('input[name^=ven_cantidad]').eq( index ).val();
+			var costo = $(this).val();
 			$('#suma'+index+'').html(cantidad*costo);
 			/*totalizando*/
 			
