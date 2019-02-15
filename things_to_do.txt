@@ -82,5 +82,10 @@ Extras
 - (X) Mover a papelera debe poderse hacer dentro de caja solamente (actualmente en compra) y solo para el día en curso. No para cajas cerradas. No seria mover a papelera sino Revertir Transacción. 
 NOTA: puede ser necesario revertir tambien compras y ventas a credito
 - (X) boton de actalizar costo en parametros cuando se crea compra
-- En inventario de materia prima y producciones se debe agregar un boton de ajuste de inventario que permita modificar la cantidad de materia prima dejando asiento en cardex
-- Si se abona a una cuenta x pagar deberia mostrar el remanente por pagar de la ultima cuenta
+- (X) En inventario de materia prima y producciones se debe agregar un boton de ajuste de inventario que permita modificar la cantidad de materia prima dejando asiento en cardex
+- (X) Si se abona a una cuenta x pagar deberia mostrar el remanente por pagar de la ultima cuenta
+
+
+14/02/19
+- (X) las facturas de ventas no se muestran
+- revertir compras no funciona

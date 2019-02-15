@@ -18,7 +18,7 @@
 				<td>{{$compra->comp_proveedor}}</td>
 				<td>{{$compra->comp_cred_cont}}</td>
 				<td>{{$compra->comp_doc}}</td>			
-				<td>{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</td>
 
 				<td>
 					

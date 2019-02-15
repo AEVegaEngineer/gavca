@@ -20,7 +20,7 @@
 	</div>
 	<div class="row margenBotSm">    	
 		<div class="col-xs-12 col-md-5">	
-			{!!Form::text('caja_fecha',null,['class'=>'form-control datepicker','placeholder'=>'Click aquí seleccionar una fecha','required'=>'required'])!!}	
+			{!!Form::text('caja_fecha',$caja_actual,['class'=>'form-control datepicker','placeholder'=>'Click aquí seleccionar una fecha','required'=>'required'])!!}	
 			<?php if(isset($entidad)){ ?>
 			<input type="hidden" name="entidad" value="{{$entidad}}"> 
 			<?php } ?>
