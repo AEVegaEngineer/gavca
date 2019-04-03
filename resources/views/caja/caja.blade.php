@@ -55,8 +55,8 @@
 		<table class="table">
 			<thead>			
 				<td>Concepto</td>
-				<td align="center">Entra</td>				
-				<td align="center">Sale</td>
+				<td align="center">Debe</td>				
+				<td align="center">Haber</td>
 				<td align="center">Saldo</td>
 				<td>Opciones</td>
 			</thead>

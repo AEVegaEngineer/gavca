@@ -195,7 +195,7 @@ class CardexMPController extends Controller
         $cardexs = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
                 ->leftJoin('compras', 'compras.id', '=', 'cardexmp.car_compra_id')
                 ->where('cardexmp.mp_codigo',$mp_codigo)
-                ->orderBy('cardexmp.id','dsc')                
+                ->orderBy('cardexmp.id','asc')                
                 ->get();
         $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;       
         return view('cardex.show',compact('cardexs','existencia'));

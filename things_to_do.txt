@@ -88,4 +88,15 @@ NOTA: puede ser necesario revertir tambien compras y ventas a credito
 
 14/02/19
 - (X) las facturas de ventas no se muestran
-- revertir compras no funciona
+- Realizar las relaciones en la base de datos
+
+06/03/19
+- No permitir duplicados en el registro de compras
+
+25/03/19
+- (X) Los porcentajes cuando se produce la receta de proceso B estan mal
+- El vinculo para arreglar la contraseña en el login
+- Las producciones tienen el costo unitario, no el total.
+- (x) En compras, la autocompletación no se muestra correctamente.
+- Hacer tester en macro recorder para el input de compras, produccion y ventas
+- Los botones de modificar producciones solo deben estar disponibles para administradores

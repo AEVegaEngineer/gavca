@@ -4,7 +4,7 @@
 $(document).ready(function() {
     var token;
     var proveedor;
-    $(document).on('keyup , change','#comp_proveedor',function(){
+    $(document).on('keyup','#comp_proveedor',function(){
         token = $("#token").val();
         proveedor = $("#comp_proveedor").val(); 
         getProveedor();

@@ -736,7 +736,7 @@ class ProduccionController extends Controller
                 ->
         */
         $producciones = produccion::where('produccion.rec_nombre',$nombre)
-                ->orderBy('produccion.id','dsc')                
+                ->orderBy('produccion.id','asc')                
                 ->get();
         //$producciones = cardexMP::where('car_compra_id',$id)->get();
         return view('produccion.show',compact('producciones'));

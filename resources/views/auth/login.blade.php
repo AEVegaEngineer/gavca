@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="content">
-	<div class="col-md-12" style="background-color:#000; color:#FFF; text-align:center;"><h3>Sistema Administrativo en la Nube Gavca</h3></div>
+	<div class="col-md-12" style="background-color:#000; color:#FFF; text-align:center;"><h3>Sistema Administrativo Gavca</h3></div>
 	<div class="col-md-4 col-xs-12"></div>
 	<div class="col-md-4 col-xs-12 margenBotSm">
 		@include('alerts.errors')	
@@ -14,7 +14,7 @@
 				{!!Form::text('email',null,['class'=>'form-control input-lg margenBotSm','placeholder'=>'Ingresa tu usuario o correo'])!!}
 				{!!Form::password('password',['class'=>'form-control margenBotSm','placeholder'=>'Ingresa tu contraseña'])!!}
 				{!!Form::submit('Entrar',['class'=>'btn btn-primary margenBotSm'])!!}
-			
+				{!! csrf_field() !!}
 			
 			{!!Form::close()!!}							
 		</div>

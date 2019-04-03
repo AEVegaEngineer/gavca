@@ -197,7 +197,7 @@
 	</div>
 	<!-- SEGUN LA PRODUCCIÓN QUE SEA SE EJECUTA UNO U OTRO SCRIPT PARA CALCULAR PORCENTAJES Y TOTALES -->
 	{!!Html::script('js/jquery.min.js')!!}
-	{!!Html::script('js/produccion/PB.js?9')!!}
+	{!!Html::script('js/produccion/PB.js')!!}
 	
 
 @endsection

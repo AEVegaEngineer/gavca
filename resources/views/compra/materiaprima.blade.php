@@ -31,7 +31,7 @@
 			<input type="hidden" name="entidad" id="entidad" value="{{$entidad}}">
 		</div>
 		<div class="col-md-12">
-			<table class="table table-bordered" id="content">			
+			<table class="table table-bordered" id="content" style="overflow-x: auto; width: 1024px;">			
 				<thead>
 					<th>Materia Prima</th>
 					<th>Código M.P.</th>
