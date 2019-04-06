@@ -56,7 +56,7 @@
 
 			@foreach($dependencias as $key => $dependencia)
 			<?php if($recetas->rec_proc != 'PA'){ 
-				$req_total = $dependencia->requerimiento;
+				$req_total = $dependencia->pro_produccion;
 				$req_unitario = $req_total/$prod;				
 				//$req_total = $produccion*$dependencia->requerimiento;
 				$costo = $costos[$key]->pro_costo;
@@ -79,8 +79,7 @@
 				$costosTotales+=$costo_total;
 				$costosUnit+=$costo_unitario;
 				$i++;
-				} 
-			?>
+			}?>
 			@endforeach
 			<?php
 			function round_a($number, $precision = 2)
@@ -197,7 +196,7 @@
 	</div>
 	<!-- SEGUN LA PRODUCCIÓN QUE SEA SE EJECUTA UNO U OTRO SCRIPT PARA CALCULAR PORCENTAJES Y TOTALES -->
 	{!!Html::script('js/jquery.min.js')!!}
-	{!!Html::script('js/produccion/PB.js')!!}
+	{!!Html::script('js/produccion/PB.js?2')!!}
 	
 
 @endsection

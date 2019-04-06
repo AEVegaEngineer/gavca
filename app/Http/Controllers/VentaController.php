@@ -26,7 +26,7 @@ class VentaController extends Controller
      */
     public function index()
     {
-        $totalesventas = totalventa::paginate(15);
+        $totalesventas = totalventa::orderBy('id', 'dsc')->paginate(15);
         $elementos = venta::All();
         $elementos = $elementos->unique('ven_factura');   
         return view('venta.index',compact('totalesventas','elementos'));
@@ -64,15 +64,26 @@ class VentaController extends Controller
             }               
             $bancos = banco::lists('ban_nombre', 'ban_nombre');
             $clientes = cliente::lists('cli_nombre', 'cli_codigo'); 
-             
             return view('venta.create',compact('bancos','clientes','fecha'));
         }else{
             \Session::flash('message-error', 'Antes de registrar operaciones de compra, venta o producción debes seleccionar una fecha en caja, bajo la cual se registrarán las operaciones.');
             $hoy = Carbon::today()->toDateString();
-            return view('caja.index',compact('hoy'));
+            $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
+            if($caja_actual !== null)
+            {
+                $caja_actual = new Carbon($caja_actual->cb_fecha);
+                $caja_actual = $caja_actual->toDateString();
+            }
+            $ultima_caja = cajabanco::where('cb_activo',0)->latest()->first();
+            if($ultima_caja !== null)
+            {
+                $ultima_caja = new Carbon($ultima_caja->cb_fecha);
+                $ultima_caja = $ultima_caja->toDateString();
+            }
+            return view('caja.index',compact('hoy','caja_actual','ultima_caja'));
         }
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -160,8 +171,19 @@ class VentaController extends Controller
             }else if($banco_o_caja == 'banco'){
                 $entidad = $banco;
             }
+            /*creo el registro en el totalventa*/
+            $iva = (int)str_replace("%","",$request['iva']);
+            totalventa::create([               
+                'ven_factura' => $request['ven_factura'],
+                'ven_total' => $request['totMasIva'],
+                'ven_iva' => $iva,
+            ]);
+            /*creo el registro en ventas para cada producto vendido*/
             foreach ($request["rec_nombre"] as $key => $nombre) {            
-                if($request['ven_cantidad'][$key] != null){
+                if($request['ven_cantidad'][$key] != null 
+                    && $request['ven_cantidad'][$key] != "0" 
+                    && $request['ven_cantidad'][$key] != "")
+                {
                     venta::create([
                         'cli_codigo' => $request['cli_codigo'],
                         'ven_fecha' => $request['ven_fecha'],                
@@ -177,25 +199,19 @@ class VentaController extends Controller
                         'pro_fecha' => $request['ven_fecha'],
                         'rec_nombre' => $request["rec_nombre"][$key],
                         'pro_etapa' => 'PC',
-                        'pro_costo' => 0,
                         'pro_produccion' => $request['ven_cantidad'][$key],
                         'pro_mano_obra' => 0,
                         'pro_concepto' => 'Venta bajo factura: '.$request['ven_factura'].' de fecha '.$request['ven_fecha'],
                     ]);
+                
+                    /*Resto la cantidad comprada de la existencia de producciones*/
+                    $existencia = produccionc::where('rec_nombre',$request["rec_nombre"][$key])->first()->pro_produccion;
+                    $nueva_existencia = $existencia - $request['ven_cantidad'][$key];
+                    produccionc::where('rec_nombre',$request["rec_nombre"][$key])
+                        ->update(['pro_produccion' => $nueva_existencia]);
                 }
-                /*Resto la cantidad comprada de la existencia de producciones*/
-                $existencia = produccionc::where('rec_nombre',$request["rec_nombre"][$key])->first()->pro_produccion;
-                $nueva_existencia = $existencia - $request['ven_cantidad'][$key];
-                produccionc::where('rec_nombre',$request["rec_nombre"][$key])
-                    ->update(['pro_produccion' => $nueva_existencia]);
             }
-            /*creo el registro en el totalventa*/
-            $iva = (int)str_replace("%","",$request['iva']);
-            totalventa::create([               
-                'ven_factura' => $request['ven_factura'],
-                'ven_total' => $request['totMasIva'],
-                'ven_iva' => $iva,
-            ]); 
+            
             $venta_id = totalventa::max('id');
             /*creo el registro en caja*/
             if($request['ven_condicion'] == "credito"){
@@ -273,16 +289,17 @@ class VentaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  totalesventa->$id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $factura = venta::where('id',$id)->pluck('ven_factura');
-        $ventas = venta::leftJoin('totalesventas', 'totalesventas.ven_factura', '=', 'ventas.ven_factura')
-        ->where('ventas.ven_factura',$factura)
-        ->get();        
+        $factura = totalventa::where('id',$id)->pluck('ven_factura');
+        $ventas = totalventa::leftJoin('ventas', 'ventas.ven_factura', '=', 'totalesventas.ven_factura')
+            ->where('totalesventas.ven_factura',$factura)
+            ->get();          
         return view('venta.show',compact('ventas','factura'));
+        
     }
 
     /**

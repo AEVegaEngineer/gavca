@@ -90,8 +90,9 @@ class ClienteController extends Controller
             'cli_condiciones' => $request['cli_condiciones'],
         ]);  
         $clientes = cliente::paginate(15);
-        $request->session()->flash('message', 'El cliente se ha guardado exitosamente.'); 
-        return view('cliente.index',compact('clientes'));
+        $request->session()->flash('message', 'El cliente se ha guardado exitosamente.');
+        $cuentasxcobrar = ctaxcobrar::All();
+        return view('cliente.index',compact('clientes','cuentasxcobrar'));
     }
 
     /**

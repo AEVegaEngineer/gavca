@@ -6,7 +6,7 @@
 		<table class="table">
 			<thead>
 				<th>Fecha de compra</th>
-				<th>Código del Proveedor</th>
+				<th>Código del Cliente</th>
 				<th>Documento de factura</th>	
 			</thead>
 			<tr class="warning">

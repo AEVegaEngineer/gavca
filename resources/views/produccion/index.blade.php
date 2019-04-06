@@ -3,14 +3,14 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de producciones</h2>		
+		<h2 class="form-signin-heading">Historial de producciones</h2>		
 		<table class="table">
 			<thead>
 				<th>Receta usada</th>
 				<th>Fecha de producción</th>
 				<th>Cantidad de producción</th>
 				<th>Etapa de la producción</th>
-				<th>Costo</th>
+				<th>Costo Unitario</th>
 				<th>Operaciones</th>
 			</thead>
 			<tbody>
@@ -23,27 +23,21 @@
 				<td>{{$produccion->pro_fecha}}</td>
 				<td>{{$produccion->pro_produccion}}</td>
 				<td>{{$produccion->pro_etapa}}</td>
-				<td>{{$produccion->pro_costo}}</td>
+				<td>{{number_format ( $produccion->pro_costo , $decimals = 2 , "," , "." )}}</td>
 				<td>					
-					{!!Form::open(['route'=>['produccion.destroy',$produccion->id],'method'=>'DELETE'])!!}
-						<div class="btn-group">
+					<div class="btn-group">
 						<?php 
 						if($produccion->pro_costo!=null){
 						?>
-						<a href="/verProduccion/{{$produccion->rec_nombre}}/{{$produccion->pro_fecha}}" class="btn btn-primary btn-sm">Ver Producción</a>
-						<?php //{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-sm'])!!}?>
+						<a href="/verProduccion/{{$produccion->id}}" class="btn btn-primary btn-sm">Ver Producción</a>	
 						<?php } ?>
-						</div>
-					{!!Form::close()!!}
+					</div>
 				</td>
 			</tr>
 			<?php } ?>
 			@endforeach
 			</tbody>
-		</table>
-
-		
-			
+		</table>			
 	</div>
 	{!!$producciones->render()!!}
 @endsection

@@ -80,6 +80,7 @@ class MateriaPrimaController extends Controller
     public function index()
     {
         $materiasprimas = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
+                ->orderBy('parametros.par_nombre','asc')
                 ->paginate(15);
 
         return view('materiaprima.index',compact('materiasprimas'));

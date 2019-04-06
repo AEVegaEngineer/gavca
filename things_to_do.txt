@@ -91,12 +91,31 @@ NOTA: puede ser necesario revertir tambien compras y ventas a credito
 - Realizar las relaciones en la base de datos
 
 06/03/19
-- No permitir duplicados en el registro de compras
+- (X) No permitir duplicados en el registro de compras
 
 25/03/19
 - (X) Los porcentajes cuando se produce la receta de proceso B estan mal
-- El vinculo para arreglar la contraseña en el login
-- Las producciones tienen el costo unitario, no el total.
+- (X) Las producciones tienen el costo unitario, no el total.
 - (x) En compras, la autocompletación no se muestra correctamente.
-- Hacer tester en macro recorder para el input de compras, produccion y ventas
+- ? Crear clientes esta roto, crea el cliente pero no retorna bien. (Undefined variable: cuentasxcobrar en views\cliente\index.blade.php)
+- (x) En facturación de ventas, si se vende una cantidad mayor a la existente arroja error, (Undefined variable: banco_o_caja, views\venta\facturando.blade.php)
+- (X) Ver Factura de venta en Caja muestra la factura dado un ID para un ven_factura en ventas, no debe buscarla ahi, debe buscarla según el id de totalesventas, sacar la ven_factura de ahi y reflejar las operaciones de ventas según esa factura, HACERLO COMO EL VER FACTURA DE VENTAS
+- (X) En Cardex de producción C las ventas estan cayendo siempre por el lado del Debe en lugar del Haber
+- (X) Ordenar el inventario de materia prima por nombre de producto
+- Arreglar la superposición del texto al asignar requerimientos en la corrida de producción
+- (X)En producción, cuando cambiaba de pagina en el paginator, me cambiaba los valores del campo pro_costo en las producciones q habian sido ventas, cambie algunas cosas y no pude reproducir de nuevo el error, tratar de reproducir de nuevo.
+RESULTA que el problema era el script produccion/PB.js, cuando registro una producción este script es el encargado de guardar el costo de la producción, el problema es que lo hace desde el reporte de producción, y cada vez que accedo a este reporte (ver producción) me actualiza los costos, aparte de esto, este script actualiza los costos según la fecha y el nombre de receta, osea que también para las ventas de ese mismo artículo de ese mismo dia se cambiarán los precios, dañandolo todo.
+UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de requerimiento de producción B que puse en la última producción y sobreescribe todas las anteriores
+- Arreglar el formato de la suma en las ventas
+- Los totales en la factura de venta estan invertidos
+- No debe dejar registrar compras y ventas sin artículos
 - Los botones de modificar producciones solo deben estar disponibles para administradores
+- Arreglar el formato de costo en inventario producto C
+- No se puede quitar un producto B ingrediente de una Receta C
+
+- Hacer tester en macro recorder para el input de compras, produccion y ventas
+- El vinculo para arreglar la contraseña en el login
+- Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar.
+
+tabla dependencias:
+Se usa para registrar las recetas que funcionarán como ingredientes dentro de una receta de etapa posterior. Registra el id de la producción del hijo, el cual se utilizará en el cálculo de los costos unitarios.

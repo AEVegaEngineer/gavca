@@ -22,7 +22,7 @@
 					<td>{{$totalventa->ven_factura}}</td>
 					<td>{{$elemento->ven_condicion}}</td>
 					<td align="right">{{ number_format ( $totalventa->ven_total , $decimals = 2 , "," , "." ) }}</td>
-					<td>{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $elemento->id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}</td>
+					<td>{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $totalventa->id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}</td>
 				</tr>
 				<?php } ?>
 				@endforeach

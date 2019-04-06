@@ -91,7 +91,7 @@ post('/reqDepUpd', 'ProduccionController@reqDepUpd');
 post('/reqUpd', 'ProduccionController@req_upd');
 post('/checkDep', 'ProduccionController@checkDep');
 post('/storeProd', 'ProduccionController@storeProd');
-Route::get('/verProduccion/{rec_nombre}/{req_fecha}', 'ProduccionController@verProduccion');
+Route::get('/verProduccion/{id}', 'ProduccionController@verProduccion');
 Route::resource('produccion','ProduccionController');
 
 

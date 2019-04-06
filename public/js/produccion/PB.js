@@ -34,18 +34,6 @@
 	costo = costo.replace(".","");
 	var rec_nombre = $('#rec_nombre').val();
 	var pro_fecha = $('#pro_fecha').val();
-	guardar_costos();
-	function guardar_costos(){
-		$.ajax({
-	        type: "POST",
-	        url: '/guardarCostos',
-	        headers:{'X-CSRF-TOKEN': token},
-	        data: {costo: costo,rec_nombre:rec_nombre,pro_fecha:pro_fecha},
-	        success: function( data ) {
-	           	console.log('insertado');		
-			}
-	    });	
-		//alert("script ejecutado");	
-	}
+	
 	
 	

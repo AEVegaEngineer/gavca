@@ -10,7 +10,6 @@
 				<td>Producto</td>
 				<td>Entra</td>
 				<td>Sale</td>
-				<!--<td>Valor</td>-->
 				<td>Concepto</td>
 			</thead>
 			<?php $totalEntra = 0; $totalSale = 0; ?>

@@ -38,19 +38,10 @@ class ProduccionController extends Controller
      */
     public function index()
     {       
-        /*
-        
-        DB::statement("DELETE FROM `compras` WHERE 1");
-        DB::statement("ALTER TABLE `dependencias` DROP FOREIGN KEY `dependencias_ibfk_2`; ALTER TABLE `dependencias` ADD CONSTRAINT `dependencias_ibfk_2` FOREIGN KEY (`dep_produccion`) REFERENCES `produccion`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE");
-        return "DB UPDATED";     
-        
-        */
-        
         $producciones = DB::table('produccion')
-                ->orderBy('pro_fecha', 'dsc')
-                ->orderBy('rec_nombre', 'dsc')
-                ->orderBy('pro_fecha', 'dsc')
-                ->paginate(15);
+            ->whereNotNull('pro_costo')
+            ->orderBy('id', 'dsc')
+            ->paginate(15);
         return view('produccion.index',compact('producciones'));
     }
     /**
@@ -92,7 +83,7 @@ class ProduccionController extends Controller
                 ->whereNotNull('produccion.pro_costo')
                 ->orderBy('produccion.pro_fecha', 'dsc')
                 ->take(15) 
-                // el take 30 tomara solo 30 producciones en general
+                // el take 15 tomara solo 15 producciones en general
                 ->get(['produccion.id', 'produccion.pro_fecha','produccion.rec_nombre','produccion.pro_costo']);
             //return $producciones;
             return view('produccion.create',compact('receta','dependencias','producciones','fecha'));
@@ -251,25 +242,29 @@ class ProduccionController extends Controller
      * @param  $rec_nombre, $req_fecha
      * @return \Illuminate\Http\Response
      */
-    public function verProduccion($rec_nombre,$req_fecha)
+    public function verProduccion($id)
     {
-        $req_fecha = str_replace("-","/",$req_fecha);
-        //return "aqui estoo ".$rec_nombre." ".$req_fecha;
-        //$ingredientes = ingrediente::where('rec_nombre', $id)->get();
+        $rec_nombre = produccion::where('id',$id)->pluck('rec_nombre');
+        $req_fecha = produccion::where('id',$id)->pluck('pro_fecha');        
         $recetas = receta::where('rec_nombre',$rec_nombre)->first();
-        $produccion = produccion::where('rec_nombre',$rec_nombre)
-            ->where('pro_fecha', $req_fecha)
+        $produccion = produccion::where('id',$id)
             ->first();
 
         $aumentos = aumento::All();
         $salarios = salario::All();
         $miscelaneo = miscelaneo::where('id','1')->first();
+        /*$objetivo = produccion::where('rec_nombre',"ANTIPASTO ATÚN (FRASCO 470G)")
+            ->where('id', '<', $id)
+            ->max('id');
+        return $objetivo;*/
+        $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
         $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
-            ->where('dep_padre',$rec_nombre)
+            ->leftJoin('produccion', 'produccion.rec_nombre', '=', 'dependencias.dep_hijo')
+            ->where('produccion.id', '<', $id)
+            ->select("produccion.pro_produccion", 'recetas.rec_unidad', 'dependencias.dep_hijo')
+            ->orderBy('produccion.id','dsc')
+            ->take($cuenta)
             ->get();
-        //$dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
-
-
         $costos = DB::table('produccion')
             ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
             ->where('dependencias.dep_padre',$rec_nombre)
@@ -606,9 +601,14 @@ class ProduccionController extends Controller
         $aumentos = aumento::All();
         $salarios = salario::All();
         $miscelaneo = miscelaneo::where('id','1')->first();
-        //$dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
+        
+        $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
         $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
-            ->where('dep_padre',$rec_nombre)
+            ->leftJoin('produccion', 'produccion.rec_nombre', '=', 'dependencias.dep_hijo')
+            ->where('produccion.id', '<', produccion::max('id'))
+            ->select("produccion.pro_produccion", 'recetas.rec_unidad', 'dependencias.dep_hijo')
+            ->orderBy('produccion.id','dsc')
+            ->take($cuenta)
             ->get();
 
         $costos = DB::table('produccion')
@@ -628,7 +628,40 @@ class ProduccionController extends Controller
         ->where('requerimientos.rec_nombre', $rec_nombre)
         ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
         ->get();
-        //return $dependencias;        
+        //return $dependencias;   
+        /*
+        ** Hago los cálculos de costo unitario para pro_costo
+        */
+        $costosUnit=0;
+        $prod = $produccion->pro_produccion;
+        foreach($dependencias as $key => $dependencia)
+        {
+            $req_total = $dependencia->pro_produccion;
+            $req_unitario = $req_total/$prod;               
+            $costo = $costos[$key]->pro_costo;
+            $costo_unitario = $costo*$req_unitario;
+            $costosUnit+=$costo_unitario;            
+        }
+        foreach($parametros as $parametro)
+        {
+            $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
+        }
+        $req = $produccion->pro_mano_obra;
+        foreach($salarios as $salario)
+        {
+            $salario_integral = $salario->salario_integral;
+        }
+        $cos_tot_obra = $req*$salario_integral;
+        $cos_unit_obra = $cos_tot_obra / $prod;
+        $total_cf = ($miscelaneo->std_x_frasco/3)*$prod;
+        $unit_cf = $total_cf/$prod;
+        $costoDirUnit = $costosUnit+$cos_unit_obra;
+        $total_unit = $costoDirUnit+$unit_cf;
+
+        $id = produccion::max('id');
+        produccion::where('id',$id)->
+            update(['pro_costo' => $total_unit]);
+
         return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos'));
 
     }
