@@ -108,7 +108,7 @@ RESULTA que el problema era el script produccion/PB.js, cuando registro una prod
 UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de requerimiento de producción B que puse en la última producción y sobreescribe todas las anteriores
 - Arreglar el formato de la suma en las ventas
 - Los totales en la factura de venta estan invertidos
-- No debe dejar registrar compras y ventas sin artículos
+- No debe dejar registrar compras y ventas sin artículos, tampoco debe dejar ingresar cantidades mayores a las disponibles
 - Los botones de modificar producciones solo deben estar disponibles para administradores
 - Arreglar el formato de costo en inventario producto C
 - No se puede quitar un producto B ingrediente de una Receta C
@@ -116,6 +116,7 @@ UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login
 - Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar.
-
+- Arreglar el ordenamiento de la tabla venta cuando uno recien hace una venta
+- Arreglar la fecha del cobro y el codigo del cliente dentro de la Factura de Cobro de cuentas por cobrar
 tabla dependencias:
 Se usa para registrar las recetas que funcionarán como ingredientes dentro de una receta de etapa posterior. Registra el id de la producción del hijo, el cual se utilizará en el cálculo de los costos unitarios.
