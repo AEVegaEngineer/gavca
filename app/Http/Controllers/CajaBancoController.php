@@ -202,10 +202,10 @@ class CajaBancoController extends Controller
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
             ->first();
         $records = cajabanco::where('cb_entidad',$caja)
-        ->whereDate('cb_fecha', '=',session('caja_fecha'))
-        ->where('cb_activo',1)
-        ->orderBy('id','asc')
-        ->get();    
+            ->whereDate('cb_fecha', '=',session('caja_fecha'))
+            ->where('cb_activo',1)
+            ->orderBy('id','asc')
+            ->get();    
 
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
@@ -298,7 +298,6 @@ class CajaBancoController extends Controller
     public function cerrarcaja($entidad, $fecha)
     {
         //borrando datos erroneos de compras
-        
         DB::table('cajabanco')
             ->where('cb_saldo', '=', 0)
             ->where('cb_concepto', '!=', 'Inicio de caja')
@@ -479,16 +478,22 @@ class CajaBancoController extends Controller
         $caja = $request["entidad"];
         $saldo_existe = saldocaja::where('sc_entidad',$caja)
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-            ->first(); 
-        $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-            ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-            ->where('cajabanco.cb_entidad',$caja)
+            ->first();
+        $records = cajabanco::where('cb_entidad',$caja)
             ->whereDate('cb_fecha', '=',session('caja_fecha'))
             ->where('cb_activo',1)
-            ->orderBy('cajabanco.id','asc')
-            ->get();        
-        $bancos = banco::All();
-        return view('caja.caja',compact('bancos','caja','records','saldo_existe'))->with('message','Saldo Transferido Correctamente.');        
+            ->orderBy('id','asc')
+            ->get();    
+
+        $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
+        if($caja_actual !== null)
+        {
+            $caja_actual = new Carbon($caja_actual->cb_fecha);
+            $caja_actual = $caja_actual->toDateString();
+        }
+
+        $bancos = banco::All(); 
+        return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'))->with('message','Saldo Transferido Correctamente.');      
     }
     /**
      * FORMULARIO DE ENTRADA DE SALDOS
@@ -540,16 +545,25 @@ class CajaBancoController extends Controller
         $caja = $request["entidad"];
         $saldo_existe = saldocaja::where('sc_entidad',$caja)
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-            ->first(); 
-        $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-            ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-            ->where('cajabanco.cb_entidad',$caja)
+            ->first();
+        $records = cajabanco::where('cb_entidad',$caja)
             ->whereDate('cb_fecha', '=',session('caja_fecha'))
             ->where('cb_activo',1)
-            ->orderBy('cajabanco.id','asc')
-            ->get();
-        $bancos = banco::All();
-        return view('caja.caja',compact('bancos','caja','records','saldo_existe'))->with('message','Saldo Transferido Correctamente.');
+            ->orderBy('id','asc')
+            ->get();    
+
+        $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
+        if($caja_actual !== null)
+        {
+            $caja_actual = new Carbon($caja_actual->cb_fecha);
+            $caja_actual = $caja_actual->toDateString();
+        }
+
+        $bancos = banco::All(); 
+        return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'))->with('message','Saldo Transferido Correctamente.');
+
+
+
     }    
     /**
      * SALIDA DE SALDOS
@@ -581,16 +595,22 @@ class CajaBancoController extends Controller
         $caja = $request["entidad"];
         $saldo_existe = saldocaja::where('sc_entidad',$caja)
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-            ->first(); 
-        $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-            ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-            ->where('cajabanco.cb_entidad',$caja)
+            ->first();
+        $records = cajabanco::where('cb_entidad',$caja)
             ->whereDate('cb_fecha', '=',session('caja_fecha'))
             ->where('cb_activo',1)
-            ->orderBy('cajabanco.id','asc')
-            ->get();        
-        $bancos = banco::All();
-        return view('caja.caja',compact('bancos','caja','records','saldo_existe'))->with('message','Saldo Transferido Correctamente.');
+            ->orderBy('id','asc')
+            ->get();    
+
+        $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
+        if($caja_actual !== null)
+        {
+            $caja_actual = new Carbon($caja_actual->cb_fecha);
+            $caja_actual = $caja_actual->toDateString();
+        }
+
+        $bancos = banco::All(); 
+        return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'))->with('message','Saldo Transferido Correctamente.');
     }
     /**
      * Show the form for editing the specified resource.

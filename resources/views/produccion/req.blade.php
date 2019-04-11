@@ -24,7 +24,7 @@
 			<tbody>
 				<td>{{$dependencia->dep_hijo}}</td>	
 				<td>
-					<input type="text" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
+					<input type="text" required="" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
 					<input type="hidden" name="dep_hijo[]" value="{{$dependencia->dep_hijo}}">
 				</td>					
 				<!---->

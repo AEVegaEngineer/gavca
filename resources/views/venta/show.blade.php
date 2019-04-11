@@ -44,8 +44,8 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><b>{{ number_format ( $totalIva , $decimals = 2 , "," , "." ) }}</b></td>
 				<td><b>{{ number_format ( $totalBase , $decimals = 2 , "," , "." ) }}</b></td>
+				<td><b>{{ number_format ( $totalIva , $decimals = 2 , "," , "." ) }}</b></td>				
 				<td><b>{{ number_format ( $total , $decimals = 2 , "," , "." ) }}</b></td>
 			</tr>
 		</table>

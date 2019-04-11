@@ -106,17 +106,29 @@ NOTA: puede ser necesario revertir tambien compras y ventas a credito
 - (X)En producción, cuando cambiaba de pagina en el paginator, me cambiaba los valores del campo pro_costo en las producciones q habian sido ventas, cambie algunas cosas y no pude reproducir de nuevo el error, tratar de reproducir de nuevo.
 RESULTA que el problema era el script produccion/PB.js, cuando registro una producción este script es el encargado de guardar el costo de la producción, el problema es que lo hace desde el reporte de producción, y cada vez que accedo a este reporte (ver producción) me actualiza los costos, aparte de esto, este script actualiza los costos según la fecha y el nombre de receta, osea que también para las ventas de ese mismo artículo de ese mismo dia se cambiarán los precios, dañandolo todo.
 UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de requerimiento de producción B que puse en la última producción y sobreescribe todas las anteriores
-- Arreglar el formato de la suma en las ventas
-- Los totales en la factura de venta estan invertidos
-- No debe dejar registrar compras y ventas sin artículos, tampoco debe dejar ingresar cantidades mayores a las disponibles
+- (X) No debe dejar registrar compras y ventas sin artículos, tampoco debe dejar ingresar cantidades mayores a las disponibles
+- (X) Arreglar el formato de la suma en las ventas
+- (X) Los totales en la factura de venta estan invertidos
+- (X) Al terminar una venta, se devuelve la lista de ventas en orden ascendente, debe ser descendente
+- (X) Generar entrada no funciona: da error Undefined variable: caja_actual (View: C:\xampp\htdocs\gavca\resources\views\caja\caja.blade.php) line 85
+(arreglar la vista retornada en generarEntrada).
+- (X) Los campos de entrada de los requerimientos para la corrida de producción deben ser required
+- Alinear los costos de las facturas de compra y venta a la derecha (recordar el costo unitario)
 - Los botones de modificar producciones solo deben estar disponibles para administradores
 - Arreglar el formato de costo en inventario producto C
 - No se puede quitar un producto B ingrediente de una Receta C
+- Arreglar la fecha del cobro y el codigo del cliente dentro de la Factura de Cobro de cuentas por cobrar
+- No se deben hacer compras ni pagos de cuentas por pagar si no hay suficiente dinero en la entidad respectiva
+- Agregar boton de volver a cuentas por pagar dentro de la pagina de las cuentas por pagar del proveedor X, igual para cuentas por cobrar.
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login
 - Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar.
-- Arreglar el ordenamiento de la tabla venta cuando uno recien hace una venta
-- Arreglar la fecha del cobro y el codigo del cliente dentro de la Factura de Cobro de cuentas por cobrar
+
+
+
 tabla dependencias:
 Se usa para registrar las recetas que funcionarán como ingredientes dentro de una receta de etapa posterior. Registra el id de la producción del hijo, el cual se utilizará en el cálculo de los costos unitarios.
+
+req_default:
+Valor que se le da a los requerimientos (parámetros) cuando se quiere que tomen su valor de acuerdo a una producción dada, expresado en el denominador de un ratio (1/10 representa 10 elementos por cada producción).

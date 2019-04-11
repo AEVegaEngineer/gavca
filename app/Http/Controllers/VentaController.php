@@ -19,6 +19,10 @@ use gavca\cajabanco;
 
 class VentaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -262,11 +266,12 @@ class VentaController extends Controller
                 ]);                
             }           
             
-            $totalesventas = totalventa::paginate(15);
+            $totalesventas = totalventa::orderBy('id', 'dsc')->paginate(15);
             $elementos = venta::All();
             $elementos = $elementos->unique('ven_factura'); 
             $request->session()->flash('message', 'La venta se ha guardado exitosamente.');   
             return view('venta.index',compact('totalesventas','elementos'));
+
         }else{
             //Si NO hay existencias para vender
             $costos = array();
