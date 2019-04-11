@@ -31,11 +31,11 @@
 			<tr>
 				<td>{{$venta->rec_nombre}}</td>
 				<td>{{$cantidad}}</td>			
-				<td>{{ number_format ( $venta->ven_costo , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $venta->ven_costo , $decimals = 2 , "," , "." ) }}</td>
 				<td>{{$venta->ven_iva}}%</td>
-				<td>{{ number_format ( $base = $venta->ven_costo*$cantidad , $decimals = 2 , "," , "." ) }}</td>
-				<td>{{ number_format ( $iva = $base*($venta->ven_iva/100) , $decimals = 2 , "," , "." ) }}</td>
-				<td>{{ number_format ( $base+$iva , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $base = $venta->ven_costo*$cantidad , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $iva = $base*($venta->ven_iva/100) , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $base+$iva , $decimals = 2 , "," , "." ) }}</td>
 				<?php $totalIva+=$iva; $totalBase+=$base; $total+=$base+$iva;?>
 			</tr>
 			@endforeach
@@ -44,9 +44,9 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><b>{{ number_format ( $totalBase , $decimals = 2 , "," , "." ) }}</b></td>
-				<td><b>{{ number_format ( $totalIva , $decimals = 2 , "," , "." ) }}</b></td>				
-				<td><b>{{ number_format ( $total , $decimals = 2 , "," , "." ) }}</b></td>
+				<td align="right"><b>{{ number_format ( $totalBase , $decimals = 2 , "," , "." ) }}</b></td>
+				<td align="right"><b>{{ number_format ( $totalIva , $decimals = 2 , "," , "." ) }}</b></td>				
+				<td align="right"><b>{{ number_format ( $total , $decimals = 2 , "," , "." ) }}</b></td>
 			</tr>
 		</table>
 		

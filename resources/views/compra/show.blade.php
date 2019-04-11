@@ -33,11 +33,11 @@
 				<td>{{$cardex->par_nombre}}</td>
 				<td>{{$cardex->par_codigo}}</td>
 				<td>{{$cantidad}}</td>			
-				<td>{{ number_format ( $cardex->car_costo , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $cardex->car_costo , $decimals = 2 , "," , "." ) }}</td>
 				<td>{{$cardex->car_alicuota}}</td>
-				<td>{{ number_format ( $costo = $cardex->car_costo*$cantidad , $decimals = 2 , "," , "." ) }}</td>
-				<td>{{ number_format ( $cardex->car_iva , $decimals = 2 , "," , "." ) }}</td>
-				<td>{{ number_format ( $costo+$cardex->car_iva , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $costo = $cardex->car_costo*$cantidad , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $cardex->car_iva , $decimals = 2 , "," , "." ) }}</td>
+				<td align="right">{{ number_format ( $costo+$cardex->car_iva , $decimals = 2 , "," , "." ) }}</td>
 				<?php $iva+=$costo;?>
 			</tr>
 			@endforeach
@@ -47,9 +47,9 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><b>{{ number_format ( $iva , $decimals = 2 , "," , "." ) }}</b></td>
-				<td><b>{{ number_format ( $compra->comp_monto-$iva , $decimals = 2 , "," , "." ) }}</b></td>
-				<td><b>{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</b></td>
+				<td align="right"><b>{{ number_format ( $iva , $decimals = 2 , "," , "." ) }}</b></td>
+				<td align="right"><b>{{ number_format ( $compra->comp_monto-$iva , $decimals = 2 , "," , "." ) }}</b></td>
+				<td align="right"><b>{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</b></td>
 			</tr>
 		</table>
 		

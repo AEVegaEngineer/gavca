@@ -113,7 +113,8 @@ UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de
 - (X) Generar entrada no funciona: da error Undefined variable: caja_actual (View: C:\xampp\htdocs\gavca\resources\views\caja\caja.blade.php) line 85
 (arreglar la vista retornada en generarEntrada).
 - (X) Los campos de entrada de los requerimientos para la corrida de producción deben ser required
-- Alinear los costos de las facturas de compra y venta a la derecha (recordar el costo unitario)
+- (X) Alinear los costos de las facturas de compra y venta a la derecha (recordar el costo unitario)
+- Validar en front end que las cuentas por cobrar y pagar no se cobren por mas del monto que se debe.
 - Los botones de modificar producciones solo deben estar disponibles para administradores
 - Arreglar el formato de costo en inventario producto C
 - No se puede quitar un producto B ingrediente de una Receta C
