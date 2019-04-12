@@ -81,32 +81,28 @@ class ProveedorController extends Controller
         function crearCodigo(){
             $numero = 0;
             $n = 0;
-            //itero para buscar el numero
-            for ($i=0; $i < 99999; $i++) { 
-                $pattern = "P";
-                //cuento digitos
-                $n = 0; 
-                $floor = $i;           
-                do{
-                    $floor = floor($floor / 10);
-                    $n++;
-                } while ($floor > 0);
+            //itero para buscar el numero            
+            $ultimoProveedor = proveedor::orderBy('id','dsc')->take(1)->pluck('prov_codigo');
+            $ultimoProveedor = str_replace("P","",$ultimoProveedor);
+            $ultimoProveedor = (int)$ultimoProveedor+1;
+            $patron = "P";
+            //cuento digitos
+            $n = 0; 
+            $floor = $ultimoProveedor;           
+            do{
+                $floor = floor($floor / 10);
+                $n++;
+            } while ($floor > 0);
                 
-                //segun la cantidad de numeros agrego ceros para completar 5 cifras
-                $limit = 5-$n;
-                //return $limit;
-                for ($j=0; $j < $limit; $j++) { 
-                    $pattern = $pattern."0";
-                }            
-                //concateno el patron con el numero
-                $code = $pattern.$i;  
-                //si no hay ningun numero como este registrado sal del loop y registre
-                $proveedor = proveedor::where('prov_codigo', '=', $code)->first();
-                if ($proveedor === null) {
-                    break;
-                }
-                
-            }
+            //segun la cantidad de numeros agrego ceros para completar 5 cifras
+            $limit = 5-$n;
+            //return $limit;
+            for ($j=0; $j < $limit; $j++) { 
+                $patron = $patron."0";
+            }            
+            //concateno el patron con el numero
+            $code = $patron.$ultimoProveedor; 
+
             return $code;
         }
         

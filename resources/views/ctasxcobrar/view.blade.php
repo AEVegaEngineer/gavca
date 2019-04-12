@@ -8,12 +8,14 @@
 				<th>Fecha de cobro</th>
 				<th>Código del Cliente</th>
 				<th>Concepto</th>
+				<th>Cobrado a entidad</th>
 				<th>Monto de pago</th>
 			</thead>
 			<tr class="warning">
 				<td>{{date("Y/m/d", strtotime($ctasxcobrar->cta_fecha))}}</td>
-				<td>{{$ctasxcobrar->cta_prov_codigo}}</td>
+				<td>{{$ctasxcobrar->cta_cli_codigo}}</td>
 				<td>{{$ctasxcobrar->cta_concepto}}</td>
+				<td>{{$ctasxcobrar->cta_entidad}}</td>
 				<td>{{number_format ( $ctasxcobrar->cta_monto , $decimals = 2 , "," , "." )}}</td>
 			</tr>
 		</table>

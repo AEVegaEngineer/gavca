@@ -1,25 +1,24 @@
-/*PARA CORREGIR EL PROBLEMA DEL DELETE Y DE LA ACTUALIZACION DE LOS COSTOS TOTALES SE PUEDE METER UN INPUT HIDDEN CON EL VALOR DEL COSTO OBTENIDO POR AJAX EN CADA ROW, LUEGO MEDIANTE UN FOREACH SE TOMAN TODOS LOS COSTOS, SE MULTIPLICAN POR LAS CANTIDADES Y SE SUMAN EN EL TOTAL.
-PARA EL BORRADO SE TOMA EL ID DEL BOTON, SE BUSCA EL PADRE Y DIRECTAMENTE ABAJO SE LOCALIZA EL COSTO*CANTIDAD Y SE RESTA DEL TOTAL*/
+
 $(document).ready(function() {
-	
+
+	var token = $("#token").val();
 	total = 0;
 	var cantidad = [];
 	var cost = [];
 	cont = 0;
 	var codigo;
+	$(':input[type="submit"]').prop('disabled', true);
+
 	//BORRA EL PARAMETRO
 	function sustraerMP(id_delbtn){
 		console.log(id_delbtn);
 		$('#' + id_delbtn).parent().parent().show().hide();
 
 		calcular();
-	}
-	//Ejecuta el script al cargar la pagina
-	//$('#popup').hide();
+	}	
 
 	//SECCION PARA CREAR EL NUEVO PARAMETRO, GUARDA EN DB Y MUESTRA EN LISTA
-	//GUARDANDO EL PARAMETRO EN DB
-	var token = $("#token").val();
+	
 	
 	$('a[id="create_mp"]').click(function(){
 		$('#par_codigo').val(codigo);
@@ -228,7 +227,6 @@ $(document).ready(function() {
 			var costoTotal = 0;
 			var ivaTotal = 0;
 			var ivaCompleto = 0;
-			console.log('calculos: ');
 			$( 'input[id^="qty"]:not(:hidden)' ).each(function() {						
 				var cantidad = $( this ).val();
 
@@ -248,6 +246,7 @@ $(document).ready(function() {
 			$('#totalIva').html(addCommas(ivaTotal));	
 			$('#totalMasIva').html(addCommas(ivaTotal+costoTotal));
 			$('#comp_monto').val(ivaTotal+costoTotal);
+			getDisponible(ivaTotal+costoTotal);
 	}
 	/*FIN DE SECCION DE CALCULO*/
 
@@ -266,74 +265,40 @@ $(document).ready(function() {
 	}
 	/*FIN DE SECCION DE COMAS*/
 
-	/*SECCION DE GUARDAR CAMBIOS Y TERMINAR*/
+	/*FUNCIÓN PARA CALCULAR SI HAY SUFICIENTE DINERO EN ENTIDAD PARA PAGAR LA COMPRA*/
 	
-	/*
-	$('#finish').click(function(){
-		//Actualiza el monto de la compra en tabla compras
-		var id = $('#id').val();
-		var banco = $('#banco').val();
-		var monto = $('#totalMasIva').html();
-		var monto = monto.replace(/\,/g, '');
-		//alert(monto);
-		$.ajax({
-		    type: "POST",
-		    url: '/montoUpd',
-		    headers:{'X-CSRF-TOKEN': token},
-		    data: {id: id, comp_monto: monto, banco: banco},
-		    success: function( data ) {
-		        $.each(data, function (i, item) {
-		            console.log(item["message"]);
-		            console.log(item["banco"]);
-		            console.log(item["transaccion"]);
-		            console.log(item["saldo_previo"]);
-		            console.log(item["saldo_posterior"]);
-				});
-			}
-		});		
-		$('input[id^="qty"]').each(function(){
-			var quantity = $(this).val();
-			var codigo = $(this).parent().parent().find('.codigo').html(); 
-			//HACE EL LOG DE LOS CAMBIOS EN CARDEXMP
-			var comp_doc = $('#comp_doc').val();
-		    $.ajax({
-		        type: "POST",
-		        url: '/logCardexMP',
-		        headers:{'X-CSRF-TOKEN': token},
-		        data: {mp_codigo: codigo, mp_cantidad: quantity, comp_doc:comp_doc, id: id},
-		        success: function( data ) {
-		         	$.each(data, function (i, item) {	
-		         		/*
-		         		console.log("ID: "+item["id"]);	            	
-		            	console.log(item["mp_codigo"]);
-		            	console.log(item["comp_doc"]);
-		            	console.log(item["car_valor_anterior"]);
-		            	console.log(item["car_valor_actual"]);
-		            	console.log(item["message"]);
-		            	*/
-		            	//window.location.href = "compra";
-		            	/*
-					});  			
-				}
-		    });
-			//Se debe chequear si el mp_codigo existe en materiasprimas, si no, se crea.		
-			$.ajax({
-		        type: "POST",
-		        url: '/createMP',
-		        headers:{'X-CSRF-TOKEN': token},
-		        data: {mp_codigo: codigo, mp_cantidad: quantity},
-		        success: function( data ) {
-		         	$.each(data, function (i, item) {
-		         		
-		            	//console.log(item["message"]);
-		            	
-		            	//window.location.href = "compra";
-					});  			
-				}
-		    });			      
-	    });	 
-	    window.location.href = "compra";	    
-	});
-	*/
-	/*FIN DE SECCION DE GUARDAR CAMBIOS Y TERMINAR*/
+	function getDisponible(total)
+    {
+    	var entidad = $('#entidad').val();
+        //console.log('ejecutando getDisponible');
+        $.ajax({
+            type: "POST",
+            url: '/getDisponible',
+            headers:{'X-CSRF-TOKEN': token},
+            data: {entidad: entidad},
+            error: function(){
+                alert("Error. Intente escribir los datos de nuevo.");
+            },
+            success: function( data ) {
+            	console.log(data+" "+entidad+" "+token);
+                if(data){
+                	if(total > data)
+                	{
+                    	$('#error-msg').html("Error, no hay suficientes fondos en "+entidad+" para pagar la compra, fondos actuales: "+addCommas(data));
+                		$(':input[type="submit"]').prop('disabled', true);
+                	}
+                	else if(total == 0)
+                	{
+                		$(':input[type="submit"]').prop('disabled', true);
+                	}
+                	else
+                	{
+                		$('#error-msg').html("");
+                		$(':input[type="submit"]').prop('disabled', false);
+                	}
+                }       
+            }
+        });         
+    }  
+	/*FIN DE FUNCIÓN PARA CALCULAR SI HAY SUFICIENTE DINERO EN ENTIDAD PARA PAGAR LA COMPRA*/
 });

@@ -20,10 +20,10 @@
 			<br>
 			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Crear nuevo Producto y Agregarlo a Compra</button>
 			<br>
-			<br>		
+			<br>	
+			<b><p id="error-msg" align="right"></p></b>	
 			{!!Form::submit('Guardar Cambios y Terminar',['class'=>'btn btn-success pull-right'])!!}
 			<hr>
-			
 			<input type="hidden" name="comp_monto" value="0" id="comp_monto">
 			<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
 			<input type="hidden" name="id" id="id" value="{{$compra->id}}">
@@ -143,5 +143,5 @@
 	</div>	
 	<script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript"></script>	
 
-	<script src="{{ asset('/js/materiaprima/crear_mp.js?113') }}" type="text/javascript"></script>
+	<script src="{{ asset('/js/materiaprima/crear_mp.js?115') }}" type="text/javascript"></script>
 @endsection

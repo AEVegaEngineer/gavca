@@ -96,6 +96,8 @@ class CtaxCobrarController extends Controller
             'cta_cli_codigo' => $cliente,
             'cta_monto' => $request['abono'],
             'cta_concepto' => $concepto,
+            'cta_fecha' => $request['fecha'],
+            'cta_entidad' => $entidad,
         ]);
         $request->session()->flash('message', 'Se ha abonado a la deuda correctamente.');
         $ctasxcobrar = ctaxcobrar::where('cta_cli_codigo',$cliente)->get();  

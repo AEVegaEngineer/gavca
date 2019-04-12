@@ -350,6 +350,7 @@ class CajaBancoController extends Controller
                 'cb_debe_haber' => 'HABER',
                 'cb_fecha' => $diaDespues,
                 'cb_concepto' => 'Inicio de caja',
+                'cb_activo' => 1,
                 'cb_saldo' => $saldo,
             ]);   
         }
