@@ -167,7 +167,7 @@ Route::post('caja/generarSalida', [
     'uses' => 'CajaBancoController@generarSalida'
 ]);
 Route::resource('caja','CajaBancoController');
-
+post('/getDisponible', 'CajaBancoController@getDisponible');
 Route::post('venta/facturar', [
     'as' => 'venta.facturar',
     'uses' => 'VentaController@facturar'

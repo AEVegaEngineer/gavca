@@ -114,13 +114,14 @@ UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de
 (arreglar la vista retornada en generarEntrada).
 - (X) Los campos de entrada de los requerimientos para la corrida de producción deben ser required
 - (X) Alinear los costos de las facturas de compra y venta a la derecha (recordar el costo unitario)
-- Validar en front end que las cuentas por cobrar y pagar no se cobren por mas del monto que se debe.
-- Los botones de modificar producciones solo deben estar disponibles para administradores
-- Arreglar el formato de costo en inventario producto C
-- No se puede quitar un producto B ingrediente de una Receta C
+- (X) Validar en front end que las cuentas por cobrar y pagar no se cobren por mas del monto que se debe, tambien en cuentas x pagar se debe verificar que la entidad de la que se sacará el dinero tenga los fondos.
+- (X) Los botones de modificar producciones solo deben estar disponibles para administradores
+- (X) No se puede quitar un producto B ingrediente de una Receta C
 - Arreglar la fecha del cobro y el codigo del cliente dentro de la Factura de Cobro de cuentas por cobrar
 - No se deben hacer compras ni pagos de cuentas por pagar si no hay suficiente dinero en la entidad respectiva
 - Agregar boton de volver a cuentas por pagar dentro de la pagina de las cuentas por pagar del proveedor X, igual para cuentas por cobrar.
+- Reporte no encuentra el saldo al inicio de caja
+- El cardex debe mostrar los datos de todo un mes, no absolutamente todos los datos.
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login

@@ -9,6 +9,8 @@ use gavca\Http\Controllers\Controller;
 
 use gavca\dependencia;
 
+use DB;
+
 class DependenciaController extends Controller
 {
     public function __construct()
@@ -118,6 +120,9 @@ class DependenciaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('dependencias')
+            ->where('id', $id)
+            ->delete();  
+        return redirect()->back();
     }
 }

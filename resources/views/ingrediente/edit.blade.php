@@ -39,7 +39,6 @@
 		</div>
 		<div class="col-md-6">
 			<!--SECCION PARA LA SELECCION DE PRODUCTO A O B-->
-
 			<?php if($receta->rec_proc == "PB"){?>
 				<label>Debes agregar al menos un producto A de la lista desplegable a esta receta.</label>
 				<select name="product" id="product" class="form-control margenBotSm" placeholder="Escoje un producto...">
@@ -47,8 +46,7 @@
 				    @foreach($productosa as $productoa)
 				    	<option value="{{ $productoa->rec_nombre }}">{{ $productoa->rec_nombre}}</option>
 				    @endforeach
-				</select>		
-			<?php }else if($receta->rec_proc == "PC"){?>
+				</select>			<?php }else if($receta->rec_proc == "PC"){?>
 				<label>Debes agregar al menos un producto B de la lista desplegable a esta receta.</label>
 				<select name="product" id="product" class="form-control margenBotSm" placeholder="Escoje un producto...">
 					<option value="" disabled selected>Selecciona un producto B...</option>

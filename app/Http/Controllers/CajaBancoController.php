@@ -613,6 +613,23 @@ class CajaBancoController extends Controller
         return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'))->with('message','Saldo Transferido Correctamente.');
     }
     /**
+     * Método AJAX para obtener en saldo disponible actual en una entidad
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getDisponible(Request $request){
+        //retorna por post
+        if ($request->isMethod('post')){  
+            $disponible = cajabanco::where('cb_entidad', $request["entidad"])
+                ->orderBy('id','dsc')
+                ->pluck('cb_saldo');
+            return $disponible;
+        }
+        //retorna por get
+        return response()->json(['response' => array('disponible' => 'Método Get','mensaje' => '1')]);
+    }
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

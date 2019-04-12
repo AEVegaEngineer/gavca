@@ -14,7 +14,7 @@
 		<div class="row margenBotMd">
 			<div class="col-xs-12 col-md-4">
 				<p>Ingresa la cantidad que desees cobrar.</p>
-				<input class="form-control" type="text" name="abono" placeholder="Ingrese aquí la cantidad que desea cobrar">
+				<input class="form-control" type="text" name="abono" placeholder="Ingrese aquí la cantidad que desea cobrar"  value="{{$deuda}}">
 			</div>
 		    <div class="col-xs-12 col-md-4">
 				<p>¿Se cobró en Banco o Caja Chica?: </p>
@@ -32,6 +32,9 @@
 				<p>Se reflejará en caja el día: </p>
 				{!!Form::text('fecha',$fecha,['class'=>'form-control','placeholder'=>'Click aquí seleccionar una fecha','required'=>'required','readonly'=>'readonly'])!!}
 			</div>
+			<div class="col-xs-12 col-md-4">
+				<b><p id="error-msg"></p></b>
+			</div>
 		</div>
 		<div class="row margenBotMd">
 			<div class="col-md-12">
@@ -39,6 +42,7 @@
 			</div>
 		</div>
 		<input type="hidden" name="cliente" value="{{$cliente}}">
+		<input type="hidden" id="deuda" value="{{$deuda}}">
 		<div class="row">
 			<div class="col-md-12">
 				{!!Form::submit('Pagar deuda',['class'=>'btn btn-lg btn-success'])!!}
@@ -48,12 +52,13 @@
 	<!-- Jquery -->
     {!!Html::script('js/jquery.min.js')!!}
     <!-- Formulario dinamico -->
-    {!!Html::script('js/ctasxpagar/dynamicForm.js')!!}
+    {!!Html::script('js/ctasxcobrar/dynamicForm.js?1')!!}
 
 	<!-- Datepicker Files -->    
     {!!Html::script('js/bootstrap-datepicker.js')!!}
     <!-- Languaje -->
     {!!Html::script('locales/bootstrap-datepicker.es.min.js')!!}
+    
 
 <script type="text/javascript">
 	$('.datepicker').datepicker({

@@ -74,14 +74,6 @@ $(document).ready(function() {
 	    }
 	    return x1 + x2;
 	}
-	function removeCommas(nStr)
-	{
-		x = nStr.split(',');
-		x1 = x[0];
-		x2 = x.length > 1 ? '.' + x[1] : '';
-		x[0].replace(".","");		
-		return x1 + x2;
-	}
 	function chequeaNullOMayorADisponible()
 	{
 		var flag;

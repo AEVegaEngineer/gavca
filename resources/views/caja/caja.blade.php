@@ -58,7 +58,7 @@
 				<td align="center">Debe</td>				
 				<td align="center">Haber</td>
 				<td align="center">Saldo</td>
-				<td>Opciones</td>
+				<td align="center">Opciones</td>
 			</thead>
 			<?php $t_sale = 0; $t_entra = 0; $t_saldo = 0; ?>
 			@foreach($records as $record)
@@ -81,16 +81,20 @@
 					<?php if($record->cb_compra_id !== null){ ?>
 					<div class="btn-group">
 						<?php if($caja_actual == Session::get('caja_fecha') && $record->comp_activo != 0){ ?>
-						{!!link_to_route('compra.show', $title = 'Ver Factura', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}						
-						{!!link_to_route('compra.trash', $title = 'Revertir Compra', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
+							{!!link_to_route('compra.show', $title = 'Ver Factura', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}		
+							<?php if(Auth::user()->privilegio == "admin"){ ?>			
+								{!!link_to_route('compra.trash', $title = 'Revertir Compra', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
+							<?php } ?>
 						<?php } ?>
 				    </div>
 					<?php } ?>
 					<?php if($record->cb_concepto == 'Venta'){ ?>
 					<div class="btn-group">
 						<?php if($caja_actual == Session::get('caja_fecha') && $record->cb_activo != 0){ ?>
-						{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}						
-						{!!link_to_route('venta.revertir', $title = 'Revertir Venta', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
+							{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}	
+							<?php if(Auth::user()->privilegio == "admin"){ ?>			
+								{!!link_to_route('venta.revertir', $title = 'Revertir Venta', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
+							<?php } ?>
 						<?php } ?>
 					</div>
 					<?php } ?>
