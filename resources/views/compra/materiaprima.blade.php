@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-	{!!Form::open(['route'=>'cardexMP.logCardexMP','method'=>'POST'])!!}
+	{!!Form::open(['route'=>'compra.store','method'=>'POST'])!!}
 		<h3 class="form-signin-heading margenBotSm">Ingrese las materias primas adquiridas con la compra</h3>
 		<div class="col-md-12">
 			<p>Para agregar productos a la compra seleccionalos de la lista desplegable y haz click en agregar producto a compra</p>
@@ -24,11 +24,17 @@
 			<b><p id="error-msg" align="right"></p></b>	
 			{!!Form::submit('Guardar Cambios y Terminar',['class'=>'btn btn-success pull-right'])!!}
 			<hr>
+
+			<input type="hidden" name="comp_fecha" value="{{$comp_fecha}}" id="comp_fecha">
+			<input type="hidden" name="comp_proveedor" value="{{$proveedor}}" id="comp_proveedor">
+			<input type="hidden" name="comp_doc" value="{{$comp_doc}}" id="comp_doc">
+			<input type="hidden" name="comp_cred_cont" value="{{$comp_cred_cont}}" id="comp_cred_cont">
+			<input type="hidden" name="banco_o_caja" value="{{$banco_o_caja}}" id="banco_o_caja">
+			<input type="hidden" name="banco" value="{{$banco}}" id="banco">
 			<input type="hidden" name="comp_monto" value="0" id="comp_monto">
-			<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
-			<input type="hidden" name="id" id="id" value="{{$compra->id}}">
-			<input type="hidden" name="comp_doc" id="comp_doc" value="{{$compra->comp_doc}}">
+			<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">		
 			<input type="hidden" name="entidad" id="entidad" value="{{$entidad}}">
+
 		</div>
 		<div class="col-md-12">
 			<table class="table table-bordered" id="content" style="overflow-x: auto; width: 1024px;">			
@@ -143,5 +149,5 @@
 	</div>	
 	<script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript"></script>	
 
-	<script src="{{ asset('/js/materiaprima/crear_mp.js?115') }}" type="text/javascript"></script>
+	<script src="{{ asset('/js/materiaprima/crear_mp.js?118') }}" type="text/javascript"></script>
 @endsection

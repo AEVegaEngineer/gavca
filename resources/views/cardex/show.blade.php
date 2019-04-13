@@ -3,7 +3,7 @@
 @section('content')
 	@include('alerts.success')
 		<h2 class="form-signin-heading">Cardex de producto {{$cardexs[0]->par_nombre}}</h2>
-		<h3>Existencia actual: {{$existencia}} {{$cardexs[0]->par_unidad}}&nbsp;&nbsp;&nbsp;&nbsp;Costo Actual: {{number_format ( $cardexs[0]->car_costo , $decimals = 2 , "," , "." )}}</h3>
+		<h3>Existencia actual: {{$existencia}} {{$cardexs[0]->par_unidad}}&nbsp;&nbsp;&nbsp;&nbsp;Costo Actual: {{number_format ( $cardexs[0]->par_costo , $decimals = 2 , "," , "." )}}</h3>
 		
 		<table class="table">
 			<thead>
@@ -19,7 +19,7 @@
 			<?php 
 				$cantidad = $cardex->car_valor_actual - $cardex->car_valor_anterior;	  
 				$debe_haber = (isset($cardex->comp_fecha)) ? true : false;
-				$costo = $cardexs[0]->car_costo; 
+				$costo = $cardexs[0]->par_costo; 
 			?>
 			<tr>
 				<?php 

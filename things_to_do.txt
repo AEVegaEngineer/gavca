@@ -119,14 +119,21 @@ UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de
 - (X) No se puede quitar un producto B ingrediente de una Receta C
 - (X) Arreglar la fecha del cobro y el codigo del cliente dentro de la Factura de Cobro de cuentas por cobrar
 - (X) No se deben hacer compras ni pagos de cuentas por pagar si no hay suficiente dinero en la entidad respectiva
-- Cuando registro una compra pero no procedo con ella (estando en el listado de materias primas me salgo) registra una compra con saldo 0, luego si cierro caja, tomara ese saldo 0 y lo reproducira borrando registros anteriores, el dia siguiente me aparece con saldo 0, caja del dia anterior no me registra un cierre de caja.
-- Agregar boton de volver a cuentas por pagar dentro de la pagina de las cuentas por pagar del proveedor X, igual para cuentas por cobrar.
-- Reporte no encuentra el saldo al inicio de caja
+- (X) Cuando registro una compra pero no procedo con ella (estando en el listado de materias primas me salgo) registra una compra con saldo 0, luego si cierro caja, tomara ese saldo 0 y lo reproducira borrando registros anteriores, el dia siguiente me aparece con saldo 0, caja del dia anterior no me registra un cierre de caja.
+- (X) Arreglar la función que detecta si hay saldo en la cuenta antes de comprar, filtrar cuando la compra sea a crédito.
+- (X) Hacer lo mismo con la generación del código consecutivo para parámetros dentro de CompraController que lo que hice con la generación del código de proveedor
+- (X) Eliminar logCardexMP de las rutas 
+- (X) El checkbox para actualizar los costos directamente cuando se hace una compra no sirve para los parametros recien creados en la compra
+- (X) Agregar boton de volver a cuentas por pagar dentro de la pagina de las cuentas por pagar del proveedor X, igual para cuentas por cobrar.
+- (X) Reporte no encuentra el saldo al inicio de caja
 - El cardex debe mostrar los datos de todo un mes, no absolutamente todos los datos.
+O paginarlos, mostrar 20 por página ordenados descendiente y con el total en la parte superior como subtítulo, con columna de Disponible
+- El costo actual del cardex de MP no actualiza cuando se actualiza el costo del parámetro  (cuando se actualiza en compra no se actualiza cardex->car_costo, cambiar el enlace de Foreign Key por Update Cascade)
+- Informes para Cardex, Inventarios y Producción
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login
-- Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar.
+- (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
 
 

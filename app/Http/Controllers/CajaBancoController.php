@@ -182,14 +182,6 @@ class CajaBancoController extends Controller
      */
     public function store(Request $request)
     {
-        //borrando datos erroneos de compras
-        
-        DB::table('cajabanco')
-            ->where('cb_saldo', '=', 0)
-            ->where('cb_concepto', '!=', 'Inicio de caja')
-            ->where('cb_concepto', '!=', 'Cierre de caja')
-            ->delete();    
-               
         cajabanco::create([
             'cb_entidad' => $request["entidad"],
             'cb_debe_haber' => 'DEBE',
@@ -250,14 +242,7 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($caja)
-    {
-        //borrando datos erroneos de compras
-        
-        DB::table('cajabanco')
-            ->where('cb_saldo', '=', 0)
-            ->where('cb_concepto', '!=', 'Inicio de caja')
-            ->where('cb_concepto', '!=', 'Cierre de caja')
-            ->delete();
+    {        
             
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
@@ -296,13 +281,7 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function cerrarcaja($entidad, $fecha)
-    {
-        //borrando datos erroneos de compras
-        DB::table('cajabanco')
-            ->where('cb_saldo', '=', 0)
-            ->where('cb_concepto', '!=', 'Inicio de caja')
-            ->where('cb_concepto', '!=', 'Cierre de caja')
-            ->delete();
+    {       
 
         //itera a través de las entidades y cierra todas las cajas
         $bancos = banco::All();
@@ -379,7 +358,7 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function vercierre($entidad, $fecha)
-    {
+    {       
         //return "entidad: ".$entidad."<br> fecha: ".$fecha;
         $caja = $entidad;
         $saldo_existe = "caja_cerrada";        
@@ -410,6 +389,7 @@ class CajaBancoController extends Controller
             ->where('cb_activo',0)
             ->orderBy('cajabanco.id','asc')
             ->get();
+        //return $records;
         $pdf = PDF::loadView('caja.caja-report', compact('caja','records'));
         $pdf->save(storage_path('reports/Reporte-'.$caja.'-'.session('caja_fecha').'.pdf'));
         return $pdf->stream('Reporte-'.$caja.'-'.session('caja_fecha').'.pdf');

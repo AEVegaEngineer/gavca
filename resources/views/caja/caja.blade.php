@@ -118,8 +118,8 @@
 					<?php } ?>
 				<?php } else { ?>
 				<h3>-- Día Cerrado --</h3>
-				<h2>Este día esta cerrado, si desea ver o imprimir el cierre de caja haga click en el siguiente vínculo.</h2>
-				{!!link_to_route('caja.reporte', $title = 'Generar reporte PDF', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary'])!!}
+					<h2>Este día esta cerrado, si desea ver o imprimir el cierre de caja haga click en el siguiente vínculo.</h2>
+					{!!link_to_route('caja.reporte', $title = 'Generar reporte PDF', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary'])!!}
 				<?php } ?>
 			</div>
 		</div>

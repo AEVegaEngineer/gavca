@@ -47,7 +47,7 @@ $(document).ready(function() {
 		else
 			per = "Imperecedero";
 			
-		$("#content tr:last").after("<tr><td>"+par_nombre+"</td><td class='codigo'>"+par_codigo+"<input type='hidden' name='codigo[]' value='"+par_codigo+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"'></td><td>"+par_unidad+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+par_costo+"'></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%'></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"'></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"'></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
+		$("#content tr:last").after("<tr><td>"+par_nombre+"</td><td class='codigo'>"+par_codigo+"<input type='hidden' name='codigo[]' value='"+par_codigo+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"' required=''></td><td>"+par_unidad+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+par_costo+"' required=''></td><td></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%' required=''></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"' required=''></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"' required=''></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
 
 		cont++;
 		cantidad.push(0);
@@ -112,7 +112,7 @@ $(document).ready(function() {
 
 		    /*SE DEBEN USAR LAS VARIABLES DENTRO DEL AMBITO DE ESTA FUNCION*/
 
-		    $("#content tr:last").after("<tr><td id='nombre-"+cont+"'>"+texto+"</td><td class='codigo'>"+valor+"<input type='hidden' name='codigo[]' value='"+valor+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"'></td><td>"+param["par_unidad"]+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+param["par_costo"]+"'></td><td><input type='checkbox' class='form-control' name='update[]' id='update-"+cont+"' value='"+valor+"'></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%'></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"'></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"'></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
+		    $("#content tr:last").after("<tr><td id='nombre-"+cont+"'>"+texto+"</td><td class='codigo'>"+valor+"<input type='hidden' name='codigo[]' value='"+valor+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"' required=''></td><td>"+param["par_unidad"]+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+param["par_costo"]+"' required=''></td><td><input type='checkbox' class='form-control' name='update[]' id='update-"+cont+"' value='"+valor+"'></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%' required=''></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"' required=''></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"' required=''></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
 		   	//boton de editar
 			/*<a href='/parametro/"+param["id"]+"/edit' class='btn btn-warning btn-xs' id='edit-"+cont+"' target='_blank'>Editar</a>*/
 			cont++;
@@ -148,10 +148,7 @@ $(document).ready(function() {
             headers:{'X-CSRF-TOKEN': token},
             data: {perecedero:perecedero},
             success: function( data ) {
-            	$.each(data, function (i, item) {
-            		//console.log(item["code"]);
-            		codigo = item["code"];            		   
-				});		
+            	codigo = data;  
 			}
     	});
   
@@ -269,36 +266,44 @@ $(document).ready(function() {
 	
 	function getDisponible(total)
     {
+    	var comp_cred_cont = $('#comp_cred_cont').val();
     	var entidad = $('#entidad').val();
         //console.log('ejecutando getDisponible');
-        $.ajax({
-            type: "POST",
-            url: '/getDisponible',
-            headers:{'X-CSRF-TOKEN': token},
-            data: {entidad: entidad},
-            error: function(){
-                alert("Error. Intente escribir los datos de nuevo.");
-            },
-            success: function( data ) {
-            	console.log(data+" "+entidad+" "+token);
-                if(data){
-                	if(total > data)
-                	{
-                    	$('#error-msg').html("Error, no hay suficientes fondos en "+entidad+" para pagar la compra, fondos actuales: "+addCommas(data));
-                		$(':input[type="submit"]').prop('disabled', true);
-                	}
-                	else if(total == 0)
-                	{
-                		$(':input[type="submit"]').prop('disabled', true);
-                	}
-                	else
-                	{
-                		$('#error-msg').html("");
-                		$(':input[type="submit"]').prop('disabled', false);
-                	}
-                }       
-            }
-        });         
+        if(comp_cred_cont == 'credito')
+        {
+			$(':input[type="submit"]').prop('disabled', false);
+        }
+        else
+        {
+	        $.ajax({
+	            type: "POST",
+	            url: '/getDisponible',
+	            headers:{'X-CSRF-TOKEN': token},
+	            data: {entidad: entidad},
+	            error: function(){
+	                alert("Error. Intente escribir los datos de nuevo.");
+	            },
+	            success: function( data ) {
+	            	console.log(data+" "+entidad+" "+token);
+	                if(data){
+	                	if(total > data)
+	                	{
+	                    	$('#error-msg').html("Error, no hay suficientes fondos en "+entidad+" para pagar la compra, fondos actuales: "+addCommas(data));
+	                		$(':input[type="submit"]').prop('disabled', true);
+	                	}
+	                	else if(total == 0)
+	                	{
+	                		$(':input[type="submit"]').prop('disabled', true);
+	                	}
+	                	else
+	                	{
+	                		$('#error-msg').html("");
+	                		$(':input[type="submit"]').prop('disabled', false);
+	                	}
+	                }       
+	            }
+	        });
+        }         
     }  
 	/*FIN DE FUNCIÓN PARA CALCULAR SI HAY SUFICIENTE DINERO EN ENTIDAD PARA PAGAR LA COMPRA*/
 });

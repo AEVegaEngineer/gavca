@@ -26,56 +26,7 @@ class CompraController extends Controller
         $this->middleware('auth');
         $this->middleware('todos');
     }
-    public function montoUpd(Request $request)
-    {
-        //retorna por post
-        if ($request->isMethod('post')){  
-            //Reviso si el código ya esta utilizado, si lo esta se generará otro.
-            compra::where('id', $request['id'])->update(array('comp_monto' => $request['comp_monto']));
-
-            
-            /*ACTUALIZANDO EL MONTO EN CAJA*/
-            if($request['banco']== ""){
-                $transaccion = cajabanco::where('cb_entidad', 'Caja Chica')->max('id')-1;
-            }
-            else{
-                $transaccion = cajabanco::where('cb_entidad', $request['banco'])->max('id')-1;
-            }
-            $saldo = cajabanco::where('id',$transaccion)->first();
-            if($saldo === null)
-                $saldo = 0;
-            else
-                $saldo = $saldo->cb_saldo;
-
-            /*INICIO DE MODIFICACIÓN DE MONTO DE CUENTAS*/
-            $target = ctaxpagar::where('cta_compra_id', $request['id'])->first();
-            if($target === null){
-                
-                cajabanco::where('cb_compra_id', $request['id'])->update(array(
-                    'cb_monto' => $request['comp_monto'],
-                    'cb_saldo' => $saldo-$request['comp_monto']
-                ));
-
-            }else{
-                //aparte de actualizar el monto dentro de ctaxpagar tengo q actualizar el saldo del proveedor
-                ctaxpagar::where('cta_compra_id', $request['id'])->update(array('cta_monto' => $request['comp_monto']));
-                $prov = ctaxpagar::where('cta_compra_id', $request['id'])->first()->cta_prov_codigo;
-                $saldo = proveedor::where('prov_codigo', $prov)->first()->prov_saldo;
-                $n_saldo = $saldo + $request['comp_monto'];
-                proveedor::where('prov_codigo', $prov)->update(array('prov_saldo' => $n_saldo));
-            }
-            /*FIN DE MODIFICACIÓN DE MONTO DE CUENTAS*/
-            return response()->json(['response' => array(
-                'message' => 'actualizado',
-                /*'id' => $request['id'],*/
-                /*'comp_monto' => $request['comp_monto']*/
-                'banco'=>$request['banco'],
-                'cajabanco_id' => $transaccion,
-                'saldo_previo' => $saldo,
-                'saldo_posterior' => $saldo-$request['comp_monto'],
-            )]);
-        }
-    }
+    
     public function checkCode(Request $request)
     {
         /*
@@ -86,35 +37,33 @@ class CompraController extends Controller
         if ($request->isMethod('post')){ 
             $numero = 0;
             $n = 0;
+            
+            $ultimoParametro = parametro::orderBy('id','dsc')->take(1)->pluck('par_codigo');
+            $ultimoParametro = str_replace("MI","",$ultimoParametro);
+            $ultimoParametro = str_replace("MP","",$ultimoParametro);
+
+            $ultimoParametro = (int)$ultimoParametro+1;
             //itero para buscar el numero
-            for ($i=0; $i < 99999; $i++) { 
-                $pattern = $request['perecedero'];
-                //cuento digitos
-                $n = 0; 
-                $floor = $i;           
-                do{
-                    $floor = floor($floor / 10);
-                    $n++;
-                } while ($floor > 0);
+            $pattern = $request['perecedero'];
+            //cuento digitos
+            $n = 0; 
+            $floor = $ultimoParametro;           
+            do{
+                $floor = floor($floor / 10);
+                $n++;
+            } while ($floor > 0);
                 
-                //segun la cantidad de numeros agrego ceros para completar 5 cifras
-                $limit = 5-$n;
-                //return $limit;
-                for ($j=0; $j < $limit; $j++) { 
-                    $pattern = $pattern."0";
-                }            
-                //concateno el patron con el numero
-                $code = $pattern.$i;  
-                //si no hay ningun numero como este registrado sal del loop y registre
-                $parametro = parametro::where('par_codigo', '=', $code)->first();
-                if ($parametro === null) {
-                    break;
-                }
-                
-            }
-            return response()->json(['response' => array('code' => $code)]);            
-        }           
-        
+            //segun la cantidad de numeros agrego ceros para completar 5 cifras
+            $limit = 5-$n;
+            //return $limit;
+            for ($j=0; $j < $limit; $j++) { 
+                $pattern = $pattern."0";
+            }            
+            //concateno el patron con el numero
+            $code = $pattern.$ultimoParametro;  
+                  
+            return $code;          
+        } 
     }
     //CREACION DEL PARAMETRO NECESARIO PARA CREAR MATERIA PRIMA
     public function createParam(Request $request)
@@ -242,100 +191,110 @@ class CompraController extends Controller
             return view('caja.index',compact('hoy','caja_actual','ultima_caja'));
         }        
     }
-
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pass(CompraCreateRequest $request)
+    {
+        $comp_fecha = $request['comp_fecha'];
+        $proveedor = $request['comp_proveedor'];
+        $comp_doc = $request['comp_doc'];
+        $comp_cred_cont = $request['comp_cred_cont'];
+        $banco_o_caja = $request['banco_o_caja'];
+        $banco = $request['banco'];        
+        $parametros = DB::table('parametros')
+            ->orderBy('par_nombre', 'asc')->get(); 
+        $entidad;   
+        if($comp_cred_cont == "credito")
+        {
+            $entidad = "Compra a Crédito"; 
+        }
+        else
+        {
+            if($banco_o_caja == "caja")    
+                $entidad = "Caja Chica";        
+            else            
+                $entidad = $banco;            
+        }
+        
+        return view('compra.materiaprima',compact('comp_fecha','proveedor','comp_doc','comp_cred_cont','banco_o_caja','banco','parametros','entidad')); 
+    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CompraCreateRequest $request)
+    public function store(Request $request)
     {
-        //Elimino compras hechas a medias        
-        DB::table('compras')->where('comp_monto', '=', null)->delete();
-        DB::table('cajabanco')
-            ->where('cb_concepto', '!=', 'Inicio de caja')
-            ->where('cb_concepto', '!=', 'Cierre de caja')
-            ->where('cb_monto', '=', null)
-            ->delete();
-        //necesito borrar los inputs erroneos, por si el usuario hecha para atras y quiere sobreescribir
+
+        //DETECTA SI YA FUE REGISTRADA UNA COMPRA CON LA MISMA FACTURA PARA EL MISMO PROVEEDOR
         $compra_existe = compra::where('comp_doc',$request['comp_doc'])
             ->where('comp_proveedor',$request['comp_proveedor'])
             ->first();
         if($compra_existe === null)
-        {
-            compra::create([
-                'comp_fecha' => $request['comp_fecha'],
-                'comp_doc' => $request['comp_doc'],
-                'comp_proveedor' => $request['comp_proveedor'],
-                'comp_cred_cont' => $request['comp_cred_cont'],
-            ]);
+        {            
             /*
             SECCIÓN CRÉDITO O CONTADO
-            SI ES A CRÉDITO VA A CUENTA DEL PROVEEDOR COMO CUENTA POR PAGAR, SI ES A CONTADO PREGUNTA COMO SE PAGO, SI CONTRA BANCO O CAJA CHICA  */
-            $compra_id = DB::table('compras')->max('id'); 
-            $entidad=0;           
+            SI ES A CRÉDITO VA A CUENTA DEL PROVEEDOR COMO CUENTA POR PAGAR, SI ES A CONTADO PREGUNTA COMO SE PAGO, SI CONTRA BANCO O CAJA CHICA  
+            */        
+            
+            $id;
+            $comp_doc = $request["comp_doc"];  
+            $entidad = $request["entidad"];  
+            
             if($request['comp_cred_cont'] == 'credito'){
+                compra::create([
+                    'comp_fecha' => $request['comp_fecha'],
+                    'comp_doc' => $request['comp_doc'],
+                    'comp_proveedor' => $request['comp_proveedor'],
+                    'comp_cred_cont' => $request['comp_cred_cont'],
+                    'comp_monto' => $request['comp_monto'],
+                    'comp_entidad' => $request['comp_entidad'],
+                ]);
+                $id = compra::max('id');
                 ctaxpagar::create([
                     'cta_prov_codigo' => $request['comp_proveedor'],
+                    'cta_monto' => $request['comp_monto'],
                     'cta_concepto' => 'Compra a crédito bajo factura: '.$request['comp_doc'].' de fecha '.$request['comp_fecha'],
-                    'cta_compra_id' => $compra_id,
-                ]);
-                compra::where('id',$compra_id)->update(['comp_entidad' => "Compra a Crédito"]);           
-            }else{                       
-                if($request['banco_o_caja'] == 'caja'){
-                    $entidad = 'Caja Chica'; 
-                }else if($request['banco_o_caja'] == 'banco'){
-                    $entidad = $request['banco'];                          
-                }
-                compra::where('id',$compra_id)->update(['comp_entidad' => $entidad]);
+                    'cta_compra_id' => $id,
+                ]);  
+                $prov = ctaxpagar::where('cta_compra_id', $id)->first()->cta_prov_codigo;
+                $saldo = proveedor::where('prov_codigo', $prov)->first()->prov_saldo;
+                $n_saldo = $saldo + $request['comp_monto'];
+                proveedor::where('prov_codigo', $prov)->update(array('prov_saldo' => $n_saldo));         
+            }else{   
+                
                 $dia_actual = new Carbon($request['comp_fecha']);
                 $existencia = cajabanco::where('cb_entidad',$entidad)
                     ->whereDate('cb_fecha','=',$dia_actual->toDateString())
                     ->latest()
                     ->first();
-                //$existencia = cajabanco::where('id',$existencia_id)->first();         
-                
-                if($existencia===null){                   
-                    //return $dia_actual->subDay()->toDateString();
-                    
-                    //saldo de cualquier dia anterior a este que tenga un saldo
-                    $saldo = saldocaja::where('sc_entidad','Caja Chica')
-                        ->whereDate('sc_fecha', '<=' , $dia_actual->subDay()->toDateString())
-                        ->whereNotNull('sc_saldo')
-                        ->latest()
-                        ->first();
-                    if($saldo === null){
-                        $saldo = 0;
-                    }else{
-                        $saldo = $saldo->sc_saldo;
-                    }
-                    cajabanco::create([
-                        'cb_entidad' => $entidad,
-                        'cb_debe_haber' => 'HABER',
-                        'cb_fecha' => $request['comp_fecha'],
-                        'cb_concepto' => 'Inicio de caja',
-                        'cb_saldo' => $saldo,
-                    ]);
+                $montoMasSaldo;
+                $concepto;
+                $saldo = saldocaja::where('sc_entidad','Caja Chica')
+                    ->whereDate('sc_fecha', '<=' , $dia_actual->subDay()->toDateString())
+                    ->whereNotNull('sc_saldo')
+                    ->latest()
+                    ->first();
+                if($saldo === null){
+                    $saldo = 0;
                 }else{
-                    cajabanco::create([
-                        'cb_entidad' => $entidad,
-                        'cb_debe_haber' => 'HABER',
-                        'cb_compra_id' => $compra_id,
-                        'cb_fecha' => $request['comp_fecha'],
-                        'cb_concepto' => 'Compra',
-                    ]);
-
+                    $saldo = $saldo->sc_saldo;
+                }
+                if($existencia===null){                  
+                    
+                    $montoMasSaldo = $saldo;
+                    $concepto = 'Inicio de caja';                    
+                }else{
+                    $montoMasSaldo = $saldo-$request['comp_monto'];
+                    $concepto = 'Compra';
                     $cerrada = $existencia->cb_activo;
                     if($cerrada == 0){
                         //Esta caja esta cerrada
-
-                        //Borro los registos anteriores
-                        DB::table('compras')->where('comp_monto', '=', null)->delete();
-                        DB::table('cajabanco')->where('cb_entidad',$entidad)
-                            ->orderBy('created_at','dsc')
-                            ->take(2)->delete();
-
                         //Redirecciono a create con error
                         $fecha = session('caja_fecha');        
                         if(isset($fecha)){
@@ -350,15 +309,36 @@ class CompraController extends Controller
 
                     }
                 }
+                compra::create([
+                    'comp_fecha' => $request['comp_fecha'],
+                    'comp_doc' => $request['comp_doc'],
+                    'comp_proveedor' => $request['comp_proveedor'],
+                    'comp_cred_cont' => $request['comp_cred_cont'],
+                    'comp_monto' => $request['comp_monto'],
+                    'comp_entidad' => $request['comp_entidad'],
+                ]);
+                $id = compra::max('id');
+                $saldo = cajabanco::where('cb_entidad',$entidad)                
+                    ->orderBy('id','dsc')
+                    ->take(1)
+                    ->pluck('cb_saldo');
+                if($saldo === null){
+                    $saldo = 0;
+                }
+                $montoMasSaldo = $saldo-$request['comp_monto'];
+                cajabanco::create([
+                    'cb_entidad' => $entidad,
+                    'cb_debe_haber' => 'HABER',
+                    'cb_compra_id' => $id,
+                    'cb_fecha' => $request['comp_fecha'],
+                    'cb_concepto' => $concepto,
+                    'cb_monto' => $request['comp_monto'],
+                    'cb_saldo' => $montoMasSaldo,
+                ]);
                 
             }
-            /*FIN DE SECCIÓN CRÉDITO O CONTADO*/               
-            
-            $compra = compra::where('comp_fecha',$request['comp_fecha'])->where('comp_doc',$request['comp_doc'])->first();
-            $parametros = DB::table('parametros')
-                ->orderBy('par_nombre', 'asc')->get();
-            //$parametros = parametro::All();
-            return view('compra.materiaprima',compact('compra','parametros','entidad')); 
+            /*FIN DE SECCIÓN CRÉDITO O CONTADO*/              
+             
         }else{
             $fecha = session('caja_fecha');        
             if(isset($fecha)){
@@ -368,7 +348,65 @@ class CompraController extends Controller
             }else{
                 return 'error, debes establecer una fecha en caja';
             }           
-        }   
+        }     
+        /*FIN DE MODIFICACIÓN DE MONTO DE CUENTAS*/
+        foreach ($request["qty"] as $key => $qty) {
+            //declaración de variables varias
+            $mp_codigo = $request["codigo"][$key];  
+            $qty = $request["qty"][$key]; 
+            $cost = $request["cost"][$key];  
+            $alicuota = $request["alicuota"][$key];  
+            $ivamonto = $request["ivamonto"][$key]; 
+
+            //RECORRO LOS UPDATES QUE ESTEN SET Y ACTUALIZO SEGUN EL VALOR DEL UPDATE (EL CODIGO DE PARAMETRO)
+
+            if ( isset($request["update"])){
+                foreach ($request["update"] as $key => $value) {
+                    if ($mp_codigo == $value) {
+                        parametro::where('par_codigo',$value)
+                            ->update(['par_costo'=>$cost]);
+                    }                    
+                }                
+            }
+            //FIN DE ACTUALIZACIÓN DE PARÁMETROS
+
+            //CREO LOS ARTÍCULOS COMPRADOS DENTRO DE CARDEXMP       
+            $mp = materiaprima::where('mp_codigo', $mp_codigo)->latest()->first();
+            if($mp === NULL){
+                $valor_anterior = 0;
+            }else{
+                $valor_anterior = $mp->mp_cantidad;
+            }            
+            $valor_actual = $valor_anterior + $request["qty"][$key];
+            cardexMP::create([
+                'mp_codigo' => $mp_codigo,
+                'comp_doc' => $request['comp_doc'],
+                'car_costo' => $cost,
+                'car_valor_anterior' => $valor_anterior,
+                'car_valor_actual' => $valor_actual,  
+                'car_alicuota' => $alicuota,  
+                'car_iva' => $ivamonto,
+                'car_compra_id' => $id,         
+            ]);
+            //FIN DE CREACION DE LOS ARTÍCULOS COMPRADOS DENTRO DE CARDEXMP
+
+            //CREO LA EXISTENCIA DE MATERIA PRIMA           
+            if($mp == null){
+                //crea
+                materiaprima::create([
+                    'mp_codigo' => $mp_codigo,
+                    'mp_cantidad' => $qty,           
+                ]);                
+            }else{
+                //actualiza                
+                $existente = $mp->mp_cantidad;
+                materiaprima::where('id', $mp->id)->update(array(
+                    'mp_cantidad' => $existente+$qty
+                ));                               
+            }
+            //FIN DE CREACION DE EXISTENCIA DE MATERIA PRIMA
+        }
+        return redirect('/compra')->with('message','Compra registrada exitosamente');
     }
 
     /**
@@ -389,16 +427,7 @@ class CompraController extends Controller
         return view('compra.show',compact('cardexs','compra'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.

@@ -2,6 +2,9 @@
 
 @section('content')
 	@include('alerts.success')
+
+		{!!link_to_route('cliente.index', $title = 'Volver a Clientes', null, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+
 		<h2 class="form-signin-heading margenBotLg">Cuentas por cobrar del cliente código: {{$cliente}}</h2>
 		
 		<table class="table">

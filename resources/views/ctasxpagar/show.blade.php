@@ -2,6 +2,9 @@
 
 @section('content')
 	@include('alerts.success')
+
+		{!!link_to_route('proveedor.index', $title = 'Volver a Proveedores', null, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+
 		<h2 class="form-signin-heading margenBotLg">Cuentas por pagar del proveedor código: {{$prov}}</h2>
 		
 		<table class="table">

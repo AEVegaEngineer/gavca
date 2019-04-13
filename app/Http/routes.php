@@ -50,7 +50,10 @@ Route::get('/compra/trash/{id}',[
     'uses' => 'CompraController@trash'
 ]);
 Route::resource('compra/view_trash', 'CompraController@view_trash');
-post('/montoUpd', 'CompraController@montoUpd');
+Route::post('/compra/pass',[
+    'as' => 'compra.pass',
+    'uses' => 'CompraController@pass'
+]);
 post('/checkCode', 'CompraController@checkCode');
 post('/createParam', 'CompraController@createParam');
 Route::resource('compra','CompraController');
@@ -60,11 +63,6 @@ Route::resource('materiaprima/insert', 'MateriaPrimaController@insert');
 
 Route::resource('materiaprima', 'MateriaPrimaController');
 
-//post('/logCardexMP', 'CardexMPController@logCardexMP');
-Route::post('compra/registro',[
-    'as' => 'cardexMP.logCardexMP',
-    'uses' => 'CardexMPController@logCardexMP'
-]);
 Route::get('/listCardexMP', 'CardexMPController@listCardexMP');
 Route::get('/listCardexPA', 'CardexMPController@listCardexPA');
 Route::get('/listCardexPB', 'CardexMPController@listCardexPB');
