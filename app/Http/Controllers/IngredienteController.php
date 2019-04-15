@@ -50,7 +50,7 @@ class IngredienteController extends Controller
             $ingrediente = $request->input('ingrediente');
             $rec_nombre = $request->input('rec_nombre');
             $ing_ratio = $request->input('ing_ratio');
-            $ing_mark = $request->input('ing_mark');
+            $ing_default = $request->input('ing_default');
 
             $ingredientes = DB::table('ingredientes')
                 ->where('rec_nombre',$rec_nombre)
@@ -70,7 +70,7 @@ class IngredienteController extends Controller
                     'rec_nombre' => $rec_nombre,
                     'ing_ingrediente' => $ingrediente,
                     'ing_ratio' => $ing_ratio,
-                    'ing_mark' => $ing_mark,
+                    'ing_default' => $ing_default,
                 ]);
                 return response()->json(['response' => array('message' => 'El parámetro se ha agregado a la receta')]);
             }

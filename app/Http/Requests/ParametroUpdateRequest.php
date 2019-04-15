@@ -27,8 +27,6 @@ class ParametroUpdateRequest extends Request
             'par_nombre' => 'required',
             'par_unidad' => 'required',
             'par_costo' => 'required',
-            'par_radio' => 'required',
-            'par_default' => 'required',
         ];
     }
     protected function getValidatorInstance()
@@ -39,17 +37,7 @@ class ParametroUpdateRequest extends Request
         $data['par_costo'] = $amount2;
         $this->getInputSource()->replace($data);
 
-        //capturo el valor del bool del checkbox y lo cambio por int(1)
-        if($data['par_default'] == true){
-            $valor = 1;
-        }else{
-            $valor = 0;
-        }
-        $data['par_default'] = $valor;
         
-        
-
-        /*modify data before send to validator*/
 
 
         return parent::getValidatorInstance();

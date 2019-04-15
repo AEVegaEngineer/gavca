@@ -102,6 +102,6 @@
 	<script type="text/javascript">
 		var rec_nombre = "<?php echo $rec_nombre; ?>";
 	</script>
-	{!!Html::script('js/ingrediente/Ingrediente.js?12')!!}
+	{!!Html::script('js/ingrediente/Ingrediente.js?14')!!}
 	{!!Html::script('js/parametro/paramFormFadeIn.js?2')!!}
 @endsection

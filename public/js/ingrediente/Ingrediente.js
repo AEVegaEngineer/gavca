@@ -18,24 +18,22 @@ $(document).ready(function() {
 
 	//$("#content ul li:last").append("<li>"+ingrediente+"</li>");
 	function add_ingredientes(){
-		var ing_mark;
+		var ing_default;
 		var ing_ratio = $("#ing_ratio").val();
 		
 		if ($('#par_default').is(":checked"))
-			ing_mark = 1;
+			ing_default = 1;
 		else
-			ing_mark = 0;
-		//console.log(ingrediente+"\n"+ing_mark+"\n"+ing_ratio);
+			ing_default = 0;
+		//console.log(ingrediente+"\n"+ing_default+"\n"+ing_ratio);
 		$.ajax({
             type: "POST",
             url: '/addIngrediente',
             headers:{'X-CSRF-TOKEN': token},
-            data: {ingrediente: ingrediente, rec_nombre: rec_nombre, ing_ratio:ing_ratio, ing_mark:ing_mark},
+            data: {ingrediente: ingrediente, rec_nombre: rec_nombre, ing_default, ing_ratio:ing_ratio},
             success: function( data ) {
-            	$.each(data, function (i, item) {
-            		alert(item["message"]);
-            		location.reload();
-				});  			
+            	//console.log(data);
+            	location.reload();         		
 				          	
             }
     	});

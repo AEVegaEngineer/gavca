@@ -66,51 +66,8 @@ class ParametroController extends Controller
      */
     public function store(ParametroCreateRequest $request)
     {
-        
-        $numero = 0;
-        $n = 0;
-        //itero para buscar el numero
-        for ($i=0; $i < 99999; $i++) { 
-            $pattern = $request['par_radio'];
-            //cuento digitos
-            $n = 0; 
-            $floor = $i;           
-            do{
-                $floor = floor($floor / 10);
-                $n++;
-            } while ($floor > 0);
-            
-            //segun la cantidad de numeros agrego ceros para completar 5 cifras
-            $limit = 5-$n;
-            //return $limit;
-            for ($j=0; $j < $limit; $j++) { 
-                $pattern = $pattern."0";
-            }            
-            //concateno el patron con el numero
-            $code = $pattern.$i;  
-            //si no hay ningun numero como este registrado sal del loop y registre
-            $parametro = parametro::where('par_codigo', '=', $code)->first();
-            if ($parametro === null) {
-                break;
-            }
-            
-        }
-        $par_codigo = $code;
-        //GENERACIÓN DE CÓDIGO PSEUDOALEATORIO YA NO UTILIZADO.
-        /*
-        $par_codigo = null;
-        while($par_codigo == null){            
-            $pattern = $request['par_radio'];
-            
-            $random = (rand(10000,99999));
-            $code = $pattern.$random;            
-            $parametro = parametro::where('par_codigo', '=', $code)->first();
-            if ($parametro === null) {
-                $par_codigo = $code;
-            }
-            
-        }
-        */
+        $pattern = $request['par_radio'];
+        $par_codigo = crearCodigoParametro($pattern);        
 
         parametro::create([
             'par_codigo' => $par_codigo,
@@ -118,8 +75,6 @@ class ParametroController extends Controller
             'par_unidad' => $request['par_unidad'],
             'par_costo' => $request['par_costo'],
             'par_observacion' => $request['par_observacion'],
-            'par_default' => $request['par_default'],
-            'par_ratio' => $request['par_ratio'],
             ]);
         
         return redirect('/parametro')->with('message','Parámetro creado exitosamente');
@@ -169,8 +124,15 @@ class ParametroController extends Controller
     {
         $this->getInputSource()->replace($input);
     }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(ParametroUpdateRequest $request, $id)
-    {     
+    {    
 
         $parametro = parametro::where('id', '=', $id)->first();
         /*si el costo se actualizó, guarda la fecha y la hora en par_cost_updated*/
@@ -189,37 +151,7 @@ class ParametroController extends Controller
             $request["par_codigo"] = $parametro->par_codigo;
         }else{
             //si cambio el codigo
-            $numero = 0;
-            $n = 0;
-            //itero para buscar el numero
-            for ($i=0; $i < 99999; $i++) { 
-                $pattern = $request['par_radio'];
-                //cuento digitos
-                $n = 0; 
-                $floor = $i;           
-                do{
-                    $floor = floor($floor / 10);
-                    $n++;
-                } while ($floor > 0);
-                
-                //segun la cantidad de numeros agrego ceros para completar 5 cifras
-                $limit = 5-$n;
-                //return $limit;
-                for ($j=0; $j < $limit; $j++) { 
-                    $pattern = $pattern."0";
-                }            
-                //concateno el patron con el numero
-                $code = $pattern.$i;  
-                //si no hay ningun numero como este registrado sal del loop y registre
-                $parametro = parametro::where('par_codigo', '=', $code)->first();
-                if ($parametro === null) {
-                    break;
-                }
-                
-            }
-            $par_codigo = $code;
-
-            $request["par_codigo"] = $par_codigo;
+            $request["par_codigo"] = crearCodigoParametro($request['par_radio']);
         }     
         
         
@@ -243,4 +175,32 @@ class ParametroController extends Controller
         parametro::destroy($id);
         return redirect('/parametro')->with('message','Parámetro eliminado exitosamente');
     }
+}
+function crearCodigoParametro($pattern){
+    $numero = 0;
+    $n = 0;
+    //itero para buscar el numero            
+    $ultimoParametro = parametro::orderBy('updated_at','dsc')->first()->par_codigo;
+    $ultimoParametro = str_replace("MI","",$ultimoParametro);
+    $ultimoParametro = str_replace("MP","",$ultimoParametro);
+    $ultimoParametro = (int)$ultimoParametro+1;
+    $patron = $pattern;
+    //cuento digitos
+    $n = 0; 
+    $floor = $ultimoParametro;           
+    do{
+        $floor = floor($floor / 10);
+        $n++;
+    } while ($floor > 0);
+                
+    //segun la cantidad de numeros agrego ceros para completar 5 cifras
+    $limit = 5-$n;
+    //return $limit;
+    for ($j=0; $j < $limit; $j++) { 
+        $patron = $patron."0";
+    }            
+    //concateno el patron con el numero
+    $code = $patron.$ultimoParametro; 
+
+    return $code;
 }

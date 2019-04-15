@@ -196,7 +196,7 @@ class ProduccionController extends Controller
             foreach ($request['dep_produccion'] as $dep_produccion => $valor) {
                 $input = explode("_", $valor);            
                 dependencia::where('dep_hijo',$input[1])
-                ->update(['dep_produccion' => $input[0]]);
+                    ->update(['dep_produccion' => $input[0]]);
             }
         }
         
@@ -210,19 +210,18 @@ class ProduccionController extends Controller
                     'req_fecha' => $fecha,
                     'rec_nombre' => $rec_nombre,
                     'req_ingrediente' => $ingrediente->ing_ingrediente,
-                    'req_default' => $ingrediente->ing_mark,
-                    'req_ratio' => $ingrediente->ing_ratio,
-                    ]);
+                ]);
             }
         }
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
-
         $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         $cantidad_produccion = $pro_produccion;
         $rec_etapa = receta::where('rec_nombre',$rec_nombre)->first()->rec_etapa;
         
         /*
         DEBUG
+        
+
         $debug = "rec_nombre: ".$rec_nombre."<br><br>"
         ."fecha: ".$fecha."<br><br>"
         ."requerimientos: ".$requerimientos."<br><br>"
@@ -230,10 +229,18 @@ class ProduccionController extends Controller
         ."cantidad_produccion: ".$cantidad_produccion."<br><br>"
         ."pro_mano_obra: ".$pro_mano_obra."<br><br>"
         ."rec_etapa: ".$rec_etapa."<br><br>";
-        return $debug;
         */
+        /*
+        $requerimientos = requerimiento::leftJoin('ingredientes', 'requerimientos.rec_nombre', '=', 'ingredientes.rec_nombre')
+            ->where('requerimientos.req_fecha', $fecha)            
+            ->where('requerimientos.rec_nombre', $rec_nombre) 
+            ->select('requerimientos.req_total', 'requerimientos.rec_nombre', 'requerimientos.req_ingrediente', 'ingredientes.ing_default', 'ingredientes.ing_ratio')           
+            ->get();
+        */
+        //return $requerimientos."<br><br>".$ingredientes;
+        
 
-        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa'));
+        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa','ingredientes'));
     }
     
     /**
@@ -537,7 +544,6 @@ class ProduccionController extends Controller
         ACTUALIZO LOS REQUERIMIENTOS DE LOS INGREDIENTES DE LA PRODUCCION (NO LAS DEPENDENCIAS)        
         */
         $requerimientos = requerimiento::where('req_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
-        $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
         foreach ($request["req_ingrediente"] as $key => $ingrediente) {
             requerimiento::where('rec_nombre', $rec_nombre)
                 ->where('req_fecha', $fecha)
@@ -571,7 +577,6 @@ class ProduccionController extends Controller
         /*RETORNANDO LA VISTA COMO EL METODO DE ARRIBA VERPRODUCCION*/
         $req_fecha = str_replace("-","/",$fecha);
         //return "aqui estoo ".$rec_nombre." ".$req_fecha;
-        //$ingredientes = ingrediente::where('rec_nombre', $id)->get();
         $recetas = receta::where('rec_nombre',$rec_nombre)->first();
         $produccion = produccion::where('rec_nombre',$rec_nombre)
             ->where('pro_fecha', $req_fecha)
