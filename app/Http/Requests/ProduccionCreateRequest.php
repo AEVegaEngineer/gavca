@@ -30,7 +30,8 @@ class ProduccionCreateRequest extends Request
             'pro_produccion' => 'required|integer',
             'pro_fecha' => 'required',
             'rec_nombre' => 'required', 
-            'pro_mano_obra' => 'required',                     
+            'pro_mano_obra' => 'required', 
+            'req_total' => 'required|integer'                    
         ];
     }
 }

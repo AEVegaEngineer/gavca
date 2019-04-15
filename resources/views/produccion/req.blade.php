@@ -5,11 +5,9 @@
 	@include('alerts.success')
 		<h3 class="form-signin-heading margenBotLg">Ingrese el requerimiento total de los ingredientes de la producción {{$rec_nombre}} de fecha {{$fecha}}</h3>
 		{!!Form::open(['route'=>'produccion.store','method'=>'POST','id'=>'formulario'])!!}
-		<!--<form method="POST" action="/{{$rec_nombre}}/{{$fecha}}/update">-->			
 		<div class="col-md-12">
 			<div class="col-md-3">
 			
-			<!--<a href="#" id="req_upd" class="btn btn-primary">Actualizar Requerimientos</a>	-->
 			</div>
 			<div class="col-md-6">
 				{!!Form::submit('Actualizar Requerimientos',['class'=>'btn btn-lg btn-success', 'id'=>'req_upd'])!!}
@@ -26,7 +24,7 @@
 					<tbody>
 						<td>{{$dependencia->dep_hijo}}</td>	
 						<td>
-							<input type="text" required="" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
+							<input type="number" required="" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
 							<input type="hidden" name="dep_hijo[]" value="{{$dependencia->dep_hijo}}">
 						</td>					
 						<!---->
@@ -44,11 +42,11 @@
 						?>	
 
 						<td>
-							<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
+							<input type="number" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
 						</td>			
 						<?php }else{ ?>		
 						<td>
-							<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value=""  autocomplete="off" required="">
+							<input type="number" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value=""  autocomplete="off" required="">
 							<!-- {{$requerimiento->req_total}}-->
 						</td>
 						<?php } ?>	

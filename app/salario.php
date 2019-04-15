@@ -18,5 +18,5 @@ class salario extends Model
      *
      * @var array
      */
-    protected $fillable = ['sal_mensual','unidad_tributaria','cant_cesta_ticket'];
+    protected $fillable = ['sal_mensual','salario_integral','unidad_tributaria','cant_cesta_ticket'];
 }

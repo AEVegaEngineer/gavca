@@ -18,5 +18,5 @@ class parametro extends Model
      *
      * @var array
      */
-    protected $fillable = ['par_nombre', 'par_unidad', 'par_costo', 'par_observacion', 'par_codigo', 'par_default', 'par_ratio'];
+    protected $fillable = ['par_nombre', 'par_unidad', 'par_costo', 'par_observacion', 'par_codigo', 'par_default', 'par_ratio', 'par_cost_updated'];
 }

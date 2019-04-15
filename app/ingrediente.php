@@ -18,5 +18,5 @@ class ingrediente extends Model
      *
      * @var array
      */
-    protected $fillable = ['rec_nombre', 'ing_ingrediente', 'ing_req_total', 'ing_ratio', 'ing_default'];
+    protected $fillable = ['rec_nombre', 'ing_ingrediente', 'ing_ratio', 'ing_default'];
 }
