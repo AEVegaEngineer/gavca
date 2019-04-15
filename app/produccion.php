@@ -18,5 +18,5 @@ class produccion extends Model
      *
      * @var array
      */
-    protected $fillable = ['pro_fecha', 'rec_nombre', 'pro_produccion', 'pro_mano_obra', 'pro_etapa', 'pro_lote', 'pro_concepto'];
+    protected $fillable = ['pro_fecha', 'rec_nombre', 'pro_produccion', 'pro_disponible', 'pro_mano_obra', 'pro_etapa', 'pro_lote', 'pro_concepto'];
 }

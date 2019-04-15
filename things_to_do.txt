@@ -126,14 +126,23 @@ UPDATE, Cuando registro una nueva producción C me toma en cuenta la cantidad de
 - (X) El checkbox para actualizar los costos directamente cuando se hace una compra no sirve para los parametros recien creados en la compra
 - (X) Agregar boton de volver a cuentas por pagar dentro de la pagina de las cuentas por pagar del proveedor X, igual para cuentas por cobrar.
 - (X) Reporte no encuentra el saldo al inicio de caja
-- El cardex debe mostrar los datos de todo un mes, no absolutamente todos los datos.
-O paginarlos, mostrar 20 por página ordenados descendiente y con el total en la parte superior como subtítulo, con columna de Disponible
+- (X) El cardex debe mostrar los datos de todo un mes, no absolutamente todos los datos.
+O paginarlos, mostrar 15 por página ordenados descendiente y con el total en la parte superior como subtítulo, con columna de Disponible
+- (X) Revisar todas y cada una de las instancias de Producción y editarlas para corregir el nuevo campo pro_disponible (falta el update de produccion)
+UPD: Sólo queda un error en cardex de materia prima, en receta B updatee aceite a 87 y en cardex de aceite updateo 88 (tomó el update de proceso A).
+- A pesar de que se coloca el checkbox de ratio no me pone automáticamente el requerimiento cuando voy a correr producción
 - El costo actual del cardex de MP no actualiza cuando se actualiza el costo del parámetro  (cuando se actualiza en compra no se actualiza cardex->car_costo, cambiar el enlace de Foreign Key por Update Cascade)
+- Testear método store de produccion para producto A, B y C y ventas, fijarse si actualiza pro_disponible
+- Costo unitario de proceso B no es igual en el reporte de producción y en la tabla de producciones
+- Revisar cálculo de estándar de costos fijos y su reflejo en las producciones
+- Papelera de reciclaje de recetas no entra
 - Informes para Cardex, Inventarios y Producción
+- Probar el funcionamiento de req_ratio y par_ratio
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login
 - (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
+
 
 
 

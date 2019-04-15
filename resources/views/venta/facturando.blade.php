@@ -66,6 +66,6 @@
 		{!!Form::close()!!}
 
 		{!!Html::script('js/jquery.min.js')!!}
-		{!!Html::script('js/venta/venta.js?6')!!}	
+		{!!Html::script('js/venta/venta.js?7')!!}	
 	</div>
 @endsection

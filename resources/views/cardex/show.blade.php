@@ -2,35 +2,38 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Cardex de producto {{$cardexs[0]->par_nombre}}</h2>
-		<h3>Existencia actual: {{$existencia}} {{$cardexs[0]->par_unidad}}&nbsp;&nbsp;&nbsp;&nbsp;Costo Actual: {{number_format ( $cardexs[0]->par_costo , $decimals = 2 , "," , "." )}}</h3>
+		<h2 class="form-signin-heading">Cardex de Materia Prima {{$cardexs[0]->par_nombre}}</h2>
+		<h3>Existencia actual: {{$existencia}} {{$cardexs[0]->par_unidad}}</h3>
 		
 		<table class="table">
 			<thead>
-				<td>Concepto</td>
 				<td>Fecha</td>
+				<td>Concepto</td>				
 				<td>Entra</td>
 				<td>Sale</td>
-				<!--<td>Valor</td>-->				
+				<td>Disponible</td>	
+				<td align="right">Costo de Compra</td>			
 			</thead>
-			<?php $debe=0;$haber=0; ?>
+			<?php $debe=0;$haber=0;$disponible=0; ?>
 
 			@foreach($cardexs as $cardex)
 			<?php 
 				$cantidad = $cardex->car_valor_actual - $cardex->car_valor_anterior;	  
 				$debe_haber = (isset($cardex->comp_fecha)) ? true : false;
-				$costo = $cardexs[0]->par_costo; 
+				$costo = $cardexs[0]->car_costo; 
+
 			?>
 			<tr>
-				<?php 
-				echo ''.($debe_haber ? '<td>Compra</td>' : '<td>'.$cardex->car_concepto.'</td>');
-				?>
 				<td>
 					<?php 
 					$fecha_compra=date_create($cardex->comp_fecha);
 					echo $fecha = (isset($cardex->comp_fecha)) ? date_format($fecha_compra,"Y-m-d") : $cardex->car_fecha;
 					?>					
 				</td>
+				<?php 
+				echo ''.($debe_haber ? '<td>Compra de factura: '.$cardex->comp_doc.'</td>' : '<td>'.$cardex->car_concepto.'</td>');
+				?>
+				
 				<?php 
 				$findme = 'Ajuste -';
 				$pos = strpos($cardex->car_concepto, $findme);
@@ -51,17 +54,16 @@
 					echo ''.($debe_haber ? '<td>'.$cantidad.'</td><td></td>' : '<td></td><td>'.$cantidad*(-1).'</td>');
 				}
 				?>	
+				<td>{{(int)$cardex->car_valor_actual}}</td>
+				<td align="right">
+					<?php echo ''.($debe_haber ? number_format ( $cardex->car_costo , $decimals = 2 , "," , "." ) : ''); ?>					
+				</td>
 			</tr>
 			
 			@endforeach	
-			<tr>
-				<td>Total</td>
-				<td>-</td>
-				<td>{{$debe}}</td>
-				<td>{{$haber}}</td>
-			</tr>
+			
 		</table>
 		
-		
+		{!!$cardexs->render()!!}
 	
 @endsection

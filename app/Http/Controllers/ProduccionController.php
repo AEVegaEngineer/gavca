@@ -250,13 +250,24 @@ class ProduccionController extends Controller
         $produccion = produccion::where('id',$id)
             ->first();
 
+        /*SECCIÓN PARA REVISAR QUE UNA PRODUCCIÓN SE PUEDA MODIFICAR*/
+        $id_buscado = $produccion->id;
+        $maximo = produccion::max('id');
+        $rango = (int)$maximo - $id_buscado;
+        $rango == 0 ? $rango = 1 : $rango;
+        $producciones = produccion::orderBy('id','dsc')
+            ->take($rango+1)
+            ->get();
+        
+        
+        $modificable = verificarModificable($producciones,$produccion,$id_buscado);
+        //return $modificable ? "true" : "false";
+        
+        /*FIN DE SECCIÓN PARA REVISAR QUE UNA PRODUCCIÓN SE PUEDA MODIFICAR*/
+
         $aumentos = aumento::All();
         $salarios = salario::All();
         $miscelaneo = miscelaneo::where('id','1')->first();
-        /*$objetivo = produccion::where('rec_nombre',"ANTIPASTO ATÚN (FRASCO 470G)")
-            ->where('id', '<', $id)
-            ->max('id');
-        return $objetivo;*/
         $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
         $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
             ->leftJoin('produccion', 'produccion.rec_nombre', '=', 'dependencias.dep_hijo')
@@ -269,21 +280,19 @@ class ProduccionController extends Controller
             ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
             ->where('dependencias.dep_padre',$rec_nombre)
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
-            ->get();
-        //return $costos;
-        /*        
-        Sentencia SQL:
-        select * from parametros par 
-            left join requerimientos req on par.par_nombre = req.req_ingrediente
-            WHERE req.req_fecha = '2017/10/20' AND req.rec_nombre = 'Ejemplo 2'
-        */
+            ->get();        
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
-        ->where('requerimientos.req_fecha', $req_fecha)
-        ->where('requerimientos.rec_nombre', $rec_nombre)
-        ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-        ->get();
-        //return $recetas;
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos'));
+            ->where('requerimientos.req_fecha', $req_fecha)
+            ->where('requerimientos.rec_nombre', $rec_nombre)
+            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+            ->get();   
+
+        produccion::where('id',$id)->
+            update([
+                'pro_costo' => calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo),
+            ]);
+
+        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable'));
 
     }
 
@@ -307,6 +316,7 @@ class ProduccionController extends Controller
         /*CONTINUO CON EL REGISTRO*/
         $produccion_ya_existe = produccion::where('rec_nombre',$rec_nombre)
             ->where('pro_fecha',$fecha)
+            ->whereNotNull('pro_costo')
             ->first();
         if($produccion_ya_existe!==null){
             \Session::flash('message', 'No puedes crear una producción con esa fecha para esa receta porque ya ha sido creada, modifícala o crea una nueva.');
@@ -319,7 +329,6 @@ class ProduccionController extends Controller
             return view('receta.index',compact('recetas'));
         }       
 
-        //produccion.store
         //REVISO CUAL PRODUCCION SE ESTA LLEVANDO A CABO Y GUARDO ESE VALOR AL CREAR LA PRODUCCION
         $receta = receta::where('rec_nombre',$request['rec_nombre'])->first();
 
@@ -344,7 +353,6 @@ class ProduccionController extends Controller
         /*
         Paso las dependencias de este padre como requerimientos para obtener el valor y actualizo el valor del requerimiento total de las dependencias para expresarla en la hoja de datos para los calculos.
         */        
-        //$dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         if($request["dependencia"] !== null){
             foreach ($request["dependencia"] as $key => $dependencia) {                
                 dependencia::where('dep_padre', $rec_nombre)
@@ -366,27 +374,16 @@ class ProduccionController extends Controller
                 }      
                 if($existencia === null)
                     $existencia = 0;
-                /*$requiere = requerimiento::where('req_fecha',$fecha)
-                    ->where('rec_nombre',$dependencia->dep_padre)
-                    ->where('req_ingrediente',$dependencia->dep_hijo)
-                    ->first()
-                    ->req_total;*/
                 $requiere = dependencia::where('dep_padre',$dependencia->dep_padre)
                     ->where('dep_hijo',$dependencia->dep_hijo)
                     ->first()
                     ->requerimiento;
-                /*    
-                if($key == 1){
-                    return $existencia."-".$requiere;
-                }
-                */
-
+                
                 if($requiere>$existencia){
-                    //return "redirect: requiere(".$requiere.") > existencia(".$existencia.")";
                     return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$dependencia->dep_hijo.' para crear esta cantidad de producción!');                
                 }else{
-                    //return "pasa: requiere(".$requiere.") <= existencia(".$existencia.")";
                     $etapa_hijo;
+                    
                     if($receta->rec_proc == "PB"){
                         producciona::where('rec_nombre',$dependencia->dep_hijo)
                         ->update(['pro_produccion' => $existencia-$requiere]);
@@ -396,18 +393,28 @@ class ProduccionController extends Controller
                         ->update(['pro_produccion' => $existencia-$requiere]);
                         $etapa_hijo = "PB";
                     }
+                    
                     //CREO EL LOG DE CARDEX DE PRODUCCION PARA EL CAMBIO EN EL DEP_HIJO
                     
                     $prod = produccion::where('rec_nombre',$dependencia->dep_hijo)
-                        ->orderBy('pro_fecha', 'desc')
+                        ->orderBy('id', 'desc')
                         ->first();
                     $man_obr = $prod->pro_mano_obra;
                     $costo = $prod->pro_costo;
+                    //$disponible = produccion::where('rec_nombre',$dependencia->dep_hijo)->first()->pro_disponible; 
+                    
+                    $disponible = produccion::where('produccion.rec_nombre',$dependencia->dep_hijo)
+                        ->orderBy('produccion.id','dsc')                
+                        ->take(1)
+                        ->pluck('pro_disponible');
+                        
+                    $resta = $disponible-$requiere;                    
                     produccion::create([
                         'pro_fecha' => $fecha,
                         'rec_nombre' => $dependencia->dep_hijo,
                         'pro_etapa' => $etapa_hijo,
                         'pro_produccion' => $requiere,
+                        'pro_disponible' => $resta,
                         'pro_mano_obra' => $man_obr,
                         'pro_costo' => $costo,
                         'pro_concepto' => 'Producción de '.$dependencia->dep_padre,
@@ -458,8 +465,13 @@ class ProduccionController extends Controller
         /*FIN DE SECCION PARA CREAR O ACTUALIZAR EL INVENTARIO DE PRODUCCION*/
 
         /*SECCION PARA GUARDAR LA PRODUCCIÓN EN CURSO*/
+        $disponible = produccion::where('produccion.rec_nombre',$rec_nombre)
+            ->orderBy('produccion.id','dsc')                
+            ->take(1)
+            ->pluck('pro_disponible');
         $producciones = produccion::where('pro_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
         if($producciones === null){
+            
             if($receta->rec_proc == "PB"){
                     $lote = DB::table('produccion')
                         ->where('pro_etapa','PB')
@@ -467,11 +479,13 @@ class ProduccionController extends Controller
                         ->max('pro_lote');
                     if($lote === null)
                         $lote = 0;
+
                 produccion::create([
                     'pro_fecha' => $fecha,
                     'rec_nombre' => $rec_nombre,
                     'pro_etapa' => $receta->rec_proc,
                     'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
                     'pro_mano_obra' => $pro_mano_obra,
                     'pro_lote' => $lote+1,
                     'pro_concepto' => 'Producción de '.$rec_nombre,
@@ -482,6 +496,7 @@ class ProduccionController extends Controller
                     'rec_nombre' => $rec_nombre,
                     'pro_etapa' => $receta->rec_proc,
                     'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
                     'pro_mano_obra' => $pro_mano_obra,
                     'pro_concepto' => 'Producción de '.$rec_nombre,
                 ]);
@@ -497,6 +512,7 @@ class ProduccionController extends Controller
                     'rec_nombre' => $rec_nombre,
                     'pro_etapa' => $receta->rec_proc,
                     'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
                     'pro_mano_obra' => $pro_mano_obra,
                     'pro_lote' => $lote+1,
                     'pro_concepto' => 'Producción de '.$rec_nombre,
@@ -507,6 +523,7 @@ class ProduccionController extends Controller
                     'rec_nombre' => $rec_nombre,
                     'pro_etapa' => $receta->rec_proc,
                     'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
                     'pro_mano_obra' => $pro_mano_obra,
                     'pro_concepto' => 'Producción de '.$rec_nombre,
                 ]);
@@ -514,7 +531,6 @@ class ProduccionController extends Controller
         }
         /*FIN DE SECCION PARA GUARDAR LA PRODUCCIÓN EN CURSO*/
         /*
-
         Obtengo todos los ingredientes que pertenezcan a esta receta y creo sus campos de requerimientos, lo que significa que la fecha del requerimiento sera la misma fecha que la de la producción.
         */
         /*
@@ -522,24 +538,6 @@ class ProduccionController extends Controller
         */
         $requerimientos = requerimiento::where('req_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
         $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
-        /*
-        foreach ($ingredientes as $ingrediente) {            
-            $par = parametro::where('par_nombre',$ingrediente->ing_ingrediente)->first();
-            if($ingrediente->rec_nombre == $rec_nombre && $requerimientos === null){
-                //return $par."<br>".$requerimientos."<br>".$rec_nombre;
-                requerimiento::create([
-                    'req_fecha' => $fecha,
-                    'rec_nombre' => $rec_nombre,
-                    'req_ingrediente' => $ingrediente->ing_ingrediente,
-                    'req_default' => $par->par_default,
-                    ]);
-            }
-        }
-        */
-        /*
-        return print_r($request["req_ingrediente"])."<br><br>".print_r($request["req_total"]);
-        */
-        
         foreach ($request["req_ingrediente"] as $key => $ingrediente) {
             requerimiento::where('rec_nombre', $rec_nombre)
                 ->where('req_fecha', $fecha)
@@ -563,21 +561,11 @@ class ProduccionController extends Controller
                 ->update(['mp_cantidad' => $materiaprima->mp_cantidad-$request["req_total"][$key]]);
 
         }
-
-
-
-        
-        
         //MUESTRA EL FORMULARIO PARA LA EDICION DE LOS REQUERIMIENTOS DE LOS INGREDIENTES
         $produccion = produccion::where('rec_nombre',$rec_nombre)->first();
         $cantidad_produccion = $produccion->pro_produccion;
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();        
         //return $cantidad_produccion;
-        
-
-        /**/
-        /**/
-        /**/
         /**/
         /**/
         /*RETORNANDO LA VISTA COMO EL METODO DE ARRIBA VERPRODUCCION*/
@@ -588,16 +576,6 @@ class ProduccionController extends Controller
         $produccion = produccion::where('rec_nombre',$rec_nombre)
             ->where('pro_fecha', $req_fecha)
             ->first();
-
-        /*
-        if($produccion === null){
-            return "produccion no creada";
-        }else{
-            return "produccion encontrada";
-        }
-        */
-
-
         $aumentos = aumento::All();
         $salarios = salario::All();
         $miscelaneo = miscelaneo::where('id','1')->first();
@@ -616,53 +594,19 @@ class ProduccionController extends Controller
             ->where('dependencias.dep_padre',$rec_nombre)
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
             ->get();
-        //return $costos;
-        /*        
-        Sentencia SQL:
-        select * from parametros par 
-            left join requerimientos req on par.par_nombre = req.req_ingrediente
-            WHERE req.req_fecha = '2017/10/20' AND req.rec_nombre = 'Ejemplo 2'
-        */
+        
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
         ->where('requerimientos.req_fecha', $req_fecha)
         ->where('requerimientos.rec_nombre', $rec_nombre)
         ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-        ->get();
-        //return $dependencias;   
-        /*
-        ** Hago los cálculos de costo unitario para pro_costo
-        */
-        $costosUnit=0;
-        $prod = $produccion->pro_produccion;
-        foreach($dependencias as $key => $dependencia)
-        {
-            $req_total = $dependencia->pro_produccion;
-            $req_unitario = $req_total/$prod;               
-            $costo = $costos[$key]->pro_costo;
-            $costo_unitario = $costo*$req_unitario;
-            $costosUnit+=$costo_unitario;            
-        }
-        foreach($parametros as $parametro)
-        {
-            $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
-        }
-        $req = $produccion->pro_mano_obra;
-        foreach($salarios as $salario)
-        {
-            $salario_integral = $salario->salario_integral;
-        }
-        $cos_tot_obra = $req*$salario_integral;
-        $cos_unit_obra = $cos_tot_obra / $prod;
-        $total_cf = ($miscelaneo->std_x_frasco/3)*$prod;
-        $unit_cf = $total_cf/$prod;
-        $costoDirUnit = $costosUnit+$cos_unit_obra;
-        $total_unit = $costoDirUnit+$unit_cf;
-
+        ->get();        
         $id = produccion::max('id');
         produccion::where('id',$id)->
-            update(['pro_costo' => $total_unit]);
-
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos'));
+            update([
+                'pro_costo' => calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo),
+            ]);     
+        $modificable = true;
+        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable'));
 
     }
 
@@ -676,7 +620,6 @@ class ProduccionController extends Controller
     {
         //retorna por post
         if ($request->isMethod('post')){  
-            //si esta receta ya tiene otro ingrediente con este mismo nombre no lo dejo guardar
             $req_total = $request->input('req_total');
             $rec_nombre = $request->input('rec_nombre');
             $req_fecha = $request->input('req_fecha');
@@ -765,14 +708,47 @@ class ProduccionController extends Controller
     public function show($nombre)
     {
         /*
-        ::leftJoin('requerimientos', 'requerimientos.req_fecha', '=', 'produccion.pro_fecha')
-                ->
+        $receta = "receta prueba c";
+        $disponible=0;        
+        for ($i=1; $i < produccion::max('id'); $i++) { 
+            $row = produccion::where('id',$i)->first();
+            if($i == 103)
+                continue;
+            if($row->rec_nombre == $receta)
+            {
+                if($row->pro_costo !== null)
+                {
+                    if($i == 1)
+                    {
+                        $disponible = $row->pro_produccion;
+                    }
+                    else
+                    {
+                        $disponible = $row->pro_produccion + $disponible;
+                    }
+
+                }
+                else
+                {
+                    $disponible = $disponible - $row->pro_produccion;
+                }
+                produccion::where('id',$i)
+                    ->update(["pro_disponible" => $disponible]);
+            }
+        }
+        
         */
+        $existencia = produccion::where('produccion.rec_nombre',$nombre)
+                ->orderBy('produccion.id','dsc')                
+                ->take(1)
+                ->pluck('pro_disponible');
         $producciones = produccion::where('produccion.rec_nombre',$nombre)
-                ->orderBy('produccion.id','asc')                
-                ->get();
+                ->orderBy('produccion.id','dsc')                
+                ->paginate(15);
         //$producciones = cardexMP::where('car_compra_id',$id)->get();
-        return view('produccion.show',compact('producciones'));
+        return view('produccion.show',compact('producciones','existencia'));
+        
+       
     }
 
     /**
@@ -788,7 +764,7 @@ class ProduccionController extends Controller
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
         $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         $produccion = produccion::find($id);
-        return view('produccion.edit',compact('requerimientos','dependencias','produccion'));
+        return view('produccion.edit',compact('requerimientos','dependencias','produccion'));        
     }
 
     /**
@@ -801,8 +777,13 @@ class ProduccionController extends Controller
     public function update(Request $request, $id)
     {
         /*DEBIDO A LAS ACTUALIZACIONES TOCO HACER TODO EL TRABAJO PESADO DE LAS PRODUCCIONES EN UPDATE*/
+        // HAGO CAMBIOS PARA LA DISPONIBILIDAD DEL PRODUCTO     
+        $producto = produccion::where('id',$id)->first();
+        $disponible = $producto->pro_disponible;
+        $produccion_previa = $producto->pro_produccion;
+        $disponible = $disponible-($produccion_previa-$request["pro_produccion"]);
+        produccion::where('id',$id)->update(['pro_disponible' => $disponible]);
 
-        
         //GUARDO LOS CAMBIOS
         $produccion = produccion::find($id);
         $produccion->fill($request->all());
@@ -819,10 +800,10 @@ class ProduccionController extends Controller
         $salarios = salario::All();
         $miscelaneo = miscelaneo::where('id','1')->first();
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
-        ->where('requerimientos.req_fecha', $req_fecha)
-        ->where('requerimientos.rec_nombre', $rec_nombre)
-        ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-        ->get();
+            ->where('requerimientos.req_fecha', $req_fecha)
+            ->where('requerimientos.rec_nombre', $rec_nombre)
+            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+            ->get();
 
         /*ACTUALIZO EL INVENTARIO DE PRODUCCION*/
         $etapa = $produccion->pro_etapa;
@@ -847,41 +828,108 @@ class ProduccionController extends Controller
                 dependencia::where('dep_padre',$rec_nombre) 
                     ->where('dep_hijo',$request['dep_hijo'][$key])             
                     ->update(['requerimiento' => $dependencia]);
+                
+                $producto = produccion::where('id', '<',$id)
+                    ->where('rec_nombre',$request['dep_hijo'][$key])  
+                    ->orderBy('id','dsc')
+                    ->first();
+                $disponible = $producto->pro_disponible;                
+                $produccion_previa = $producto->pro_produccion;
+                produccion::where('id',$producto->id)
+                    ->update([
+                        'pro_disponible' => $disponible+($produccion_previa-$dependencia),
+                        'pro_produccion' => $dependencia,
+                    ]);
+                $etapa = produccion::where('id',$producto->id)->first()->pro_etapa;
+                if($etapa == 'PA')
+                {
+                    producciona::where('rec_nombre',$request['dep_hijo'][$key])              
+                        ->update(['pro_produccion' => $disponible+($produccion_previa-$dependencia)]);
+                }
+                else if($etapa == 'PB')
+                {
+                    produccionb::where('rec_nombre',$request['dep_hijo'][$key])              
+                        ->update(['pro_produccion' => $disponible+($produccion_previa-$dependencia)]);
+                }
+                else if($etapa == 'PC')
+                {
+                    produccionc::where('rec_nombre',$request['dep_hijo'][$key])              
+                        ->update(['pro_produccion' => $disponible+($produccion_previa-$dependencia)]);
+                }
             }
         }
         foreach ($request['req_total'] as $key => $req_total) {
             requerimiento::where('rec_nombre',$rec_nombre) 
                 ->where('req_fecha',$req_fecha)
-                ->where('req_ingrediente',$request['req_ingrediente'][$key])             
+                ->where('req_ingrediente',$request['req_ingrediente'][$key])            
                 ->update(['req_total' => $req_total]);
+            $param = parametro::where('par_nombre',$request['req_ingrediente'][$key])->first()->par_codigo;
+            $actualizar = cardexmp::where('mp_codigo',$param)
+                ->where('car_fecha',$req_fecha)
+                ->whereNull('car_costo')
+                ->where('car_concepto',"Producción de ".$rec_nombre)
+                ->first();
+            //return $actualizar;
+            $valor_anterior = $actualizar->car_valor_anterior;
+            
+            /* MODIFICA LOS CARDEX DE LOS REQUERIMIENTOS DE LA RECETA */
+            $id_buscado = $actualizar->id;
+            $maximo = cardexmp::max('id');
+            $rango = (int)$maximo - $id_buscado;
+            $rango == 0 ? $rango = 1 : $rango;
+            $cardexs = cardexmp::orderBy('id','dsc')
+                ->take($rango+1)
+                ->get();
+            $temp_actual = 0;
+            for($i = count($cardexs)-1; $i>=0; $i--)
+            {
+                if($cardexs[$i]->mp_codigo == $param)
+                {                                        
+                    if($i == count($cardexs)-1)
+                    {                        
+                        //caso inicial, el cardex que modificamos directamente
+                        $valor_anterior = $actualizar->car_valor_anterior;
+                        cardexmp::where('id',$actualizar->id)
+                            ->update([
+                                'car_valor_actual' => $valor_anterior - $req_total,
+                            ]);
+                        $temp_actual = $valor_anterior - $req_total;
+                    }                    
+                    else
+                    {
+                        //casos restantes, los demás que están encima del que modificamos
+                        $step = $temp_actual - $cardexs[$i]->car_valor_anterior;
+                        cardexmp::where('id',$cardexs[$i]->id)
+                            ->update([
+                                'car_valor_actual' => $cardexs[$i]->car_valor_actual + $step,
+                                'car_valor_anterior' => $cardexs[$i]->car_valor_anterior + $step,
+                            ]);
+                        $temp_actual = $cardexs[$i]->car_valor_actual + $step;                  
+                    }              
+                }
+            } 
+            /* FIN DE MODIFICACIÓN DE LOS CARDEX DE LOS REQUERIMIENTOS DE LA RECETA */
+
+            /* MODIFICACIÓN DE INVENTARIO DE MATERIAS PRIMAS*/
+            $cantidad = cardexmp::where('mp_codigo',$param)
+                ->orderBy('id','dsc')
+                ->first()
+                ->car_valor_actual;
+            materiaprima::where('mp_codigo',$param)
+                ->update([
+                    'mp_cantidad' => $cantidad,
+                ]);
+
+            /* FIN DE MODIFICACIÓN DE INVENTARIO DE MATERIAS PRIMAS*/
         }
         /*FIN DE ACTUALIZACIÓN DE LOS REQUERIMIENTOS Y LAS DEPENDENCIAS*/
 
+        /*CÁLCULO DE COSTOS UNITARIOS*/
+
+        /*FIN DE CÁLCULO DE COSTOS UNITARIOS*/
+
         /*RETORNO VISTA COMO EN VERPRODUCCION*/
-        $req_fecha = str_replace("-","/",$req_fecha);
-        $recetas = receta::where('rec_nombre',$rec_nombre)->first();
-        $produccion = produccion::where('rec_nombre',$rec_nombre)
-            ->where('pro_fecha', $req_fecha)
-            ->first();
-
-        $aumentos = aumento::All();
-        $salarios = salario::All();
-        $miscelaneo = miscelaneo::where('id','1')->first();
-        $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
-
-        $costos = DB::table('produccion')
-            ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
-            ->where('dependencias.dep_padre',$rec_nombre)
-            ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
-            ->get();
-
-        $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
-        ->where('requerimientos.req_fecha', $req_fecha)
-        ->where('requerimientos.rec_nombre', $rec_nombre)
-        ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-        ->get();
-
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos'))->with('message','Produccion actualizada exitosamente');
+        return redirect('/verProduccion/'.$id)->with('message','Producción actualizada exitosamente');
         /*FIN DE RETORNO VISTA COMO EN VERPRODUCCION*/
 
     }
@@ -914,4 +962,89 @@ class ProduccionController extends Controller
         produccion::destroy($id);
         return redirect('/produccion')->with('message','Producción eliminada exitosamente');
     }
+}
+//SECCIÓN PARA FUNCIONES UTILITARIAS
+
+//FUNCIÓN PARA VERIFICAR SI UNA PRODUCCIÓN ES MODIFICABLE
+function verificarModificable($producciones,$produccion,$id_buscado)
+{
+    //construye cola        
+    $cola = array();
+    $modificable = true;
+    for($i = count($producciones)-1; $i > 0 ; $i--)
+    {
+        if($producciones[$i]->rec_nombre == $produccion->rec_nombre)
+        {          
+            if($producciones[$i]->pro_costo == null)
+            {
+                //producción de etapa superior o venta
+                if($cola[0]->id == $id_buscado)
+                {
+                    //una venta o prod intenta modificar el elemento buscado
+                    $modificable = false;
+                    break;
+                }
+                //restamos la producción o venta desde la primera disponibilidad
+                $cantidad = $producciones[$i]->pro_produccion;
+                //mientras todavia haya producto vendido 
+                    
+                while($cantidad != 0)
+                {
+                    $acarreo = 0;
+                    for($j = count($cola)-1; $j >= 0; $j--)
+                    {
+                        if($cola[$j]->pro_disponible > $cantidad)
+                        {
+                            $cola[$j]->pro_disponible-$cantidad;
+                            $acarreo = 0;
+                            $cantidad = 0;
+                        }                                
+                        else
+                        {
+                            $acarreo = ($cola[$j]->pro_disponible-$cantidad)*(-1);
+                            $cola[$j]=null;
+                            $cantidad-=$acarreo;
+                        }
+                    }
+                }  
+            }
+            else
+            {
+                //producción del elemento buscado
+                array_push($cola, $producciones[$i]);                
+            }
+        }
+    }
+    return $modificable;
+}
+//CÁLCULO DE COSTOS UNITARIOS PARA REGISTRO Y ACTUALIZACIÓN DE PRODUCCIÓN
+function calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo)
+{
+    $costosUnit=0;
+    $prod = $produccion->pro_produccion;
+    foreach($dependencias as $key => $dependencia)
+    {
+        $req_total = $dependencia->pro_produccion;
+        $req_unitario = $req_total/$prod;               
+        $costo = $costos[$key]->pro_costo;
+        $costo_unitario = $costo*$req_unitario;
+        $costosUnit+=$costo_unitario;            
+    }
+    foreach($parametros as $parametro)
+    {
+        $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
+    }
+    $req = $produccion->pro_mano_obra;
+    foreach($salarios as $salario)
+    {
+        $salario_integral = $salario->salario_integral;
+    }
+    $cos_tot_obra = $req*$salario_integral;
+    $cos_unit_obra = $cos_tot_obra / $prod;
+    $total_cf = ($miscelaneo->std_x_frasco/3)*$prod;
+    $unit_cf = $total_cf/$prod;
+    $costoDirUnit = $costosUnit+$cos_unit_obra;
+    $total_unit = $costoDirUnit+$unit_cf;
+
+    return $total_unit;
 }

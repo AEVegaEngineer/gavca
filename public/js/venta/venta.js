@@ -84,7 +84,7 @@ $(document).ready(function() {
 			//console.log("comparando cost: "+costo+" con cantidad: "+cantidad);
 			if(cantidad < 0 || (disponibilidad > 0 && cantidad > disponibilidad) || (disponibilidad == 0 && cantidad > 0) || (costo == "" && cantidad > 0))
 				flag = false;
-			else if(flag != false && (disponibilidad > cantidad ) && cantidad != "" && costo != "")
+			else if(flag != false && (disponibilidad >= cantidad ) && cantidad != "" && costo != "")
 				flag = true;
 		});	
 		$(':input[type="submit"]').prop('disabled', !flag);			

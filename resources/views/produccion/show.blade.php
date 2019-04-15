@@ -2,41 +2,38 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Cardex de producto </h2>	
-		
+		<h2 class="form-signin-heading">Cardex de producto {{$producciones[0]->rec_nombre}}</h2>	
+		<h3>Existencia Actual: {{number_format ( $existencia , $decimals = 2 , "," , "." )}}</h3>
 		<table class="table">
 			<thead>
 				<td>Fecha</td>
-				<td>Producto</td>
+				<td>Concepto</td>
 				<td>Entra</td>
 				<td>Sale</td>
-				<td>Concepto</td>
+				<td>Disponible</td>
+				<td align="right">Costo Producción</td>
 			</thead>
 			<?php $totalEntra = 0; $totalSale = 0; ?>
 			@foreach($producciones as $produccion)
 			<?php $debe_haber = (isset($produccion->pro_costo)) ? true : false;?>
 			<tr>
 				<td>{{$produccion->pro_fecha}}</td>
-				<td>{{$produccion->rec_nombre}}</td>
+				<td>{{$produccion->pro_concepto}}</td>
 				<?php 
-				$debe_haber ? $totalEntra += $produccion->pro_produccion : $totalSale += $produccion->pro_produccion;
+				
 				echo ''.($debe_haber ? '<td>'.$produccion->pro_produccion.'</td><td></td>' : '<td></td><td>'.$produccion->pro_produccion.'</td>');
 				?>
-				<td>{{$produccion->pro_concepto}}</td>
+				<td>{{$produccion->pro_disponible}}</td>
+				<td align="right">
+					<?php if (isset($produccion->pro_costo)) echo number_format ( $produccion->pro_costo , $decimals = 2 , "," , "." );?>					
+				</td>
 			</tr>
-			@endforeach	
-					
-			<tr>
-				<td></td>
-				<td><b>TOTAL: </b></td>
-				<td><b>{{number_format ( $totalEntra , $decimals = 2 , "," , "." )}}</b></td>
-				<td><b>{{number_format ( $totalSale , $decimals = 2 , "," , "." )}}</b></td>
-				<td></td>
-			</tr>
+			@endforeach				
+			
 
 		
 		</table>		
-		
-		<h3>Existencia Actual: {{number_format ( $totalEntra-$totalSale , $decimals = 2 , "," , "." )}}</h3>	
+		{!!$producciones->render()!!}
+			
 	
 @endsection

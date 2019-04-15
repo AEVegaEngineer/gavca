@@ -199,11 +199,17 @@ class VentaController extends Controller
                         'ven_entidad' => $entidad,
                     ]); 
                     //cardex
+                    $existencia = produccion::where('produccion.rec_nombre',$request["rec_nombre"][$key])
+                        ->orderBy('produccion.id','dsc')                
+                        ->take(1)
+                        ->pluck('pro_disponible');
                     produccion::create([
                         'pro_fecha' => $request['ven_fecha'],
                         'rec_nombre' => $request["rec_nombre"][$key],
                         'pro_etapa' => 'PC',
                         'pro_produccion' => $request['ven_cantidad'][$key],
+                        'pro_disponible' => $existencia - $request['ven_cantidad'][$key],
+
                         'pro_mano_obra' => 0,
                         'pro_concepto' => 'Venta bajo factura: '.$request['ven_factura'].' de fecha '.$request['ven_fecha'],
                     ]);
@@ -410,12 +416,17 @@ class VentaController extends Controller
                 produccionc::where('rec_nombre',$value->rec_nombre)
                     ->update(['pro_produccion' => $nueva_cantidad]);
                 //cardex
+                $existencia = produccion::where('produccion.rec_nombre',$value->rec_nombre)
+                    ->orderBy('produccion.id','dsc')                
+                    ->take(1)
+                    ->pluck('pro_disponible');
                 produccion::create([
                     'pro_fecha' => date('Y-m-d', strtotime($venta->ven_fecha)),
                     'rec_nombre' => $value->rec_nombre,
                     'pro_etapa' => 'PC',
                     'pro_costo' => 0,
                     'pro_produccion' => $value->ven_cantidad,
+                    'pro_disponible' => $existencia+$value->ven_cantidad,
                     'pro_mano_obra' => 0,
                     'pro_concepto' => 'Eliminación de venta bajo factura: '.$venta->ven_factura.' de fecha '.date('Y-m-d', strtotime($venta->ven_fecha)),
                 ]);

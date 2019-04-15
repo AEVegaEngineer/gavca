@@ -21,16 +21,17 @@ class CardexMPController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('todos');
-    }    
+    }   
+    /* 
     public function listCardexMP(){        
         $materiasprimas = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
-                ->orderBy('cardexmp.mp_codigo', 'asc')
                 ->orderBy('cardexmp.mp_codigo', 'asc')
                 ->paginate(15);
 
         $who = "Inventario de Materias Primas";
         return view('cardex.materiaprima',compact('materiasprimas','who'));
     }
+    
     public function listCardexPA(){
         $producciones = DB::table('produccion')->where('pro_etapa','PA')
                 ->orderBy('pro_fecha', 'dsc')
@@ -55,6 +56,7 @@ class CardexMPController extends Controller
         $who = "Productos en Proceso C";
         return view('cardex.index',compact('producciones','who'));
     }
+    */
     /**
      * Display a listing of the resource.
      *
@@ -97,9 +99,9 @@ class CardexMPController extends Controller
         $cardexs = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
                 ->leftJoin('compras', 'compras.id', '=', 'cardexmp.car_compra_id')
                 ->where('cardexmp.mp_codigo',$mp_codigo)
-                ->orderBy('cardexmp.id','asc')                
-                ->get();
-        $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;       
+                ->orderBy('cardexmp.id','dsc')
+                ->paginate(15);
+        $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;
         return view('cardex.show',compact('cardexs','existencia'));
     }
 

@@ -57,8 +57,7 @@
 				<tbody>
 					<td>{{$requerimiento->req_ingrediente}}</td>
 					<?php if($requerimiento->req_default == 1){ 
-						$valor = $cantidad_produccion*$requerimiento->req_ratio/120;
-
+						//$valor = $cantidad_produccion*$requerimiento->req_ratio/120;
 					?>	
 
 					<td>
