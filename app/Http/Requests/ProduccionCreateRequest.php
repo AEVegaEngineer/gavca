@@ -27,11 +27,11 @@ class ProduccionCreateRequest extends Request
         $fecha = $this->input('pro_fecha');
 
         return [
-            'pro_produccion' => 'required|integer',
+            'pro_produccion' => 'required|integer|min:1',
             'pro_fecha' => 'required',
             'rec_nombre' => 'required', 
             'pro_mano_obra' => 'required', 
-            'req_total' => 'required|integer'                    
+            'req_total' => 'required|integer|min:1',                   
         ];
     }
 }

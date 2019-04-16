@@ -167,7 +167,6 @@ class MateriaPrimaController extends Controller
                     'par_unidad' => $request['noex_unidad'][$key],
                     'par_costo' => $request['noex_costo'][$key],
                     'par_observacion' => "",
-                    'par_default' => 0,
                 ]);
                 materiaprima::create([
                     'mp_codigo' => $code,

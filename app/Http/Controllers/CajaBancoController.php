@@ -45,21 +45,28 @@ class CajaBancoController extends Controller
         }
         $fecha = session('caja_fecha');        
         if(isset($fecha)){
-            $caja = 'Caja Chica';            
-
+            $caja = 'Caja Chica';          
             $saldo_existe = saldocaja::where('sc_entidad',$caja)
                 ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-                ->first();                
-
-            $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-                ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-                ->where('cajabanco.cb_entidad',$caja)
-                ->whereDate('cb_fecha', '=',session('caja_fecha'))
-                ->orderBy('cajabanco.id','asc')
-                ->get();
-
+                ->first();
+            $records = cajabanco::where('cajabanco.cb_entidad',$caja)
+                    ->whereDate('cb_fecha', '=',session('caja_fecha'))
+                    ->orderBy('cajabanco.id','asc')
+                    ->get();
             $bancos = banco::All();
-            return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'));
+            $ultima_v_c = cajabanco::whereNotNull('cb_compra_id')
+                ->where('cb_entidad',$caja)
+                ->where('cb_activo',1)
+                ->orWhereNotNull('cb_venta_id')
+                ->where('cb_entidad',$caja)
+                ->where('cb_activo',1)
+                ->orderBy('id','dsc')
+                ->first();
+            if(isset($ultima_v_c))
+                $ultima_v_c = $ultima_v_c->id;
+                
+            //return $records." <br><br>".$ultima_v_c;
+            return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual','ultima_v_c'));
         }
         
         return view('caja.index',compact('hoy','caja_actual','ultima_caja'));
@@ -109,18 +116,27 @@ class CajaBancoController extends Controller
         //si mi fecha seleccionada es 1 dia mayor a last_closed o menor paso.
         if($request["caja_fecha"] <= $hoy && $flag){
             session(['caja_fecha' => $request["caja_fecha"]]);   
+            
             $saldo_existe = saldocaja::where('sc_entidad',$caja)
                 ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
-                ->latest()
-                ->first(); 
-            $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-                ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-                ->where('cajabanco.cb_entidad',$caja)
-                ->whereDate('cb_fecha', '=',session('caja_fecha'))
-                ->orderBy('cajabanco.id','asc')
-                ->get();  
+                ->first();
+            $records = cajabanco::where('cajabanco.cb_entidad',$caja)
+                    ->whereDate('cb_fecha', '=',session('caja_fecha'))
+                    ->orderBy('cajabanco.id','asc')
+                    ->get();
             $bancos = banco::All();
-            return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'));
+            $ultima_v_c = cajabanco::whereNotNull('cb_compra_id')
+                ->where('cb_entidad',$caja)
+                ->where('cb_activo',1)
+                ->orWhereNotNull('cb_venta_id')
+                ->where('cb_entidad',$caja)
+                ->where('cb_activo',1)
+                ->orderBy('id','dsc')
+                ->first();
+            if(isset($ultima_v_c))
+                $ultima_v_c = $ultima_v_c->id;
+            //return $records." <br><br>".$ultima_v_c;
+            return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual','ultima_v_c'));
         }else{
             if($request["caja_fecha"] > $hoy){
                 \Session::flash('message-error', "La fecha que has seleccionado es incorrecta, no puedes seleccionar un día en el futuro.");     
@@ -253,15 +269,23 @@ class CajaBancoController extends Controller
         $saldo_existe = saldocaja::where('sc_entidad',$caja)
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
             ->first();
-        $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
-                ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
-                ->where('cajabanco.cb_entidad',$caja)
+        $records = cajabanco::where('cajabanco.cb_entidad',$caja)
                 ->whereDate('cb_fecha', '=',session('caja_fecha'))
                 ->orderBy('cajabanco.id','asc')
                 ->get();
         $bancos = banco::All();
-        //return session('caja_fecha')."<br><br>".$records;
-        return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'));
+        $ultima_v_c = cajabanco::whereNotNull('cb_compra_id')
+            ->where('cb_entidad',$caja)
+            ->where('cb_activo',1)
+            ->orWhereNotNull('cb_venta_id')
+            ->where('cb_entidad',$caja)
+            ->where('cb_activo',1)
+            ->orderBy('id','dsc')
+            ->first();
+        if(isset($ultima_v_c))
+            $ultima_v_c = $ultima_v_c->id;
+        //return $records." <br><br>".$ultima_v_c;
+        return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual','ultima_v_c'));
     }
 
     /**

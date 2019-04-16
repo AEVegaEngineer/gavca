@@ -32,7 +32,6 @@ class CompraController extends Controller
         /*
         GENERACIÓN DEL CÓDIGO CONSECUTIVO PARA EL REGISTRO DE PARAMETROS EN EL MODULO COMPRAS
         */
-
         //retorna por post
         if ($request->isMethod('post')){ 
             $numero = 0;
@@ -113,8 +112,18 @@ class CompraController extends Controller
         //filtro si la fecha que esta set es un dia cerrado, si lo es devuelva seleccionar fecha y muestre mensaje de error
         $fecha = session('caja_fecha');  
         if(isset($fecha)){
-            $existe = cajabanco::whereDate('cb_fecha','=',$fecha)->first();
-            if($existe !== null && $existe->cb_activo == 0)
+            $records = cajabanco::whereDate('cb_fecha','=',$fecha)->get();
+            //se da por supuesto que la caja esta cerrada
+            $flag = false;
+            foreach ($records as $record) {
+                if($record->cb_activo == 1)
+                {
+                    //si encuentra al menos 1 record activo, la caja esta activa
+                    $flag = true;
+                    break;
+                }
+            }
+            if($records !== null && $flag == false)
             {
                 \Session::flash('message-error', 'Esta caja ya se encuentra cerrada y no permite nuevos registros, por favor, selecciona otra fecha en caja.');
                 $hoy = Carbon::today()->toDateString();
@@ -199,6 +208,7 @@ class CompraController extends Controller
      */
     public function pass(CompraCreateRequest $request)
     {
+        filtrarCajaCerradaONoSeleccionada();
         $comp_fecha = $request['comp_fecha'];
         $proveedor = $request['comp_proveedor'];
         $comp_doc = $request['comp_doc'];
@@ -315,7 +325,7 @@ class CompraController extends Controller
                     'comp_proveedor' => $request['comp_proveedor'],
                     'comp_cred_cont' => $request['comp_cred_cont'],
                     'comp_monto' => $request['comp_monto'],
-                    'comp_entidad' => $request['comp_entidad'],
+                    'comp_entidad' => $entidad,
                 ]);
                 $id = compra::max('id');
                 $saldo = cajabanco::where('cb_entidad',$entidad)                
@@ -449,14 +459,18 @@ class CompraController extends Controller
      */
     public function trash($id)
     {
-        $compra = compra::where('id',$id)->first();
+
+        $compra = compra::where('id',$id)->first();        
         //obtengo la razon de la compra y la entidad aqui ya que la necesitare para ambos casos
         $cred_cont = $compra->comp_cred_cont;
         $entidad = $compra->comp_entidad;        
 
         $fecha = new Carbon($compra->comp_fecha);
+
+        $caja_actual = cajabanco::where('cb_activo',1)->latest()->first()->cb_fecha;
+
         $caja = cajabanco::where('cb_entidad',$compra->comp_entidad)
-            ->whereDate('cb_fecha', '=' , $fecha->toDateString())
+            ->whereDate('cb_fecha', '=' , $caja_actual)
             ->whereNotNull('cb_saldo')
             ->latest()
             ->first();
@@ -468,17 +482,17 @@ class CompraController extends Controller
         if($compra->comp_activo == 1)
         {
             //SI LA COMPRA ESTA ACTIVA Y QUIERO ELIMINARLA
-            $cta_concepto = 'Eliminación de compra a crédito bajo factura: '.$compra->comp_doc.' de fecha '.$fecha->toDateString();
+            $cta_concepto = 'Eliminación de compra a '.$cred_cont.' bajo factura: '.$compra->comp_doc.' de fecha '.$fecha->toDateString();
             $cb_debe_haber = 'DEBE';
             $cb_concepto = 'Reembolso por eliminación de compra bajo factura: '.$compra->comp_doc.' de fecha '.date('Y-m-d', strtotime($compra->comp_fecha));
             $cb_saldo = $saldo+$compra->comp_monto;
-            $statusChangeTo = 0;            
+            $statusChangeTo = 0;
             $link = '/caja';
             $message = 'Compra y movimientos de inventario revertidos correctamente, fondos devueltos a la respectiva caja.';
             
         }else{
             //SI LA COMPRA HA SIDO ELIMINADA Y QUIERO REACTIVARLA
-            $cta_concepto = 'Reactivación de compra a crédito bajo factura: '.$compra->comp_doc.' de fecha '.date('Y-m-d', strtotime($compra->comp_fecha));
+            $cta_concepto = 'Reactivación de compra a '.$cred_cont.' bajo factura: '.$compra->comp_doc.' de fecha '.date('Y-m-d', strtotime($compra->comp_fecha));
             $cb_debe_haber = 'HABER';
             $cb_concepto = 'Reactivación de compra bajo factura: '.$compra->comp_doc.' de fecha '.date('Y-m-d', strtotime($compra->comp_fecha));
             $cb_saldo = $saldo-$compra->comp_monto;
@@ -488,7 +502,6 @@ class CompraController extends Controller
         }
         if($cred_cont == 'credito')
         {
-            //comp_cred_cont "credito" y comp_proveedor tiene el codigo del proveedor al que se le debe restar o sumar el costo de la compra
             ctaxpagar::create([
                 'cta_prov_codigo' => $compra->comp_proveedor,
                 'cta_concepto' => $cta_concepto,
@@ -500,14 +513,16 @@ class CompraController extends Controller
             cajabanco::create([
                 'cb_entidad' => $compra->comp_entidad,
                 'cb_debe_haber' => $cb_debe_haber,
-                'cb_fecha' => date('Y-m-d', strtotime($compra->comp_fecha)),
+                'cb_fecha' => $caja_actual,
                 'cb_concepto' => $cb_concepto,
                 'cb_monto' => $compra->comp_monto,
-                'cb_saldo' => $cb_saldo,
+                'cb_saldo' => $cb_saldo+$compra->comp_monto,
             ]);
         }
         compra::where('id',$id)
             ->update(['comp_activo' => $statusChangeTo]);
+        cajabanco::where('cb_compra_id',$id)
+            ->update(['cb_activo' => $statusChangeTo]);
         //resto la cantidad de materia prima que se compro del inventario            
         $elementos = cardexmp::where('car_compra_id',$id)->get();
         foreach ($elementos as $key => $elemento) {
@@ -517,8 +532,8 @@ class CompraController extends Controller
                 materiaprima::where('mp_codigo',$elemento->mp_codigo)->update(['mp_cantidad' => $existencia-$cantidad]);
             else
                 materiaprima::where('mp_codigo',$elemento->mp_codigo)->update(['mp_cantidad' => $existencia+$cantidad]);
-        }  
-        return redirect($link)->with('message',$message);  
+        }
+        return redirect($link == '/caja' ? $link.'/'.$entidad : $link)->with('message',$message);  
     }
 
     /**
@@ -546,5 +561,37 @@ class CompraController extends Controller
         return "en construccion?";
         compra::destroy($id);
         return redirect('/compra')->with('message','Compra eliminada exitosamente');
+    }
+}
+/**
+* Chequea si la caja esta cerrada o no esta seleccionada
+* 
+* @return redirect a seleccionar caja si falla las pruebas
+*/
+function filtrarCajaCerradaONoSeleccionada()
+{
+    $fecha = session('caja_fecha');  
+    if(isset($fecha)){
+        $records = cajabanco::whereDate('cb_fecha','=',$fecha)->get();
+        //se da por supuesto que la caja esta cerrada
+        $flag = false;
+        foreach ($records as $record) {
+            if($record->cb_activo == 1)
+            {
+                //si encuentra al menos 1 record activo, la caja esta activa
+                $flag = true;
+                break;
+            }
+        }
+        if($records !== null && $flag == false)
+        {
+            $message = 'Esta caja ya se encuentra cerrada y no permite nuevos registros, por favor, selecciona otra fecha en caja.';
+            return redirect("/caja")->with('error',$message);            
+        }  
+    }
+    else
+    {
+        $message = 'Esta caja ya se encuentra cerrada y no permite nuevos registros, por favor, selecciona otra fecha en caja.';
+        return redirect("/caja")->with('error',$message);   
     }
 }

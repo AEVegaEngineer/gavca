@@ -348,20 +348,20 @@ class VentaController extends Controller
     }
     public function revertir($id)
     {
-
-        $venta = venta::where('id',$id)->first();
-        $factura = venta::where('id',$id)->pluck('ven_factura');
+        $factura = totalventa::where('id',$id)->first()->ven_factura;
+        $ventas = venta::where('ven_factura',$factura)->get();
         //calculo el monto de la venta
-        $elementos = venta::where('ven_factura',$factura)->get();
         $monto_venta = cajabanco::where('cb_venta_id',$id)->first()->cb_monto;
         
         //obtengo la razon de la venta y la entidad aqui ya que la necesitare para ambos casos
-        $cred_cont = $venta->ven_condicion;
-        $entidad = $venta->ven_entidad;        
+        $cred_cont = $ventas[0]->ven_condicion;
+        $entidad = $ventas[0]->ven_entidad;        
 
-        $fecha = new Carbon($venta->ven_fecha);
+        $caja_actual = cajabanco::where('cb_activo',1)->latest()->first()->cb_fecha;
+
+        $fecha = new Carbon($ventas[0]->ven_fecha);
         $caja = cajabanco::where('cb_entidad',$entidad)
-            ->whereDate('cb_fecha', '=' , $fecha->toDateString())
+            ->whereDate('cb_fecha', '=' , $caja_actual)
             ->whereNotNull('cb_saldo')
             ->latest()
             ->first();
@@ -370,71 +370,72 @@ class VentaController extends Controller
         {
             $saldo = $caja->cb_saldo;
         }
-        if($venta->ven_activo == 1)
+        if($ventas[0]->ven_activo == 1)
         {
             //SI LA VENTA ESTA ACTIVA Y QUIERO ELIMINARLA
-            $cta_concepto = 'Eliminación de venta a crédito bajo factura: '.$venta->ven_factura.' de fecha '.$fecha->toDateString();
+            $cta_concepto = 'Eliminación de venta a '.$cred_cont.' bajo factura: '.$ventas[0]->ven_factura.' de fecha '.$fecha->toDateString();
             $cb_debe_haber = 'HABER';
-            $cb_concepto = 'Reembolso por eliminación de venta bajo factura: '.$venta->ven_factura.' de fecha '.date('Y-m-d', strtotime($venta->ven_fecha));
-            $cb_saldo = $saldo-$monto_venta;
+            $cb_concepto = 'Reembolso por eliminación de venta bajo factura: '.$ventas[0]->ven_factura.' de fecha '.date('Y-m-d', strtotime($ventas[0]->ven_fecha));
             $link = '/caja';
             $message = 'Venta y movimientos de inventario revertidos correctamente, fondos restaurados a la respectiva caja.';
             if($cred_cont == 'credito')
             {
                 //comp_cred_cont "credito" y cli_codigo tiene el codigo del cliente al que se le debe restar el costo de la venta
                 ctaxcobrar::create([
-                    'cta_cli_codigo' => $venta->cli_codigo,
+                    'cta_cli_codigo' => $ventas[0]->cli_codigo,
                     'cta_concepto' => $cta_concepto,
-                    'cta_venta_id' => $venta->ven_factura,
+                    'cta_venta_id' => $ventas[0]->ven_factura,
                     'cta_monto' => $monto_venta,
                 ]);
             }else{
                 //Cuando se realizan compras a contado        
                 cajabanco::create([
-                    'cb_entidad' => $venta->ven_entidad,
+                    'cb_entidad' => $ventas[0]->ven_entidad,
                     'cb_debe_haber' => $cb_debe_haber,
-                    'cb_fecha' => date('Y-m-d', strtotime($venta->ven_fecha)),
+                    'cb_fecha' => $caja_actual,
                     'cb_concepto' => $cb_concepto,
                     'cb_monto' => $monto_venta,
-                    'cb_saldo' => $cb_saldo,
+                    'cb_saldo' => $saldo-$monto_venta,
                 ]);
             }
-            venta::where('ven_factura',$factura)
+            venta::where('id',$id)
                 ->update(['ven_activo' => 0]);
             cajabanco::where('cb_venta_id',$id)
                 ->update(['cb_activo' => 0]);
-            //agrego de nuevo la cantidad de producto que se tomó del inventario para vender y agrego tambien a cardex de producto
-            foreach ($elementos as $key => $value) {
+            // ESTABLECE CADA UNO DE LOS ELEMENTOS VENDIDOS EN ESA FACTURA DE LA VENTA COMO INACTIVO Y RESTABLECE LA DEBIDA PRODUCCIÓN
+            foreach ($ventas as $venta) {
                 //inventario
-                $producto = produccionc::where('rec_nombre',$value->rec_nombre)->first();
-                $cantidad;
+                $producto = produccionc::where('rec_nombre',$venta->rec_nombre)->first();
+                $cantidad = 0;
                 if($producto !== null)            
-                    $cantidad = $producto->pro_produccion;            
-                else
-                    $cantidad = 0;
-                $nueva_cantidad = $cantidad+$value->ven_cantidad;                
-                produccionc::where('rec_nombre',$value->rec_nombre)
-                    ->update(['pro_produccion' => $nueva_cantidad]);
-                //cardex
-                $existencia = produccion::where('produccion.rec_nombre',$value->rec_nombre)
-                    ->orderBy('produccion.id','dsc')                
-                    ->take(1)
-                    ->pluck('pro_disponible');
-                produccion::create([
-                    'pro_fecha' => date('Y-m-d', strtotime($venta->ven_fecha)),
-                    'rec_nombre' => $value->rec_nombre,
-                    'pro_etapa' => 'PC',
-                    'pro_costo' => 0,
-                    'pro_produccion' => $value->ven_cantidad,
-                    'pro_disponible' => $existencia+$value->ven_cantidad,
-                    'pro_mano_obra' => 0,
-                    'pro_concepto' => 'Eliminación de venta bajo factura: '.$venta->ven_factura.' de fecha '.date('Y-m-d', strtotime($venta->ven_fecha)),
-                ]);
-            }
-            return redirect($link)->with('message',$message);  
+                    $cantidad = $producto->pro_produccion; 
+                        
+                    $nueva_cantidad = $cantidad+$venta->ven_cantidad;                
+                    produccionc::where('rec_nombre',$venta->rec_nombre)
+                        ->update(['pro_produccion' => $nueva_cantidad]);
+                    //cardex
+                    $existencia = produccion::where('produccion.rec_nombre',$venta->rec_nombre)
+                        ->orderBy('produccion.id','dsc')                
+                        ->take(1)
+                        ->pluck('pro_disponible');
+                    produccion::create([
+                        'pro_fecha' => $caja_actual,
+                        'rec_nombre' => $venta->rec_nombre,
+                        'pro_etapa' => 'PC',
+                        'pro_costo' => 0,
+                        'pro_produccion' => $venta->ven_cantidad,
+                        'pro_disponible' => $existencia+$venta->ven_cantidad,
+                        'pro_mano_obra' => 0,
+                        'pro_concepto' => 'Eliminación de venta bajo factura: '.$venta->ven_factura.' de fecha '.date('Y-m-d', strtotime($venta->ven_fecha)),
+                    ]);
+                }
+                return redirect($link."/".$entidad)->with('message',$message);      
+              
         }else{
             //CASO: SI LA VENTA HA SIDO ELIMINADA Y QUIERO REACTIVARLA
             return "ha ocurrido un error, la venta no esta activa.";         
-        }      
+        } 
+
+
     }
 }

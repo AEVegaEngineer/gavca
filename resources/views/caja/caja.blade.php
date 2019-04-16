@@ -80,9 +80,9 @@
 				<td align="right">
 					<?php if($record->cb_compra_id !== null){ ?>
 					<div class="btn-group">
-						<?php if($caja_actual == Session::get('caja_fecha') && $record->comp_activo != 0){ ?>
+						<?php if($caja_actual == Session::get('caja_fecha') && $record->cb_activo != 0){ ?>
 							{!!link_to_route('compra.show', $title = 'Ver Factura', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}		
-							<?php if(Auth::user()->privilegio == "admin"){ ?>			
+							<?php if(Auth::user()->privilegio == "admin" && isset($ultima_v_c) && $ultima_v_c == $record->id){ ?>			
 								{!!link_to_route('compra.trash', $title = 'Revertir Compra', $parameters = $record->cb_compra_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
 							<?php } ?>
 						<?php } ?>
@@ -92,7 +92,7 @@
 					<div class="btn-group">
 						<?php if($caja_actual == Session::get('caja_fecha') && $record->cb_activo != 0){ ?>
 							{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}	
-							<?php if(Auth::user()->privilegio == "admin"){ ?>			
+							<?php if(Auth::user()->privilegio == "admin" && isset($ultima_v_c) && $ultima_v_c == $record->id){ ?>			
 								{!!link_to_route('venta.revertir', $title = 'Revertir Venta', $parameters = $record->cb_venta_id, $attributes = ['class'=>'btn btn-danger btn-xs'])!!}
 							<?php } ?>
 						<?php } ?>

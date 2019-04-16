@@ -133,8 +133,7 @@ UPD: Sólo queda un error en cardex de materia prima, en receta B updatee aceite
 - (X) A pesar de que se coloca el checkbox de ratio no me pone automáticamente el requerimiento cuando voy a correr producción
 - (X) comparar los modelos con las bases de datos actuales y reemplazar o eliminar los fillables sobrantes
 - (X) verificar necesidad de par_default y par_ratio, se tienen ya en requerimientos y en ingredientes!? 
-(se pueden quitar de ingredientes y parametros?)
-- Solo se pueden permitir revertir compras y ventas si no se han hecho mas movimientos luego de estos
+- (X) Solo se pueden permitir revertir compras y ventas si no se han hecho mas movimientos luego de estos
 - El costo actual del cardex de MP no actualiza cuando se actualiza el costo del parámetro  (cuando se actualiza en compra no se actualiza cardex->car_costo, cambiar el enlace de Foreign Key por Update Cascade)
 - Testear método store de produccion para producto A, B y C y ventas, fijarse si actualiza pro_disponible
 - Costo unitario de proceso B no es igual en el reporte de producción y en la tabla de producciones
@@ -142,6 +141,7 @@ UPD: Sólo queda un error en cardex de materia prima, en receta B updatee aceite
 - Papelera de reciclaje de recetas no entra
 - Informes para Cardex, Inventarios y Producción
 - Probar el funcionamiento de req_ratio y par_ratio
+- Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
 - El vinculo para arreglar la contraseña en el login
