@@ -43,8 +43,11 @@
 				<?php if($saldo_existe === null){ ?>
 				
 				{!!link_to_route('caja.transferir', $title = 'Transferir Saldo', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-				{!!link_to_route('caja.entradaForm', $title = 'Dar Entrada', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-				{!!link_to_route('caja.salidaForm', $title = 'Dar Salida', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+				
+					<?php if(Auth::user()->privilegio == "admin") { ?>
+					{!!link_to_route('caja.entradaForm', $title = 'Dar Entrada', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+					{!!link_to_route('caja.salidaForm', $title = 'Dar Salida', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+					<?php } ?>		
 
 				<?php } ?>		
 				

@@ -134,7 +134,7 @@ class CajaBancoController extends Controller
                 ->orderBy('id','dsc')
                 ->first();
             if(isset($ultima_v_c))
-                $ultima_v_c = $ultima_v_c->id;
+                $ultima_v_c = $ultima_v_c->id;            
             //return $records." <br><br>".$ultima_v_c;
             return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual','ultima_v_c'));
         }else{

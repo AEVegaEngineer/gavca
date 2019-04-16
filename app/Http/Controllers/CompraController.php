@@ -516,7 +516,7 @@ class CompraController extends Controller
                 'cb_fecha' => $caja_actual,
                 'cb_concepto' => $cb_concepto,
                 'cb_monto' => $compra->comp_monto,
-                'cb_saldo' => $cb_saldo+$compra->comp_monto,
+                'cb_saldo' => $cb_saldo,
             ]);
         }
         compra::where('id',$id)
