@@ -240,7 +240,7 @@ class CompraController extends Controller
      */
     public function store(Request $request)
     {
-
+        //return $request["codigo"];
         //DETECTA SI YA FUE REGISTRADA UNA COMPRA CON LA MISMA FACTURA PARA EL MISMO PROVEEDOR
         $compra_existe = compra::where('comp_doc',$request['comp_doc'])
             ->where('comp_proveedor',$request['comp_proveedor'])

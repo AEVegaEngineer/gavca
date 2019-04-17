@@ -176,77 +176,9 @@ class ProduccionController extends Controller
     /*CON LA MODIFICACIÓN DE TODA ESTA AREA TOCO PASAR TODOS LOS DATOS COMO POST AL SIGUIENTE FORMULARIO QUE SERIA REQ.BLADE.PHP, ALLI SE LLENAN LOS DATOS DE LOS REQUERIMIENTOS DE LAS DEPENDENCIAS Y SE COTEJAN CON LAS PRODUCCIONES, SI NO HAY EXISTENCIA DE ESAS DEPENDENCIAS NO SE PUEDE CREAR LA PRODUCCION.*/
 
     /**
-     * PASA LOS DATOS DE LA PRODUCCION AL FORMULARIO REQ.BLADE.PHP
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */   
-
-    public function pass(Request $request)
-    {
-        $fecha = $request['pro_fecha'];
-        $rec_nombre = $request['rec_nombre'];
-        $pro_produccion = $request['pro_produccion'];
-        $pro_mano_obra = $request['pro_mano_obra'];
-
-        // ACTUALIZO EL VALOR DE DEP_PRODUCCION EN DEPENDENCIAS EL CUAL
-        // HACE REFERENCIA AL PRODUCTO, CON EL FIN DE SACAR DE AHI EL COSTO DEL 
-        // PRODUCTO
-        if(isset($request['dep_produccion'])){
-            foreach ($request['dep_produccion'] as $dep_produccion => $valor) {
-                $input = explode("_", $valor);            
-                dependencia::where('dep_hijo',$input[1])
-                    ->update(['dep_produccion' => $input[0]]);
-            }
-        }
-        
-        $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
-        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->first();
-        foreach ($ingredientes as $ingrediente) {            
-            $par = parametro::where('par_nombre',$ingrediente->ing_ingrediente)->first();
-            if($requerimientos === null){
-                //return $ingrediente->ing_ingrediente."<br>".$ingrediente->ing_mark."<br>".$ingrediente->ing_ratio;
-                requerimiento::create([
-                    'req_fecha' => $fecha,
-                    'rec_nombre' => $rec_nombre,
-                    'req_ingrediente' => $ingrediente->ing_ingrediente,
-                ]);
-            }
-        }
-        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
-        $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
-        $cantidad_produccion = $pro_produccion;
-        $rec_etapa = receta::where('rec_nombre',$rec_nombre)->first()->rec_etapa;
-        
-        /*
-        DEBUG
-        
-
-        $debug = "rec_nombre: ".$rec_nombre."<br><br>"
-        ."fecha: ".$fecha."<br><br>"
-        ."requerimientos: ".$requerimientos."<br><br>"
-        ."dependencias: ".$dependencias."<br><br>"
-        ."cantidad_produccion: ".$cantidad_produccion."<br><br>"
-        ."pro_mano_obra: ".$pro_mano_obra."<br><br>"
-        ."rec_etapa: ".$rec_etapa."<br><br>";
-        */
-        /*
-        $requerimientos = requerimiento::leftJoin('ingredientes', 'requerimientos.rec_nombre', '=', 'ingredientes.rec_nombre')
-            ->where('requerimientos.req_fecha', $fecha)            
-            ->where('requerimientos.rec_nombre', $rec_nombre) 
-            ->select('requerimientos.req_total', 'requerimientos.rec_nombre', 'requerimientos.req_ingrediente', 'ingredientes.ing_default', 'ingredientes.ing_ratio')           
-            ->get();
-        */
-        //return $requerimientos."<br><br>".$ingredientes;
-        
-
-        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa','ingredientes'));
-    }
-    
-    /**
      * Display the specified resource.
      *
-     * @param  $rec_nombre, $req_fecha
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function verProduccion($id)
@@ -304,15 +236,59 @@ class ProduccionController extends Controller
     }
 
     /**
+     * PASA LOS DATOS DE LA PRODUCCION AL FORMULARIO REQ.BLADE.PHP
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */   
+
+    public function pass(Request $request)
+    {
+        $fecha = $request['pro_fecha'];
+        $rec_nombre = $request['rec_nombre'];
+        $pro_produccion = $request['pro_produccion'];
+        $pro_mano_obra = $request['pro_mano_obra'];
+
+        // ACTUALIZO EL VALOR DE DEP_PRODUCCION EN DEPENDENCIAS EL CUAL
+        // HACE REFERENCIA AL PRODUCTO, CON EL FIN DE SACAR DE AHI EL COSTO DEL 
+        // PRODUCTO
+        if(isset($request['dep_produccion'])){
+            foreach ($request['dep_produccion'] as $dep_produccion => $valor) {
+                $input = explode("_", $valor);            
+                dependencia::where('dep_hijo',$input[1])
+                    ->update(['dep_produccion' => $input[0]]);
+            }
+        }
+        
+        $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
+        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->first();
+        foreach ($ingredientes as $ingrediente) {            
+            $par = parametro::where('par_nombre',$ingrediente->ing_ingrediente)->first();
+            if($requerimientos === null){
+                //return $ingrediente->ing_ingrediente."<br>".$ingrediente->ing_mark."<br>".$ingrediente->ing_ratio;
+                requerimiento::create([
+                    'req_fecha' => $fecha,
+                    'rec_nombre' => $rec_nombre,
+                    'req_ingrediente' => $ingrediente->ing_ingrediente,
+                ]);
+            }
+        }
+        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
+        $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
+        $cantidad_produccion = $pro_produccion;
+        $rec_etapa = receta::where('rec_nombre',$rec_nombre)->first()->rec_proc;
+        
+        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa','ingredientes'));
+    }
+    /**
      * CREA UNA PRODUCCIÓN CON LOS DATOS PASADOS POR EL METODO pass QUE USA LOS DATOS APORTADOS POR EL FORMULARIO REQ.BLADE.PHP Y LOS QUE YA TRAIA GUARDADOS EN POST DESDE EL FORM CREATE
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */   
 
-    public function store(ProduccionCreateRequest $request)
+    public function store(Request $request)
     {
-
         /*VARIABLES QUE SE USAN REPETIDAMENTE*/
         $fecha = $request['pro_fecha'];
         $rec_nombre = $request['rec_nombre'];

@@ -7,6 +7,7 @@ $(document).ready(function() {
     */
     var entidad = "Caja Chica";
     var token = $("#token").val();
+    $(':input[type="submit"]').prop('disabled', true);
     getDisponible();
     $('#banco').hide();
     $('select[name=banco_o_caja]').change(function(){          
@@ -17,17 +18,18 @@ $(document).ready(function() {
             $('#banco').fadeIn('slow');
             entidad = "Banco de Venezuela";            
         }      
-        getDisponible();
+        getDisponible();       
+        
     });
     $('select[name=banco]').change(function(){          
         entidad = this.value;  
-        getDisponible();                 
+        getDisponible();              
     });   
-    validarMonto();
-
+    $('input[name=abono],input[name=concepto]').keyup(function(){                 
+        validarMonto();
+    });
     function getDisponible()
-    {
-        console.log('ejecutando getDisponible');
+    {        
         $.ajax({
             type: "POST",
             url: '/getDisponible',
@@ -40,9 +42,12 @@ $(document).ready(function() {
                 if(data){
                     $('#disponible').html(addCommas(data));
                     $('#disponible_hidden').val(data);
+                    console.log('copiado a disponible_hidden');
+                    validarMonto();
                 }       
             }
-        });         
+        });  
+        return;       
     }   
     function addCommas(nStr)
     {
@@ -57,32 +62,30 @@ $(document).ready(function() {
         return x1 + x2;
     } 
     function validarMonto()
-    {
-        $('input[name=abono]').keyup(function(){  
-                
-            var monto = this.value;  
-            var disponible = $('#disponible_hidden').val();
-            var deuda = $('#deuda').val();
-            if (parseFloat(monto) > parseFloat(disponible))
-            {
-                $('#error-msg').html("Error. El monto del abono es mayor al disponible");
-                $(':input[type="submit"]').prop('disabled', true);
-            }
-            else if(parseFloat(monto) < 0)
-            {
-                $('#error-msg').html("Error. El monto del abono no puede ser negativo");
-                $(':input[type="submit"]').prop('disabled', true);
-            }
-            else if(parseFloat(monto) > parseFloat(deuda))
-            {
-                $('#error-msg').html("Error. El monto del abono es mayor a la deuda");
-                $(':input[type="submit"]').prop('disabled', true);
-            }
-            else
-            {
-                $('#error-msg').html("");
-                $(':input[type="submit"]').prop('disabled', false);
-            }
-        });      
+    {       
+        var monto = $('input[name=abono]').val();  
+        var disponible = $('#disponible_hidden').val();
+        console.log("Validando monto: "+monto+", disponible: "+disponible);
+        var deuda = $('#deuda').val();
+        if (parseFloat(monto) > parseFloat(disponible))
+        {
+            $('#error-msg').html("Error. El monto del abono es mayor al disponible");
+            $(':input[type="submit"]').prop('disabled', true);
+        }
+        else if(parseFloat(monto) < 0)
+        {
+            $('#error-msg').html("Error. El monto del abono no puede ser negativo");
+            $(':input[type="submit"]').prop('disabled', true);
+        }
+        else if(parseFloat(monto) > parseFloat(deuda))
+        {
+            $('#error-msg').html("Error. El monto del abono es mayor a la deuda");
+            $(':input[type="submit"]').prop('disabled', true);
+        }
+        else
+        {
+            $('#error-msg').html("");
+            $(':input[type="submit"]').prop('disabled', false);
+        }      
     }
 });	

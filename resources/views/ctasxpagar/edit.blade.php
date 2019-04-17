@@ -59,7 +59,7 @@
 	<!-- Jquery -->
     {!!Html::script('js/jquery.min.js')!!}
     <!-- Formulario dinamico -->
-    {!!Html::script('js/ctasxpagar/dynamicForm.js?9')!!}
+    {!!Html::script('js/ctasxpagar/dynamicForm.js?19')!!}
 
 	<!-- Datepicker Files -->    
     {!!Html::script('js/bootstrap-datepicker.js')!!}
