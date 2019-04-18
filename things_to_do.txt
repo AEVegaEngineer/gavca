@@ -139,7 +139,7 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (X) Testear método store de produccion para producto A, B y C y ventas, fijarse si actualiza pro_disponible
 - (?) Costo unitario de proceso B y A no es igual en el reporte de producción y en la tabla de producciones (es posible que haya resuelto este error en etapas anteriores, no pude reproducirlo de nuevo.)
 - (X) Revisar cálculo de estándar de costos fijos y su reflejo en las producciones
-- Papelera de reciclaje de recetas no entra
+- (X) Papelera de reciclaje de recetas no entra
 - Informes para Cardex, Inventarios y Producción
 - (X) Probar el funcionamiento de req_ratio y par_ratio
 - Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito

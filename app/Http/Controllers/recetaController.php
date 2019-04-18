@@ -138,7 +138,7 @@ class recetaController extends Controller
             ->orderBy('rec_nombre', 'asc')
             ->orderBy('rec_activo', 'desc')
             ->paginate(15);
-        return view('papelera.index',compact('recetas'));
+        return view('papelera.receta',compact('recetas'));
     }
 
     /**
