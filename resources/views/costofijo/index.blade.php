@@ -26,8 +26,12 @@
 
 			<tr>
 				<td>{{$costofijo->cf_concepto}}</td>
-				<td align="right" id="mes-{{$i}}">{{number_format($costofijo->cf_montomes,$decimals = 2 , "," , ".")}}</td>
-				<td align="right" id="std-{{$i}}"></td>
+				<td align="right" id="mes-{{$i}}">
+					{{number_format($costofijo->cf_montomes,$decimals = 2 , "," , ".")}}
+				</td>
+				<td align="right" id="">
+					{{number_format($costofijo->cf_montomes/$produccionmess->produccion,$decimals = 2 , "," , ".")}}
+				</td>
 				<td>{{$costofijo->updated_at}}</td>
 				<td>
 					{!!Form::open(['route'=>['costofijo.destroy',$costofijo->id],'method'=>'DELETE'])!!}
@@ -46,7 +50,7 @@
 			<tr>
 				<td>TOTAL</td>
 				<td align="right">{{number_format($cf_montomes_tot,$decimals = 2 , "," , ".")}}</td>
-				<td align="right" id="tot_std"></td>
+				<td align="right">{{number_format($cf_montomes_tot/$produccionmess->produccion,$decimals = 2 , "," , ".")}}</td>
 			</tr>
 		</table>
 		<div class="col-md-6 col-xs-12">
@@ -62,6 +66,7 @@
 				<td id="total">{{$produccionmess->produccion}}</td>
 			</tr>			
 		</table>
+		<p><b>Estandar de costo fijo por unidad de producción: {{number_format($costo_fijo_unitario,$decimals = 2 , "," , ".")}}</b></p>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script>

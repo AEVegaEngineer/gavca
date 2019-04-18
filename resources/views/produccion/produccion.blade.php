@@ -145,7 +145,7 @@
 			$costoDirTotal = $costosTotales+$cos_tot_obra;
 			$costoDirUnit = $costosUnit+$cos_unit_obra;
 
-			$total_cf = ($miscelaneo->std_x_frasco/3)*$prod;
+			$total_cf = $miscelaneo->std_x_frasco*$prod;
 			$unit_cf = $total_cf/$prod;
 			$total_unit = $costoDirUnit+$unit_cf;
 
@@ -179,7 +179,7 @@
 			<tr>
 				<td>ESTANDAR DE COSTOS FIJOS POR UNIDAD PRODUCIDA</td>
 				<td>STD UNITARIO</td>				
-				<td align="right">{{number_format(($costoDirUnit/$total_unit)*100,$decimals = 2 , "," , ".")}}</td>
+				<td align="right">{{number_format($miscelaneo->std_x_frasco,$decimals = 2 , "," , ".")}}</td>
 				<td align="right">{{$prod}}</td>
 				<td align="right">{{number_format(1,2)}}</td>
 				<td align="right" id="total_cf">{{number_format($total_cf,$decimals = 2 , "," , ".")}}</td>

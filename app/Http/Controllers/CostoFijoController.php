@@ -37,7 +37,7 @@ class CostoFijoController extends Controller
         DB::table('miscelaneos')
             ->where('id', 1)
             ->update(['std_x_frasco' => $costo_fijo_unitario]);
-        return view('costofijo.index',compact('costofijos','produccionmess'));
+        return view('costofijo.index',compact('costofijos','produccionmess','costo_fijo_unitario'));
     }
 
     /**

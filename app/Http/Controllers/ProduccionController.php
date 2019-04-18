@@ -577,10 +577,10 @@ class ProduccionController extends Controller
             ->get();
         
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
-        ->where('requerimientos.req_fecha', $req_fecha)
-        ->where('requerimientos.rec_nombre', $rec_nombre)
-        ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-        ->get();        
+            ->where('requerimientos.req_fecha', $req_fecha)
+            ->where('requerimientos.rec_nombre', $rec_nombre)
+            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+            ->get();        
         $id = produccion::max('id');
         produccion::where('id',$id)->
             update([
@@ -1022,7 +1022,7 @@ function calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion
     }
     $cos_tot_obra = $req*$salario_integral;
     $cos_unit_obra = $cos_tot_obra / $prod;
-    $total_cf = ($miscelaneo->std_x_frasco/3)*$prod;
+    $total_cf = $miscelaneo->std_x_frasco*$prod;
     $unit_cf = $total_cf/$prod;
     $costoDirUnit = $costosUnit+$cos_unit_obra;
     $total_unit = $costoDirUnit+$unit_cf;

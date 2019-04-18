@@ -137,11 +137,11 @@ UPD: Sólo queda un error en cardex de materia prima, en receta B updatee aceite
 - (X) El costo actual del cardex de MP no actualiza cuando se actualiza el costo del parámetro  (cuando se actualiza en compra no se actualiza cardex->car_costo, cambiar el enlace de Foreign Key por Update Cascade)
 NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos ver facturas de compra viejas.
 - (X) Testear método store de produccion para producto A, B y C y ventas, fijarse si actualiza pro_disponible
-- Costo unitario de proceso B no es igual en el reporte de producción y en la tabla de producciones
-- Revisar cálculo de estándar de costos fijos y su reflejo en las producciones
+- (?) Costo unitario de proceso B y A no es igual en el reporte de producción y en la tabla de producciones (es posible que haya resuelto este error en etapas anteriores, no pude reproducirlo de nuevo.)
+- (X) Revisar cálculo de estándar de costos fijos y su reflejo en las producciones
 - Papelera de reciclaje de recetas no entra
 - Informes para Cardex, Inventarios y Producción
-- Probar el funcionamiento de req_ratio y par_ratio
+- (X) Probar el funcionamiento de req_ratio y par_ratio
 - Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
