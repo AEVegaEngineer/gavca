@@ -3,6 +3,7 @@
 @section('content')
 	@include('alerts.success')
 		<h2 class="form-signin-heading">Compra con documento de factura Nro.{{$compra->comp_doc}}</h2>
+		{!!link_to_route('compra.reporte', $title = 'Generar reporte', array($parameters = "factura",$fecha="0",$id=$compra->id), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
 			<thead>
 				<th>Fecha de compra</th>
@@ -10,7 +11,7 @@
 				<th>Documento de factura</th>	
 			</thead>
 			<tr class="warning">
-				<td>{{$compra->comp_fecha}}</td>
+				<td>{{date("Y/m/d", strtotime($compra->comp_fecha))}}</td>
 				<td>{{$compra->comp_proveedor}}</td>
 				<td>{{$compra->comp_doc}}</td>
 			</tr>

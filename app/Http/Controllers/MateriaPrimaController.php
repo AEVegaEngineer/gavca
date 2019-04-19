@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use gavca\materiaprima;
 use gavca\parametro;
+use gavca\cajabanco;
 use gavca\Http\Requests;
 use gavca\Http\Controllers\Controller;
 
@@ -79,11 +80,13 @@ class MateriaPrimaController extends Controller
      */
     public function index()
     {
+        $fecha_caja_actual = cajabanco::where('cb_activo',1)->latest()->first()->cb_fecha;
+        $fecha_caja_actual = date("Y-m-d", strtotime($fecha_caja_actual));
         $materiasprimas = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
                 ->orderBy('parametros.par_nombre','asc')
                 ->paginate(15);
 
-        return view('materiaprima.index',compact('materiasprimas'));
+        return view('materiaprima.index',compact('materiasprimas','fecha_caja_actual'));
     }
 
     /**

@@ -54,24 +54,46 @@ Route::post('/compra/pass',[
     'as' => 'compra.pass',
     'uses' => 'CompraController@pass'
 ]);
+Route::get('/compra/reporte/{factura_o_mensual}/{fecha?}/{factura?}',[
+    'as' => 'compra.reporte',
+    'uses' => 'CompraController@reporte'
+]);
+
 post('/checkCode', 'CompraController@checkCode');
 post('/createParam', 'CompraController@createParam');
 Route::resource('compra','CompraController');
 
 post('/createMP', 'MateriaPrimaController@createMP');
 Route::resource('materiaprima/insert', 'MateriaPrimaController@insert');
-
+/*
+Route::get('/materiaprima/reporte/{fecha_caja}',[
+    'as' => 'materiaprima.reporte',
+    'uses' => 'MateriaPrimaController@reporte'
+]);
+*/
 Route::resource('materiaprima', 'MateriaPrimaController');
 
+/*
 Route::get('/listCardexMP', 'CardexMPController@listCardexMP');
 Route::get('/listCardexPA', 'CardexMPController@listCardexPA');
 Route::get('/listCardexPB', 'CardexMPController@listCardexPB');
 Route::get('/listCardexPC', 'CardexMPController@listCardexPC');
+*/
 Route::resource('cardexMP', 'CardexMPController');
+Route::get('/cardex/reporte/{fecha}/{item}',[
+    'as' => 'cardexmp.reporte',
+    'uses' => 'CardexMPController@reporte'
+]);
+
 
 Route::get('/InventarioPA', 'InventarioController@InventarioPA');
 Route::get('/InventarioPB', 'InventarioController@InventarioPB');
 Route::get('/InventarioPC', 'InventarioController@InventarioPC');
+
+Route::get('/inventario/reporte/{fecha_caja}/{inventario}',[
+    'as' => 'inventario.reporte',
+    'uses' => 'InventarioController@reporte'
+]);
 
 post('/guardarCostos', 'ProduccionController@guardarCostos');
 
@@ -173,6 +195,10 @@ Route::post('venta/facturar', [
 Route::get('venta/revertir/{factura}', [
     'as' => 'venta.revertir',
     'uses' => 'VentaController@revertir'
+]);
+Route::get('/venta/reporte/{factura_o_mensual}/{atributo}',[
+    'as' => 'venta.reporte',
+    'uses' => 'VentaController@reporte'
 ]);
 Route::resource('venta','VentaController');
 

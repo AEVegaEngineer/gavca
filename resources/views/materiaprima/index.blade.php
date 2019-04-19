@@ -7,6 +7,7 @@
 		<?php if(Auth::user()->privilegio == 'admin'){ ?>
 			<a href="/materiaprima/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Materias Primas</a>
 		<?php } ?>
+		{!!link_to_route('inventario.reporte', $title = 'Generar reporte', array($fecha = $fecha_caja_actual, $inventario='Materia Prima'), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
 			<thead>
 				<th>Código</th>

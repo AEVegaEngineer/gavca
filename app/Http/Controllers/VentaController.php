@@ -17,6 +17,8 @@ use gavca\totalventa;
 use gavca\ctaxcobrar;
 use gavca\cajabanco;
 
+use PDF;
+
 class VentaController extends Controller
 {
     public function __construct()
@@ -308,11 +310,110 @@ class VentaController extends Controller
         $factura = totalventa::where('id',$id)->pluck('ven_factura');
         $ventas = totalventa::leftJoin('ventas', 'ventas.ven_factura', '=', 'totalesventas.ven_factura')
             ->where('totalesventas.ven_factura',$factura)
-            ->get();          
-        return view('venta.show',compact('ventas','factura'));
+            ->get();  
+        $totalventa_id = $id;       
+        return view('venta.show',compact('ventas','factura','totalventa_id'));
         
     }
+    /**
+     * GENERA EL REPORTE DE LAS VENTAS DEL ÚLTIMO MES
+     *
+     * @param  string  $factura_o_mensual
+     * @param  string/int  $atributo
+     * @return \Illuminate\Http\Response
+     */
+    public function reporte($factura_o_mensual, $atributo)
+    {
+        
+        if($factura_o_mensual == "mensual")
+        {
+            //reporte mensual          
+            //formatea fechas
+            if(isset($atributo) && $atributo != 0)
+            {
+                $anio = $atributo['0'].$atributo['1'].$atributo['2'].$atributo['3'];
+                $mes = $atributo['5'].$atributo['6'];
+                $mes_long = "";
+                $fecha_format = Carbon::create($anio, $mes, $day = 01);
+                switch ($mes) {
+                    case '01':
+                        $mes_long = "Enero";
+                        break;
+                    case '02':
+                        $mes_long = "Febrero";
+                        break;
+                    case '03':
+                        $mes_long = "Marzo";
+                        break;
+                    case '04':
+                        $mes_long = "Abril";
+                        break;
+                    case '05':
+                        $mes_long = "Mayo";
+                        break;
+                    case '06':
+                        $mes_long = "Junio";
+                        break;
+                    case '07':
+                        $mes_long = "Julio";
+                        break;
+                    case '08':
+                        $mes_long = "Agosto";
+                        break;
+                    case '09':
+                        $mes_long = "Septiembre";
+                        break;
+                    case '10':
+                        $mes_long = "Octubre";
+                        break;
+                    case '11':
+                        $mes_long = "Noviembre";
+                        break;
+                    case '12':
+                        $mes_long = "Diciembre";
+                        break;
+                    default:
+                        break;
+                }                
+                $totalesventas = totalventa::orderBy('id', 'dsc')
+                    ->get();
 
+                $elementos = venta::orderBy('id', 'dsc')
+                    ->where('ven_activo',1)
+                    ->whereYear('ven_fecha','=',$fecha_format->year) 
+                    ->whereMonth('ven_fecha','=',$fecha_format->month)           
+                    ->get();
+                $elementos = $elementos->unique('ven_factura');
+                
+                $pdf = PDF::loadView('venta.reporte-mensual', compact('totalesventas','elementos','mes_long','fecha_format')); 
+                $pdf->save(storage_path('reportes/Ventas/Reporte-Ventas-Mensual-'.$anio.'-'.$mes_long.'.pdf'));
+                return $pdf->stream('Reporte-Ventas-Mensual-'.$anio.'-'.$mes_long.'.pdf');
+                /*
+                $records = \DB::select('ip')
+                      ->selectRaw('count(`ip`) as `occurences`')
+                      ->from('users')
+                      ->groupBy('ip')
+                      ->having('occurences', '>', 1)
+                      ->get()
+                */
+                
+            }else{
+                return redirect('/venta')->with('message','Se debe seleccionar una fecha para generar el reporte.');
+            }
+        }
+        else
+        {
+            //reporte por factura
+            $factura = totalventa::where('id',$atributo)->pluck('ven_factura');
+            $ventas = totalventa::leftJoin('ventas', 'ventas.ven_factura', '=', 'totalesventas.ven_factura')
+                ->where('totalesventas.ven_factura',$factura)
+                ->get();                      
+            $pdf = PDF::loadView('venta.reporte-factura', compact('ventas','factura')); 
+            $pdf->save(storage_path('reportes/Ventas/Reporte-Venta-Factura-'.$factura.'.pdf'));
+            return $pdf->stream('Reporte-Venta-Factura-'.$factura.'.pdf');
+        }       
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *

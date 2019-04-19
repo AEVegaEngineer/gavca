@@ -397,7 +397,7 @@ class CajaBancoController extends Controller
         return view('caja.caja',compact('bancos','caja','records','saldo_existe'));
     }
     /**
-     * GENERA EL REPORTE EN PDF
+     * GENERA EL REPORTE DE LA ENTIDAD SELECCIONADA EN PDF
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -415,7 +415,7 @@ class CajaBancoController extends Controller
             ->get();
         //return $records;
         $pdf = PDF::loadView('caja.caja-report', compact('caja','records'));
-        $pdf->save(storage_path('reports/Reporte-'.$caja.'-'.session('caja_fecha').'.pdf'));
+        $pdf->save(storage_path('reportes/CajaBanco/Reporte-'.$caja.'-'.session('caja_fecha').'.pdf'));
         return $pdf->stream('Reporte-'.$caja.'-'.session('caja_fecha').'.pdf');
         
     }

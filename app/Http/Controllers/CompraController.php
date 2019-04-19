@@ -19,6 +19,8 @@ use gavca\Http\Requests;
 use gavca\Http\Requests\CompraCreateRequest;
 use gavca\Http\Controllers\Controller;
 
+use PDF;
+
 class CompraController extends Controller
 {
     public function __construct()
@@ -97,7 +99,6 @@ class CompraController extends Controller
      */
     public function index()
     {
-        DB::table('compras')->where('comp_monto', '=', null)->delete();
         $compras = compra::orderBy('id', 'dsc')->where('comp_activo',1)->paginate(15);
         return view('compra.index',compact('compras'));
     }
@@ -561,6 +562,91 @@ class CompraController extends Controller
         return "en construccion?";
         compra::destroy($id);
         return redirect('/compra')->with('message','Compra eliminada exitosamente');
+    }
+    /**
+     * GENERA EL REPORTE DE LAS COMPRAS DEL MES O DE LA FACTURA
+     *
+     * @param  string  $factura_o_mensual
+     * @param  string  $fecha
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function reporte($factura_o_mensual, $fecha = null, $id = null)
+    {
+        //formatea fechas
+        if(isset($fecha) && $fecha != 0)
+        {
+            $anio = $fecha['0'].$fecha['1'].$fecha['2'].$fecha['3'];
+            $mes = $fecha['5'].$fecha['6'];
+            $mes_long = "";
+            $fecha_format = Carbon::create($anio, $mes, $day = 01);
+            switch ($mes) {
+                case '01':
+                    $mes_long = "Enero";
+                    break;
+                case '02':
+                    $mes_long = "Febrero";
+                    break;
+                case '03':
+                    $mes_long = "Marzo";
+                    break;
+                case '04':
+                    $mes_long = "Abril";
+                    break;
+                case '05':
+                    $mes_long = "Mayo";
+                    break;
+                case '06':
+                    $mes_long = "Junio";
+                    break;
+                case '07':
+                    $mes_long = "Julio";
+                    break;
+                case '08':
+                    $mes_long = "Agosto";
+                    break;
+                case '09':
+                    $mes_long = "Septiembre";
+                    break;
+                case '10':
+                    $mes_long = "Octubre";
+                    break;
+                case '11':
+                    $mes_long = "Noviembre";
+                    break;
+                case '12':
+                    $mes_long = "Diciembre";
+                    break;
+                default:
+                    break;
+            }
+        }
+        if($factura_o_mensual == "mensual")
+        {
+            //reporte mensual          
+            $compras = compra::orderBy('id', 'dsc')
+                ->where('comp_activo',1)
+                ->whereYear('comp_fecha','=',$fecha_format->year) 
+                ->whereMonth('comp_fecha','=',$fecha_format->month)                 
+                ->get(); 
+            $pdf = PDF::loadView('compra.reporte-mensual', compact('compras','fecha_format','mes_long')); 
+            $pdf->save(storage_path('reportes/Compras/Reporte-Compras-Mensual-'.$anio.'-'.$mes_long.'.pdf'));
+            return $pdf->stream('Reporte-Compras-Mensual-'.$anio.'-'.$mes_long.'.pdf');       
+        }
+        else
+        {
+            //reporte por factura
+            $cardexs = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
+                ->leftJoin('compras', 'compras.id', '=', 'cardexmp.car_compra_id')
+                ->where('compras.id',$id)
+                ->orderBy('cardexmp.id','dsc')                
+                ->get();
+            $compra = compra::where('id',$id)->first();
+            $pdf = PDF::loadView('compra.reporte-factura', compact('compra','cardexs'));
+            $pdf->save(storage_path('reportes/Compras/Reporte-Compra-Factura-'.$compra->comp_doc.'.pdf')); 
+            return $pdf->stream('Reporte-Compra-Factura-'.$compra->comp_doc.'.pdf');
+        }
+        
     }
 }
 /**

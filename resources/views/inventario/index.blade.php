@@ -16,6 +16,7 @@
 			?>
 			<a href="/produccion/{{$p}}/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Productos de {{$proc}}</a>
 		<?php } ?>
+		{!!link_to_route('inventario.reporte', $title = 'Generar reporte', array($fecha = $fecha_caja_actual, $inventario=$proc), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
 			<thead>
 				<?php if($proc == "Proceso C (Terminados)"){ ?>

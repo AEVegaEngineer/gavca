@@ -15,6 +15,10 @@ use gavca\parametro;
 use gavca\Http\Requests;
 use gavca\Http\Controllers\Controller;
 
+use PDF;
+
+include 'Soporte/formatoFechaMesLong.php';
+
 class CardexMPController extends Controller
 {
     public function __construct()
@@ -104,7 +108,32 @@ class CardexMPController extends Controller
         $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;
         return view('cardex.show',compact('cardexs','existencia'));
     }
-
+    /**
+     * GENERA EL REPORTE DEL CARDEX DE UN ITEM PARA UN MES DADO     
+     *
+     * @param  date $fecha
+     * @param  string  $inventario
+     * @return pdf stream
+     */
+    public function reporte($fecha, $mp_codigo)
+    {
+        $fecha_formateada = Carbon::parse($fecha);   
+        $mes_long = getMesLong($fecha);   
+        //Devuelve una vista distinta para las materias primas
+        $cardexs = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
+                ->leftJoin('compras', 'compras.id', '=', 'cardexmp.car_compra_id')
+                ->where('cardexmp.mp_codigo',$mp_codigo)
+                ->whereYear('car_fecha','=',$fecha_formateada->year)
+                ->whereMonth('car_fecha','=',$fecha_formateada->month)
+                ->orderBy('cardexmp.id','dsc')
+                ->get();
+        return $cardexs;
+        $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;
+        $pdf = PDF::loadView('cardex.reporte-cardex', compact('cardexs','existencia','mes_long','fecha_formateada')); 
+        $pdf->save(storage_path('reportes/Cardex/Materia Prima/Reporte '.$cardexs[0]->par_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
+        return $pdf->stream('Reporte '.$cardexs[0]->par_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *
