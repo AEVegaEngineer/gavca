@@ -140,7 +140,8 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (?) Costo unitario de proceso B y A no es igual en el reporte de producción y en la tabla de producciones (es posible que haya resuelto este error en etapas anteriores, no pude reproducirlo de nuevo.)
 - (X) Revisar cálculo de estándar de costos fijos y su reflejo en las producciones
 - (X) Papelera de reciclaje de recetas no entra
-- Informes para Cardex, Inventarios y Producción
+- (X) Informes para Cardex, Inventarios y Producción
+- (X) Verificar que los reportes no den error cuando se listan fechas que no tienen nada
 - (X) Probar el funcionamiento de req_ratio y par_ratio
 - Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito
 
@@ -149,7 +150,7 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
 
-Se quitó el foreign key en dependencias.dep_produccion que referenciaba a produccion.id ya que cuando se hacia una limpieza desde los ajustes eliminaba las dependencias de las recetas
+Se colocó el foreign key en dependencias.dep_produccion que referenciaba a produccion.id como set null ya que cuando se hacia una limpieza desde los ajustes eliminaba las dependencias de las recetas
 
 Tabla ingredientes: usada para guardar los ingredientes que van a participar en una receta (no sus cantidades, únicamente se guarda si éste tiene un valor predeterminado por cada producción)
 

@@ -94,6 +94,10 @@ Route::get('/inventario/reporte/{fecha_caja}/{inventario}',[
     'as' => 'inventario.reporte',
     'uses' => 'InventarioController@reporte'
 ]);
+Route::get('/cardexProduccion/reporte/{fecha}/{etapa}/{receta}',[
+    'as' => 'produccion.reporteCardex',
+    'uses' => 'ProduccionController@reporteCardex'
+]);
 
 post('/guardarCostos', 'ProduccionController@guardarCostos');
 
@@ -112,6 +116,14 @@ post('/reqUpd', 'ProduccionController@req_upd');
 post('/checkDep', 'ProduccionController@checkDep');
 post('/storeProd', 'ProduccionController@storeProd');
 Route::get('/verProduccion/{id}', 'ProduccionController@verProduccion');
+Route::get('/Producciones/reporte/{fecha}',[
+    'as' => 'producciones.reporte',
+    'uses' => 'ProduccionController@reporte'
+]);
+Route::get('/Produccion/reporte/{id}',[
+    'as' => 'produccion.reporte',
+    'uses' => 'ProduccionController@reporteProduccion'
+]);
 Route::resource('produccion','ProduccionController');
 
 

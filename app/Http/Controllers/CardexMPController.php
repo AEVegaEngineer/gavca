@@ -125,9 +125,12 @@ class CardexMPController extends Controller
                 ->where('cardexmp.mp_codigo',$mp_codigo)
                 ->whereYear('car_fecha','=',$fecha_formateada->year)
                 ->whereMonth('car_fecha','=',$fecha_formateada->month)
+                ->orWhereNull('car_fecha')
+                ->where('cardexmp.mp_codigo',$mp_codigo)
+                ->whereYear('comp_fecha','=',$fecha_formateada->year)
+                ->whereMonth('comp_fecha','=',$fecha_formateada->month)
                 ->orderBy('cardexmp.id','dsc')
                 ->get();
-        return $cardexs;
         $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;
         $pdf = PDF::loadView('cardex.reporte-cardex', compact('cardexs','existencia','mes_long','fecha_formateada')); 
         $pdf->save(storage_path('reportes/Cardex/Materia Prima/Reporte '.$cardexs[0]->par_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));

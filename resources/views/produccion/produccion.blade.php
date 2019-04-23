@@ -11,12 +11,14 @@
 				<?php }else{ ?>
 					<p>Esta producción no es modificable ya que ha sido utilizada por una venta u otra producción de etapa superior.</p>
 				<?php } ?>
+
 			</div>		
 			<?php 
 			$req = $produccion->pro_mano_obra;
 			$prod = $produccion->pro_produccion;
 			?>
 			<div class="col-md-3 col-xs-12 form-inline">
+
 				<label for="produccion">Producción: {{$prod}}    </label>	
 				<?php 
 					if($produccion->pro_lote != null){ 
@@ -29,6 +31,10 @@
 						echo '</label>';
 					}
 				?>	
+
+			</div>
+			<div class="col-md-3">
+				{!!link_to_route('produccion.reporte', $title = 'Generar reporte', array($id = $produccion->id), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 			</div>
 		</div>
 		<table class="table table-bordered">
@@ -83,7 +89,8 @@
 				$costosTotales+=$costo_total;
 				$costosUnit+=$costo_unitario;
 				$i++;
-			}?>
+			}
+			?>
 			@endforeach
 			<?php
 			function round_a($number, $precision = 2)

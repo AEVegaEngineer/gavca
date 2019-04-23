@@ -15,7 +15,7 @@
 	</div>
 	<div class="row margenBotSm">    	
 		<div class="col-xs-12 col-md-5">	
-			{!!Form::text('fecha',null,['class'=>'form-control datepicker','placeholder'=>'Click aquí seleccionar una fecha','required'=>'required'])!!}			
+			{!!Form::text('fecha',null,['class'=>'form-control datepicker','placeholder'=>'Click aquí seleccionar una fecha','required'=>'required','autocomplete'=>'off'])!!}			
 		</div>		
 	</div>
 	{!!Form::submit('Abrir',['class'=>'btn btn-lg btn-success'])!!}

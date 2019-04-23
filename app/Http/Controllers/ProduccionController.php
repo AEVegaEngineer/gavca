@@ -24,6 +24,10 @@ use gavca\Http\Requests;
 use gavca\Http\Requests\ProduccionCreateRequest;
 use gavca\Http\Controllers\Controller;
 
+use PDF;
+
+include 'Soporte/formatoFechaMesLong.php';
+
 class ProduccionController extends Controller
 {
     public function __construct()
@@ -687,38 +691,7 @@ class ProduccionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($nombre)
-    {
-        /*
-        $receta = "receta prueba c";
-        $disponible=0;        
-        for ($i=1; $i < produccion::max('id'); $i++) { 
-            $row = produccion::where('id',$i)->first();
-            if($i == 103)
-                continue;
-            if($row->rec_nombre == $receta)
-            {
-                if($row->pro_costo !== null)
-                {
-                    if($i == 1)
-                    {
-                        $disponible = $row->pro_produccion;
-                    }
-                    else
-                    {
-                        $disponible = $row->pro_produccion + $disponible;
-                    }
-
-                }
-                else
-                {
-                    $disponible = $disponible - $row->pro_produccion;
-                }
-                produccion::where('id',$i)
-                    ->update(["pro_disponible" => $disponible]);
-            }
-        }
-        
-        */
+    {        
         $existencia = produccion::where('produccion.rec_nombre',$nombre)
                 ->orderBy('produccion.id','dsc')                
                 ->take(1)
@@ -731,7 +704,104 @@ class ProduccionController extends Controller
         
        
     }
+    /**
+     * GENERA EL REPORTE DEL CARDEX DE UNA PRODUCCIÓN ESPECÍFICA PARA UN MES DADO     
+     *
+     * @param  date $fecha
+     * @param  string  $inventario
+     * @return pdf stream
+     */
+    public function reporteCardex($fecha, $etapa, $rec_nombre)
+    {
+        $rec_nombre = html_entity_decode($rec_nombre);
+        $fecha_formateada = Carbon::parse($fecha);   
+        $mes_long = getMesLong($fecha);   
 
+        if($etapa == "PA")
+            $etapa = "Proceso A";
+        else if($etapa == "PB")
+            $etapa = "Proceso B";
+        else if($etapa == "PC")
+            $etapa = "Proceso C (Terminados)";
+        
+        //Devuelve una vista distinta para las materias primas
+        $existencia = produccion::where('rec_nombre',$rec_nombre)
+            ->orderBy('id','dsc')                
+            ->take(1)
+            ->pluck('pro_disponible');
+        $producciones = produccion::where('rec_nombre',$rec_nombre)
+            ->whereYear('pro_fecha','=',$fecha_formateada->year)
+            ->whereMonth('pro_fecha','=',$fecha_formateada->month)            
+            ->orderBy('id','dsc')                                
+            ->get();
+        $pdf = PDF::loadView('produccion.reporte-cardex', compact('producciones','existencia','mes_long','etapa','fecha_formateada')); 
+        $pdf->save(storage_path('reportes/Cardex/'.$etapa.'/Reporte '.$rec_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
+        return $pdf->stream('Reporte '.$rec_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
+        
+    }
+    /**
+     * GENERA EL REPORTE GENERAL DE LAS PRODUCCIONES PARA UN MES DADO     
+     *
+     * @param  date $fecha
+     * @param  string  $inventario
+     * @return pdf stream
+     */
+    public function reporte($fecha)
+    {
+        $fecha_formateada = Carbon::parse($fecha);   
+        $mes_long = getMesLong($fecha);   
+
+        $producciones = produccion::whereNotNull('pro_costo')
+            ->whereYear('pro_fecha','=',$fecha_formateada->year)
+            ->whereMonth('pro_fecha','=',$fecha_formateada->month)  
+            ->orderBy('id', 'dsc')            
+            ->get();
+        $pdf = PDF::loadView('produccion.reporte-producciones', compact('producciones','mes_long','fecha_formateada')); 
+        $pdf->save(storage_path('reportes/Produccion/Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
+        return $pdf->stream('Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
+        
+    }
+    /**
+     * GENERA EL REPORTE ESPECÍFICO DE UNA CORRIDA DE PRODUCCIÓN 
+     *
+     * @param  date $fecha
+     * @param  string  $inventario
+     * @return pdf stream
+     */
+    public function reporteProduccion($id)
+    {
+        $aumentos = aumento::All();
+        $salarios = salario::All();
+        $produccion = produccion::where('id',$id)
+            ->first();
+        $rec_nombre = produccion::where('id',$id)->pluck('rec_nombre');
+        $recetas = receta::where('rec_nombre',$rec_nombre)->first();
+        $req_fecha = produccion::where('id',$id)->pluck('pro_fecha');
+        $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
+            ->where('requerimientos.req_fecha', $req_fecha)
+            ->where('requerimientos.rec_nombre', $rec_nombre)
+            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+            ->get(); 
+        $miscelaneo = miscelaneo::where('id','1')->first();
+        $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
+        $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
+            ->leftJoin('produccion', 'produccion.rec_nombre', '=', 'dependencias.dep_hijo')
+            ->where('produccion.id', '<', $id)
+            ->select("produccion.pro_produccion", 'recetas.rec_unidad', 'dependencias.dep_hijo')
+            ->orderBy('produccion.id','dsc')
+            ->take($cuenta)
+            ->get();
+        $costos = DB::table('produccion')
+            ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
+            ->where('dependencias.dep_padre',$rec_nombre)
+            ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
+            ->get();  
+
+        $pdf = PDF::loadView('produccion.reporte-produccion', compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos')); 
+        $pdf->save(storage_path('reportes/Produccion/Productos/Producción de '.$rec_nombre.' de fecha '.$req_fecha.'.pdf'));
+        return $pdf->stream('Producción de '.$rec_nombre.' de fecha '.$req_fecha.'.pdf');              
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *
