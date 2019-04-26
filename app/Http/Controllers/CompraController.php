@@ -385,8 +385,18 @@ class CompraController extends Controller
             $mp = materiaprima::where('mp_codigo', $mp_codigo)->latest()->first();
             if($mp === NULL){
                 $valor_anterior = 0;
+                //CREO LA EXISTENCIA DE MATERIA PRIMA 
+                materiaprima::create([
+                    'mp_codigo' => $mp_codigo,
+                    'mp_cantidad' => $qty,           
+                ]);
             }else{
                 $valor_anterior = $mp->mp_cantidad;
+                //actualiza la existencia                
+                $existente = $mp->mp_cantidad;
+                materiaprima::where('id', $mp->id)->update(array(
+                    'mp_cantidad' => $existente+$qty
+                ));
             }            
             $valor_actual = $valor_anterior + $request["qty"][$key];
             cardexMP::create([
@@ -401,20 +411,8 @@ class CompraController extends Controller
             ]);
             //FIN DE CREACION DE LOS ARTÍCULOS COMPRADOS DENTRO DE CARDEXMP
 
-            //CREO LA EXISTENCIA DE MATERIA PRIMA           
-            if($mp == null){
-                //crea
-                materiaprima::create([
-                    'mp_codigo' => $mp_codigo,
-                    'mp_cantidad' => $qty,           
-                ]);                
-            }else{
-                //actualiza                
-                $existente = $mp->mp_cantidad;
-                materiaprima::where('id', $mp->id)->update(array(
-                    'mp_cantidad' => $existente+$qty
-                ));                               
-            }
+                      
+            
             //FIN DE CREACION DE EXISTENCIA DE MATERIA PRIMA
         }
         return redirect('/compra')->with('message','Compra registrada exitosamente');
