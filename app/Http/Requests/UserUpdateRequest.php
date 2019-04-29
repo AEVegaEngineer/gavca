@@ -30,7 +30,8 @@ class UserUpdateRequest extends Request
             //'email' => 'required',
             'email' => 'required|unique:users,email,'.$id,
             //Donde email es el campo a omitir del request e $id es la id del usuario a actualizar.
-            'privilegio' => 'required',
+            //'privilegio' => 'required',
+            //los usuarios que son tipo 1 y tipo 2 no pueden editar sus privilegios
         ];
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+@include('alerts.success')
 @include('alerts.errors')
 @section('content')
 	<div class="col-md-12">

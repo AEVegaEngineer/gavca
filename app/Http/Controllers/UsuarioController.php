@@ -92,8 +92,10 @@ class UsuarioController extends Controller
         $user = User::find($id);
         $user->fill($request->all());
         $user->save();
-
-        return redirect('/usuario')->with('message','Usuario actualizado exitosamente');
+        if($user->privilegio == "admin")
+            return redirect('/usuario')->with('message','Usuario actualizado exitosamente');
+        else
+            return redirect('/')->with('message','Usuario actualizado exitosamente');
     }
 
     /**
