@@ -84,6 +84,7 @@ class MateriaPrimaController extends Controller
         $fecha_caja_actual = date("Y-m-d", strtotime($fecha_caja_actual));
         $materiasprimas = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
                 ->orderBy('parametros.par_nombre','asc')
+                ->select('materiasprimas.mp_codigo','parametros.par_nombre','parametros.par_unidad','materiasprimas.mp_cantidad','materiasprimas.updated_at')
                 ->paginate(15);
 
         return view('materiaprima.index',compact('materiasprimas','fecha_caja_actual'));

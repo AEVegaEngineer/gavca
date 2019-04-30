@@ -13,11 +13,17 @@
 			</thead>
 			@foreach($users as $user)
 			<tbody>
-				<td>{{$user->name}}</td>
+				
+				<td>
+					<?php echo ($user->name == Auth::user()->name) ? "<b>" : "" ?>
+					{{$user->name}}
+					<?php echo ($user->name == Auth::user()->name) ? "</b>" : "" ?>
+				</td>
 				<td>{{$user->email}}</td>
 				<td>{{$user->privilegio}}</td>
+				
 				<td>
-					<?php if(Auth::user()->privilegio == 'admin'){ ?>
+					<?php if(Auth::user()->privilegio == 'admin' && $user->name != Auth::user()->name){ ?>
 					<div class="btn-group">						
 						<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" data-id="{{$user->id}}">Eliminar</button>
 					</div>		

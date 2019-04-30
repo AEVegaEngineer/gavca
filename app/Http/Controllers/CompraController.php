@@ -375,7 +375,10 @@ class CompraController extends Controller
                 foreach ($request["update"] as $key => $value) {
                     if ($mp_codigo == $value) {
                         parametro::where('par_codigo',$value)
-                            ->update(['par_costo'=>$cost]);
+                            ->update([
+                                'par_costo'=>$cost,
+                                'par_cost_updated'=>$request['comp_fecha'],
+                            ]);
                     }                    
                 }                
             }

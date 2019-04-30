@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de Bancos</h2>
+		<h2 class="form-signin-heading">Lista de Bancos</h2>
 		<table class="table">
 			<thead>
 				<th>Nombre</th>

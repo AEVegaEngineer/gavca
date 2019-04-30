@@ -159,12 +159,7 @@ $(document).ready(function() {
 	/*INICIO DE SECCION PARA LA ACTUALIZACIÓN DE LOS COSTOS TOTALES EN CAMPOS HIDDEN*/
 	$('#actualizar').click(function(e){
 		e.preventDefault();
-		actualizarCostos();
-		/*
-		setTimeout(function(){
-			calcular();
-		}, 1000);	
-		*/	
+		actualizarCostos();		
 	});
 	function actualizarCostos(){
 		var texto = "";
@@ -253,10 +248,11 @@ $(document).ready(function() {
 	    nStr += '';
 	    x = nStr.split('.');
 	    x1 = x[0];
-	    x2 = x.length > 1 ? '.' + x[1] : '';
+	    x2 = x.length > 1 ? ',' + x[1] : '';
+	    x2 = x2.substr(0,3);
 	    var rgx = /(\d+)(\d{3})/;
 	    while (rgx.test(x1)) {
-	        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	        x1 = x1.replace(rgx, '$1' + '.' + '$2');
 	    }
 	    return x1 + x2;
 	}

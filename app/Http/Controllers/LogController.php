@@ -4,11 +4,13 @@ namespace gavca\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use Mail;
 use Session;
 use Redirect;
 
 use gavca\Http\Requests;
 use gavca\Http\Requests\LoginRequest;
+use gavca\Http\Requests\PasswordRecoverRequest;
 use gavca\Http\Controllers\Controller;
 
 class LogController extends Controller
@@ -59,6 +61,18 @@ class LogController extends Controller
         }
         Session::flash('message-error','Los datos ingresados son incorrectos');
         return Redirect::to('/');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function recover(PasswordRecoverRequest $request)
+    {
+        return view('email.recover');
+        //Mail::send('email.recover');       
     }
 
     /**

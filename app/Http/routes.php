@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'FrontController@index');
+Route::get('/password/email', 'FrontController@recover');
 
 Route::resource('usuario','UsuarioController');
 
@@ -28,6 +29,10 @@ post('/addProduct', 'IngredienteController@addProduct');
 Route::resource('ingrediente','IngredienteController');
 
 Route::resource('log','LogController');
+Route::post('/password/correo-de-recuperacion',[
+    'as' => 'log.recover',
+    'uses' => 'LogController@recover'
+]);
 
 Route::get('admin', 'FrontController@admin');
 

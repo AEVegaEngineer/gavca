@@ -60,15 +60,15 @@
 					<table class="table table-bordered" id="totals">	
 						<tr>
 							<td colspan="2">Total</td>
-							<td id="total">0.00</td>
+							<td id="total" align="right">0.00</td>
 						</tr>
 						<tr>
 							<td colspan="2">Iva</td>
-							<td id="totalIva">0.00</td>
+							<td id="totalIva" align="right">0.00</td>
 						</tr>	
 						<tr>
 							<td colspan="2">Total + Iva</td>
-							<td id="totalMasIva">0.00</td>
+							<td id="totalMasIva" align="right">0.00</td>
 						</tr>		
 					</table>	
 				</div>
@@ -149,5 +149,5 @@
 	</div>	
 	<script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript"></script>	
 
-	<script src="{{ asset('/js/materiaprima/crear_mp.js?118') }}" type="text/javascript"></script>
+	<script src="{{ asset('/js/materiaprima/crear_mp.js?121') }}" type="text/javascript"></script>
 @endsection

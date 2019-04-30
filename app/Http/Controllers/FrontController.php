@@ -39,6 +39,15 @@ class FrontController extends Controller
     public function admin()
     {
         return view('admin');
-    }    
+    }   
+    /**
+     * Retorna vista de recuperación de contraseña.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recover()
+    {
+        return view('auth/recover');
+    } 
     
 }

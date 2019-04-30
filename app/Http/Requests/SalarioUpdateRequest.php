@@ -24,8 +24,9 @@ class SalarioUpdateRequest extends Request
     public function rules()
     {
         return [
-            'sal_mensual' => 'required',
-            'unidad_tributaria' => 'required',
+            'sal_mensual' => 'required|Numeric',
+            'unidad_tributaria' => 'required|Numeric',
+            'cant_cesta_ticket' => 'required|Numeric',
         ];
     }
     protected function getValidatorInstance()

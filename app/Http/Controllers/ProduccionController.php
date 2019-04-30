@@ -246,7 +246,7 @@ class ProduccionController extends Controller
      * @return \Illuminate\Http\Response
      */   
 
-    public function pass(Request $request)
+    public function pass(ProduccionCreateRequest $request)
     {
         $fecha = $request['pro_fecha'];
         $rec_nombre = $request['rec_nombre'];
@@ -265,18 +265,6 @@ class ProduccionController extends Controller
         }
         
         $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
-        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->first();
-        foreach ($ingredientes as $ingrediente) {            
-            $par = parametro::where('par_nombre',$ingrediente->ing_ingrediente)->first();
-            if($requerimientos === null){
-                //return $ingrediente->ing_ingrediente."<br>".$ingrediente->ing_mark."<br>".$ingrediente->ing_ratio;
-                requerimiento::create([
-                    'req_fecha' => $fecha,
-                    'rec_nombre' => $rec_nombre,
-                    'req_ingrediente' => $ingrediente->ing_ingrediente,
-                ]);
-            }
-        }
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
         $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         $cantidad_produccion = $pro_produccion;
@@ -337,16 +325,7 @@ class ProduccionController extends Controller
                 return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$request["req_ingrediente"][$key].' para crear esta cantidad de producción!');   
             }
         }
-        /*
-        Paso las dependencias de este padre como requerimientos para obtener el valor y actualizo el valor del requerimiento total de las dependencias para expresarla en la hoja de datos para los calculos.
-        */        
-        if($request["dependencia"] !== null){
-            foreach ($request["dependencia"] as $key => $dependencia) {                
-                dependencia::where('dep_padre', $rec_nombre)
-                    ->where('dep_hijo', $request["dep_hijo"][$key])
-                    ->update(['requerimiento' => $request["dependencia"][$key]]);
-            }
-        }
+        
         /*
         REVISO CUALES SON LAS DEPENDENCIAS DE LA RECETA A CREAR Y CUALES SON LAS RECETAS HIJAS DE ESTA, SI HAY EXISTENCIA DE LAS RECETAS HIJAS SE PUEDE CREAR LA RECETA SI NO, NO.
         */
@@ -361,10 +340,7 @@ class ProduccionController extends Controller
                 }      
                 if($existencia === null)
                     $existencia = 0;
-                $requiere = dependencia::where('dep_padre',$dependencia->dep_padre)
-                    ->where('dep_hijo',$dependencia->dep_hijo)
-                    ->first()
-                    ->requerimiento;
+                $requiere = $request["dependencia"][$key];
                 
                 if($requiere>$existencia){
                     return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$dependencia->dep_hijo.' para crear esta cantidad de producción!');                
@@ -410,7 +386,16 @@ class ProduccionController extends Controller
             }
         }
 
-        
+        /*
+        Paso las dependencias de este padre como requerimientos para obtener el valor y actualizo el valor del requerimiento total de las dependencias para expresarla en la hoja de datos para los calculos.
+        */        
+        if($request["dependencia"] !== null){
+            foreach ($request["dependencia"] as $key => $dependencia) {                
+                dependencia::where('dep_padre', $rec_nombre)
+                    ->where('dep_hijo', $request["dep_hijo"][$key])
+                    ->update(['requerimiento' => $request["dependencia"][$key]]);
+            }
+        }
         
         /*SECCION PARA CREAR O ACTUALIZAR EL INVENTARIO DE PRODUCCION*/
         if($receta->rec_proc == "PA"){
@@ -494,6 +479,8 @@ class ProduccionController extends Controller
                     ->where('pro_etapa','PB')
                     ->where('rec_nombre',$rec_nombre)
                     ->max('pro_lote');
+                if($lote === null)
+                    $lote = 0;
                 produccion::where('pro_fecha',$fecha)->where('rec_nombre',$rec_nombre)->update([
                     'pro_fecha' => $fecha,
                     'rec_nombre' => $rec_nombre,
@@ -523,12 +510,17 @@ class ProduccionController extends Controller
         /*
         ACTUALIZO LOS REQUERIMIENTOS DE LOS INGREDIENTES DE LA PRODUCCION (NO LAS DEPENDENCIAS)        
         */
+        $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
+        
         $requerimientos = requerimiento::where('req_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
         foreach ($request["req_ingrediente"] as $key => $ingrediente) {
-            requerimiento::where('rec_nombre', $rec_nombre)
-                ->where('req_fecha', $fecha)
-                ->where('req_ingrediente', $request["req_ingrediente"][$key])
-                ->update(['req_total' => $request["req_total"][$key]]);
+            requerimiento::create([
+                'req_fecha' => $fecha,
+                'rec_nombre' => $rec_nombre,
+                'req_ingrediente' => $request["req_ingrediente"][$key],
+                'req_total' => $request["req_total"][$key],
+            ]);
+            
             $materiaprima = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
                 ->where('parametros.par_nombre',$request["req_ingrediente"][$key])
                 ->first();

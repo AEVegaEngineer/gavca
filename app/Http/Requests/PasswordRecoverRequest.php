@@ -3,9 +3,8 @@
 namespace gavca\Http\Requests;
 
 use gavca\Http\Requests\Request;
-use gavca\produccion;
 
-class ProduccionCreateRequest extends Request
+class PasswordRecoverRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +23,8 @@ class ProduccionCreateRequest extends Request
      */
     public function rules()
     {
-        //$fecha = $this->input('pro_fecha');
-
         return [
-            'pro_produccion' => 'required|Integer',
-            'pro_fecha' => 'required',
-            'rec_nombre' => 'required', 
-            'pro_mano_obra' => 'required|Numeric',               
+            'email' => 'required|email',
         ];
     }
 }

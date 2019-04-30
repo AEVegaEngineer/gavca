@@ -162,10 +162,7 @@ class AjusteController extends Controller
         else if($request["target"] == 'produccionc'){
             //produccion
         }
-        \Session::flash('message', "Inventario actualizado correctamente."); 
-        $materiasprimas = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
-            ->paginate(15);
-        return view('materiaprima.index',compact('materiasprimas'));
+        return redirect('/materiaprima')->with('message','Inventario actualizado correctamente.');
     }
 
     /**
