@@ -14,8 +14,7 @@
 				{!!Form::text('email',null,['class'=>'form-control input-lg margenBotSm','placeholder'=>'Ingresa tu usuario o correo'])!!}
 				{!!Form::password('password',['class'=>'form-control margenBotSm','placeholder'=>'Ingresa tu contraseña'])!!}
 				{!!Form::submit('Entrar',['class'=>'btn btn-primary margenBotSm'])!!}
-				{!! csrf_field() !!}
-			
+							
 			{!!Form::close()!!}							
 		</div>
 		<div class="modal-footer">

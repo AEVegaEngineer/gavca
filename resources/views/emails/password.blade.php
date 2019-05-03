@@ -8,7 +8,7 @@
 		<h1 class="margenBotSm">Recuperación de Contraseña</h1>
 		<p>Usted ha requerido el restablecimiento de la contraseña para su cuenta en el sistema administrativo GAVCA</p>
 		<p>Para hacerlo por favor siga el siguiente vínculo: </p>		
-		{!!link_to('/',$tittle = 'Volver a formulario de Iniciar Sesión', $attributes = null, $secure = null)!!}
+		{{ url('password/reset/'.$token) }}
 		<p>Si usted no ha requerido ningún restablecimiento o desconoce el motivo de este mail, por favor, ignórelo.</p>
 	</div>
 </div>

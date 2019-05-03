@@ -26,8 +26,7 @@
 						<td>
 							<input type="number" min="1" step=".01" required="" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
 							<input type="hidden" name="dep_hijo[]" value="{{$dependencia->dep_hijo}}">
-						</td>					
-						<!---->
+						</td>
 					</tbody>
 					@endforeach
 					<?php			
@@ -49,8 +48,7 @@
 						<td>
 							<input type="number" min="1" step=".01" name="req_total[]" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
 						</td>	
-						<input type="hidden" name="req_ingrediente[]" value="{{$ingrediente->ing_ingrediente}}" required="">	
-						<!---->
+						<input type="hidden" name="req_ingrediente[]" value="{{$ingrediente->ing_ingrediente}}" required="">
 					</tbody>			
 					@endforeach
 

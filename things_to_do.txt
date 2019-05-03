@@ -146,7 +146,7 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito
 
 - Hacer tester en macro recorder para el input de compras, produccion y ventas
-- El vinculo para arreglar la contraseña en el login
+- (X) El vinculo para arreglar la contraseña en el login
 - (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
 
