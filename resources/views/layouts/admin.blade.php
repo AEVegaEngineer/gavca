@@ -90,13 +90,14 @@
                                 <li>
                                     <a href="{!!URL::to('/receta')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Recetas</a>
                                 </li>
+                                <?php if(Auth::user()->privilegio == "admin"){?>
                                 <li>
                                     <a href="{!!URL::to('/receta/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nueva receta</a>
                                 </li> 
                                 
                                 <li>
                                     <a href="{!!URL::to('/receta/view_trash')!!}"><i class='fa fa-trash fa-fw'></i> Papelera de reciclaje de recetas</a>
-                                </li>                                                            
+                                </li>                             <?php } ?>                              
                             </ul>
                         </li> 
                         <li>
@@ -104,19 +105,23 @@
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{!!URL::to('/compra')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Compras</a>
-                                </li> 
+                                </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?> 
                                 <li>
                                     <a href="{!!URL::to('/compra/create')!!}"><i class='fa fa-plus fa-fw'></i> Ingresar una nueva compra</a>
                                 </li>
+                                <?php } ?>
                                 <li>
                                     <a href="#"><i class="fa fa-bus fa-fw"></i> Proveedores<span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="{!!URL::to('/proveedor')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver proveedores</a>
-                                        </li>  
+                                        </li>
+                                        <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>  
                                         <li>
                                             <a href="{!!URL::to('/proveedor/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo proveedor</a>
-                                        </li>                             
+                                        </li>                   
+                                        <?php } ?>      
                                     </ul>
                                 </li>                             
                             </ul>
@@ -138,26 +143,7 @@
                                 </li>
 
                             </ul>
-                        </li> 
-                        <!--
-                        <li>
-                            <a href="#"><i class="fa fa-history fa-fw"></i> Cardex<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="{!!URL::to('/listCardexMP')!!}"><i class='fa fa-history fa-fw'></i> Cardex de Inventario Materias Primas</a>
-                                </li>  
-                                <li>
-                                    <a href="{!!URL::to('/listCardexPA')!!}"><i class='fa fa-history fa-fw'></i> Cardex de Productos en Proceso A</a>
-                                </li> 
-                                <li>
-                                    <a href="{!!URL::to('/listCardexPB')!!}"><i class='fa fa-history fa-fw'></i> Cardex de Productos en Proceso B</a>
-                                </li> 
-                                <li>
-                                    <a href="{!!URL::to('/listCardexPC')!!}"><i class='fa fa-history fa-fw'></i> Cardex de Productos en Productos Terminados</a>
-                                </li>                            
-                            </ul>
-                        </li> 
-                        -->
+                        </li>                         
                         <li>
                             <a href="#"><i class="fa fa-cube fa-fw"></i> Producción<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -173,18 +159,22 @@
                                 <li>
                                     <a href="{!!URL::to('/venta')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Ventas</a>
                                 </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
                                 <li>
                                     <a href="{!!URL::to('/venta/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear Nueva Venta</a>
                                 </li> 
+                                <?php } ?>
                                 <li>
                                     <a href="#"><i class="fa fa-user fa-fw"></i> Clientes<span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="{!!URL::to('/cliente')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Clientes</a>
                                         </li>  
+                                        <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
                                         <li>
                                             <a href="{!!URL::to('/cliente/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear Nuevo Cliente</a>
-                                        </li>                             
+                                        </li>   
+                                        <?php } ?>                          
                                     </ul>
                                 </li>                                                               
                             </ul>
@@ -196,9 +186,11 @@
                                 <li>
                                     <a href="{!!URL::to('/parametro')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Parámetros</a>
                                 </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
                                 <li>
                                     <a href="{!!URL::to('/parametro/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo parámetro</a>
-                                </li>                               
+                                </li> 
+                                <?php } ?>                          
                             </ul>
                         </li>    
                         <li>

@@ -41,8 +41,9 @@
 		<div class="row">
 			<div class="btn-group">
 				<?php if($saldo_existe === null){ ?>
-				
-				{!!link_to_route('caja.transferir', $title = 'Transferir Saldo', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+				<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
+					{!!link_to_route('caja.transferir', $title = 'Transferir Saldo', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+				<?php } ?>	
 				
 					<?php if(Auth::user()->privilegio == "admin") { ?>
 					{!!link_to_route('caja.entradaForm', $title = 'Dar Entrada', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
@@ -117,7 +118,9 @@
 			<div class="col-md-12">
 				<?php if($saldo_existe === null){ ?>
 					<?php if($caja == "Caja Chica"){ ?>
-						{!!link_to_route('caja.confirmarcierre', $title = 'Cerrar Día', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-success'])!!}
+						<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
+							{!!link_to_route('caja.confirmarcierre', $title = 'Cerrar Día', $parameters = ['entidad'=>$caja,'fecha'=>Session::get('caja_fecha')], $attributes = ['class'=>'btn btn-success'])!!}
+						<?php } ?>
 					<?php } ?>
 				<?php } else { ?>
 				<h3>-- Día Cerrado --</h3>

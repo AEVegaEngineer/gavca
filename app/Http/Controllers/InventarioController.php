@@ -21,7 +21,7 @@ class InventarioController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     public function InventarioPA(){
         $fecha_caja_actual = getFechaCajaActual();

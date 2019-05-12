@@ -145,9 +145,14 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (X) Probar el funcionamiento de req_ratio y par_ratio
 - Testear si es factible poner en funcionamiento la reversión de compras y ventas a crédito
 
-- Hacer tester en macro recorder para el input de compras, produccion y ventas
+- (F) Hacer tester en macro recorder para el input de compras, produccion y ventas
 - (X) El vinculo para arreglar la contraseña en el login
-- (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
+- (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo 
+- Tipo 1 no deberia poder registrar transferencias entre cuentas
+- El cálculo para costos indirectos solo debería sumarse en la producción b
+
+
+car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
 
 Se colocó el foreign key en dependencias.dep_produccion que referenciaba a produccion.id como set null ya que cuando se hacia una limpieza desde los ajustes eliminaba las dependencias de las recetas
@@ -161,3 +166,32 @@ Se usa para registrar las recetas que funcionarán como ingredientes dentro de u
 
 req_default:
 Valor que se le da a los requerimientos (parámetros) cuando se quiere que tomen su valor de acuerdo a una producción dada, expresado en el denominador de un ratio (1/10 representa 10 elementos por cada producción).
+
+tipo 1, tipo 2 y admin
+- Cajas
+	- Ver cajas
+	- Seleccionar Fecha Diferente
+- Recetas
+	- Ver recetas
+- Compras
+	- Ver compras
+		- Ver facturas, generar reportes
+- proveedores
+	- Ver proveedores
+		- Ver ctas x pagar
+- Inventarios
+	- Ver inventarios, generar reportes
+		- Ver cardex, generar reportes
+- Produccion
+	- Ver producciones, generar reportes
+- Ventas
+	- Ver ventas, generar reportes
+- Clientes
+	- Ver clientes
+		- Ver ctasxcobrar
+- Parametros
+	- Ver parametros
+- Parametros calculados
+	- Ver parametros calculados
+Future edits:
+- Privilegios editables

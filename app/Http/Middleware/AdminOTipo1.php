@@ -23,7 +23,7 @@ class AdminOTipo1
     public function handle($request, Closure $next)
     {
         if($this->auth->user()->privilegio != 'admin' && $this->auth->user()->privilegio != 'tipo1'){
-            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area. AdminOTipo1Error');
+            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area.');
             return redirect()->to('admin');
         }
         return $next($request);

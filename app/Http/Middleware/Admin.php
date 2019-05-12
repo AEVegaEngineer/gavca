@@ -23,7 +23,7 @@ class Admin
     public function handle($request, Closure $next)
     {
         if($this->auth->user()->privilegio != 'admin'){
-            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area. AdminError');
+            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area. ');
             return redirect()->to('admin');
         }
         return $next($request);

@@ -56,9 +56,9 @@
 				<td></td>				
 			</tr>			
 		</table>
-
+		<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1'){ ?>
 		{!!link_to_route('cuentaxpagar.edit', $title = 'Abonar a cuentas por pagar', $parameters = $prov, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-		
+		<?php } ?>
 		
 	
 @endsection

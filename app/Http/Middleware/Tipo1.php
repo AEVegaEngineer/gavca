@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Session;
 
-class Todos
+class Tipo1
 {
     protected $auth;
 
@@ -22,8 +22,8 @@ class Todos
      */
     public function handle($request, Closure $next)
     {
-        if($this->auth->user()->privilegio != 'admin' && $this->auth->user()->privilegio != 'tipo1' && $this->auth->user()->privilegio != 'tipo2'){
-            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area. TodosError');
+        if($this->auth->user()->privilegio != 'tipo1'){
+            Session::flash('message-error','Usted no tiene los privilegios necesarios para acceder a esta area. ');
             return redirect()->to('admin');
         }
         return $next($request);

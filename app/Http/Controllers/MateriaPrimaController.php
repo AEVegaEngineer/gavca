@@ -16,7 +16,7 @@ class MateriaPrimaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     /*PARA PRACTICIDAD AL ADMINISTRADOR SE LE PERMITIRÁ INSERTAR DATA DIRECTAMENTE EN BASE DE DATOS*/
     /*

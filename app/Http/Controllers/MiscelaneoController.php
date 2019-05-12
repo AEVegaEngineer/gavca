@@ -13,7 +13,7 @@ class MiscelaneoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     /**
      * Display a listing of the resource.

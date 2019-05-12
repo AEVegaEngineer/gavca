@@ -16,7 +16,7 @@ class ProveedorController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     /* Método ajax para chequear si el proveedor existe desde compras */
     public function getProveedor(Request $request){

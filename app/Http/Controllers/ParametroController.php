@@ -18,7 +18,7 @@ class ParametroController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     //Función ajax que devuelve la unidad de un parametro dado
     public function getParam(Request $request)

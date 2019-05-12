@@ -27,7 +27,9 @@
 				<td>{{date("Y/m/d", strtotime($materiaprima->updated_at))}}</td>
 				<td>
 					<div class="btn-group">
-						{!!link_to_route('ajustes.inventario', $title = 'Ajustar', $parameters = array("materiaprima",$materiaprima->mp_codigo), $attributes = ['class'=>'btn btn-warning btn-xs'])!!}
+						<?php if(Auth::user()->privilegio == 'admin'){ ?>
+							{!!link_to_route('ajustes.inventario', $title = 'Ajustar', $parameters = array("materiaprima",$materiaprima->mp_codigo), $attributes = ['class'=>'btn btn-warning btn-xs'])!!}
+						<?php } ?>
 						{!!link_to_route('cardexMP.show', $title = 'Ver Cardex', $parameters = $materiaprima->mp_codigo, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}					
 					</div>
 				</td>

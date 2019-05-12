@@ -33,7 +33,8 @@ class ProduccionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('adminotipo1');
+        $this->middleware('admin', ['except' => ['show','reporteCardex','index','verProduccion']]);
+        $this->middleware('tipo1', ['except' => ['show','reporteCardex','index','verProduccion']]);
     }
     /**
      * MUESTRA LA LISTA DE LAS PRODUCCIONES

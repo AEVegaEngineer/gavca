@@ -26,7 +26,7 @@ class CompraController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     
     public function checkCode(Request $request)

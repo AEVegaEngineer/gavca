@@ -30,15 +30,17 @@
 				</td>
 				<td>{{$receta->rec_activo}}</td>
 				<td>
-					<?php if($receta->rec_activo == "si"){?>
-					<a href="/produccion/{{$receta->rec_nombre}}/create" class="btn btn-warning btn-sm">Ejecutar Receta</a>			
-					<?php }?>		
-
-					<?php if(Auth::user()->privilegio == 'admin'){ ?>
-					{!!link_to_route('receta.edit', $title = 'Editar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-					<?php }?>
+					<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1')
+					{
+					if($receta->rec_activo == "si"){?>
+						<a href="/produccion/{{$receta->rec_nombre}}/create" class="btn btn-warning btn-sm">Ejecutar Receta</a>						<?php }	?>
+					<?php }	?>	
+					<?php if(Auth::user()->privilegio == 'admin')
+					{ ?>
+						{!!link_to_route('receta.edit', $title = 'Editar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}					
 					
-					{!!link_to_route('receta.trash', $title = 'Mover a Papelera', $parameters = $receta->id, $attributes = ['class'=>'btn btn-danger btn-sm'])!!}
+						{!!link_to_route('receta.trash', $title = 'Mover a Papelera', $parameters = $receta->id, $attributes = ['class'=>'btn btn-danger btn-sm'])!!}
+					<?php }?>
 				</td>
 			</tbody>
 		@endforeach

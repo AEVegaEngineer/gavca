@@ -16,7 +16,7 @@ class DependenciaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
     }
     /**
      * CREA UNA NUEVA DEPENDENCIA ENTRE UNA RECETA Y UN PRODUCTO DE ETAPA ANTERIOR.

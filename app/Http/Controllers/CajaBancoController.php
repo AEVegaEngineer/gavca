@@ -18,7 +18,9 @@ class CajaBancoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('todos');
+        
+        $this->middleware('admin', ['only' => ['generarEntrada', 'generarSalida', 'cerrarcaja', 'confirmarcierre']]);
+        $this->middleware('tipo1', ['only' => ['cerrarcaja', 'confirmarcierre']]);
     }
     
     /**

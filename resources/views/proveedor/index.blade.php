@@ -49,7 +49,9 @@
 					{!!Form::open(['route'=>['proveedor.destroy',$proveedor->id],'method'=>'DELETE'])!!}
 						<div class="btn-group">
 						{!!link_to_route('cuentaxpagar.show', $title = 'Ver Ctas. x Pagar', $parameters = $proveedor->prov_codigo, $attributes = ['class'=>'btn btn-default btn-xs'])!!}
-						{!!link_to_route('proveedor.edit', $title = 'Editar', $parameters = $proveedor->id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}					
+						<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1'){ ?>
+						{!!link_to_route('proveedor.edit', $title = 'Editar', $parameters = $proveedor->id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}			
+						<?php } ?>	
 						</div>
 					{!!Form::close()!!}
 					
