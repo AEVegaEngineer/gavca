@@ -1,7 +1,8 @@
 @extends('layouts.admin')
-
 @section('content')
 	@include('alerts.success')
+	@include('alerts.request')
+	@include('alerts.errors')
 	{!!Form::open(['route'=>'caja.maketransfer','method'=>'POST'])!!}
 	<div class="row margenBotLg">
 		<div class="col-md-12">

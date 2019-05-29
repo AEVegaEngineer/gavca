@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 
 use DB;
 use PDF;
+use Redirect;
 use Carbon\Carbon;
 use gavca\banco;
 use gavca\saldocaja;
 use gavca\cajabanco;
 use gavca\Http\Requests;
+use gavca\Http\Requests\MakeTransferRequest;
+use gavca\Http\Requests\MakeInOutRequest;
 use gavca\Http\Controllers\Controller;
 
 class CajaBancoController extends Controller
@@ -442,9 +445,10 @@ class CajaBancoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function maketransfer(Request $request)
+    public function maketransfer(MakeTransferRequest $request)
     {
-        //return "Destino: ".$request["destino"]."<br>Saldo: ".$request["saldo"]."<br>Entidad: ".$request["entidad"]."<br>Fecha: ".$request["fecha"];
+        //return "Destino: ".$request["destino"]."<br>Saldo: ".$request["saldo"]."<br>Entidad: ".$request["entidad"]."<br>Fecha: ".$request["fecha"];  
+
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
             ->whereDate('cb_fecha', '=',$request["fecha"])
             ->max('id');
@@ -459,7 +463,11 @@ class CajaBancoController extends Controller
             $saldo_destino = 0;
         else
             $saldo_destino  = cajabanco::where('id',$id_destino)->first()->cb_saldo;
-
+        //Valida si hay suficiente dinero para la transferencia
+        if($saldo_origen < $request["saldo"])
+        {
+            return Redirect::back()->with('message-error', 'No se encuentra suficiente saldo en la cuenta de orígen, no es posible hacer la transferencia por ese monto.');
+        }
         $saldo_origen -= $request["saldo"];
         $saldo_destino += $request["saldo"];
         //creo el registro para el origen
@@ -528,7 +536,7 @@ class CajaBancoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function generarEntrada(Request $request)
+    public function generarEntrada(MakeInOutRequest $request)
     {
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
             ->whereDate('cb_fecha', '=',$request["fecha"])
@@ -578,7 +586,7 @@ class CajaBancoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function generarSalida(Request $request)
+    public function generarSalida(MakeInOutRequest $request)
     {
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
             ->whereDate('cb_fecha', '=',$request["fecha"])

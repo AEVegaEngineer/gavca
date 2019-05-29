@@ -35,7 +35,7 @@ subir primero todo dentro de caja excepto eso
 luego cada carpeta de las views excepto caja
 luego todos dentro de app->http
 
-
+*****************
 24-02-18
 -(X) Ingresar una nueva compra, compra no esta funcionando en caja, manda los saldos a 0
 -(X) ingrese el codigo o nombre del proveedor
