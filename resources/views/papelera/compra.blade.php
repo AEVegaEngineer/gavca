@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de Compras</h2>
+		<h2 class="form-signin-heading">Papelera de Reciclaje de Compras</h2>
 		<table class="table">
 			<thead>
 				<th>Fecha de Compra</th>

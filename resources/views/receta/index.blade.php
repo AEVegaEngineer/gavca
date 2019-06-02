@@ -2,14 +2,13 @@
 @section('content')
 	<div class="recetas">
 		@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de recetas</h2>
+		<h2 class="form-signin-heading">Procesos Productivos</h2>
 
 		<table class="table">
 			<thead>
-				<th>Nombre de receta</th>
+				<th>Nombre de proceso</th>
 				<th>Ingredientes</th>
 				<th>Proceso</th>
-				<th>Receta Activa</th>
 				<th>Operaciones</th>
 			</thead>
 		@foreach($recetas as $receta)
@@ -21,14 +20,13 @@
 				<td>
 					<?php 
 					if($receta->rec_proc == 'PA') 
-						echo "Proceso A";
+						echo "Prod. Semiprocesado";
 					else if($receta->rec_proc == 'PB') 
-						echo "Proceso B";
+						echo "Prod. Terminado";
 					else if($receta->rec_proc == 'PC') 
-						echo "Proceso C";
+						echo "Presentación";
 					?>
 				</td>
-				<td>{{$receta->rec_activo}}</td>
 				<td>
 					<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1')
 					{

@@ -37,7 +37,7 @@
 
 		</div>
 		<div class="col-md-12">
-			<table class="table table-bordered" id="content" style="overflow-x: auto; width: 1024px;">			
+			<table class="table table-bordered" id="content" style="overflow-x: auto; width: 1100px;">			
 				<thead>
 					<th>Materia Prima</th>
 					<th>Código M.P.</th>

@@ -12,6 +12,11 @@ $(document).ready(function() {
 		e.preventDefault();	
 		add_ingredientes();
 	});
+	$("#addInsumo").click(function(e){
+		insumo = $('#insing_insumo').find(":selected").val();
+		e.preventDefault();	
+		add_insumos(insumo);
+	});
 	$('#ing_ingrediente').change(function(){
 		$("#ing_ratio").val('1');
 	});
@@ -37,6 +42,28 @@ $(document).ready(function() {
 				          	
             }
     	});
+	}
+
+	function add_insumos(insumo){
+		var insing_default;
+		var insing_ratio = $("#insing_ratio").val();
+		
+		if ($('#insing_default').is(":checked"))
+			insing_default = 1;
+		else
+			insing_default = 0;
+		$.ajax({
+            type: "POST",
+            url: '/insumousado',
+            headers:{'X-CSRF-TOKEN': token},
+            data: {insumo: insumo, rec_nombre: rec_nombre, insing_default:insing_default, insing_ratio:insing_ratio},
+            success: function( data ) {
+            	//console.log(data);
+            	location.reload();		
+				          	
+            }
+    	});
+    	
 	}
 
 	$("#addProduct").click(function(e){

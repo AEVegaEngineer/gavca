@@ -43,7 +43,7 @@
 				<tbody>
 					<td>{{$dependencia->dep_hijo}}</td>	
 					<td>
-						<input type="text" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
+						<input type="text" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" required="" >
 						<input type="hidden" name="dep_hijo[]" value="{{$dependencia->dep_hijo}}">
 					</td>					
 					<!---->
@@ -61,17 +61,26 @@
 					?>	
 
 					<td>
-						<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$requerimiento->req_total}}"  autocomplete="off" >
+						<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$requerimiento->req_total}}"  autocomplete="off" required="">
 					</td>			
 					<?php }else{ ?>		
 					<td>
-						<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$requerimiento->req_total}}"  autocomplete="off" >
+						<input type="text" name="req_total[]" id="val-{{$requerimiento->req_ingrediente}}" class="form-control" value="{{$requerimiento->req_total}}"  autocomplete="off" required="">
 						<!-- {{$requerimiento->req_total}}-->
 					</td>
 					<?php } ?>	
 					<input type="hidden" name="req_ingrediente[]" value="{{$requerimiento->req_ingrediente}}">	
 					<!---->
 				</tbody>			
+				@endforeach
+				@foreach($insumosrequeridos as $key => $insumorequerido)
+					<tr>
+						<td>{{$insumorequerido->ins_req_insumo}}</td>					
+						<td>
+							<input type="number" min="1" step=".01" name="ins_req_total[]" class="form-control" value="{{$insumorequerido->ins_req_total}}"  autocomplete="off" required="">
+							<input type="hidden" name="ins_req_insumo[]" value="{{$insumorequerido->ins_req_insumo}}">
+						</td>
+					</tr>			
 				@endforeach
 			</table>
 		</div>

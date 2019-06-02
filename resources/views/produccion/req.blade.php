@@ -3,7 +3,7 @@
 @section('content')
 	<div>
 	@include('alerts.success')
-		<h3 class="form-signin-heading margenBotLg">Ingrese el requerimiento total de los ingredientes de la producción {{$rec_nombre}} de fecha {{$fecha}}</h3>
+		<h3 class="form-signin-heading margenBotLg">Ingrese el requerimiento total de las materias primas e insumos de la producción {{$rec_nombre}} de fecha {{$fecha}}</h3>
 		{!!Form::open(['route'=>'produccion.store','method'=>'POST','id'=>'formulario'])!!}
 		<div class="col-md-12">
 			<div class="col-md-3">
@@ -21,20 +21,20 @@
 					if(!empty($dependencias)){
 					?>
 					@foreach($dependencias as $dependencia)
-					<tbody>
+					<tr>
 						<td>{{$dependencia->dep_hijo}}</td>	
 						<td>
 							<input type="number" min="1" step=".01" required="" name="dependencia[]" id="dep-{{$dependencia->id}}" class="form-control" value="{{$dependencia->requerimiento}}"  autocomplete="off" >
 							<input type="hidden" name="dep_hijo[]" value="{{$dependencia->dep_hijo}}">
 						</td>
-					</tbody>
+					</tr>
 					@endforeach
 					<?php			
 					}
 					?>
 					
 					@foreach($ingredientes as $key => $ingrediente)
-					<tbody>
+					<tr>
 						<td>{{$ingrediente->ing_ingrediente}}</td>
 						<?php 
 						if($ingrediente->ing_default == 1)
@@ -49,18 +49,33 @@
 							<input type="number" min="1" step=".01" name="req_total[]" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
 						</td>	
 						<input type="hidden" name="req_ingrediente[]" value="{{$ingrediente->ing_ingrediente}}" required="">
-					</tbody>			
+					</tr>			
 					@endforeach
-
-
-
+					@foreach($insumosusados as $key => $insumousado)
+					<tr>
+						<td>{{$insumousado->insing_insumo}}</td>
+						<?php 
+						if($insumousado->insing_default == 1)
+						{ 
+							$valor = $cantidad_produccion*$insumousado->insing_ratio;
+						}else{ 		
+							$valor = "";
+						} 
+						?>
+						
+						<td>
+							<input type="number" min="1" step=".01" name="ins_req_total[]" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
+						</td>	
+						<input type="hidden" name="insing_insumo[]" value="{{$insumousado->insing_insumo}}" required="">
+					</tr>			
+					@endforeach
 				</table>
-			<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
+				<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
 
-			<input type="hidden" name="pro_fecha" value="{{$fecha}}" id="pro_fecha">
-			<input type="hidden" name="rec_nombre" value="{{$rec_nombre}}" id="rec_nombre">
-			<input type="hidden" name="pro_produccion" value="{{$cantidad_produccion}}" id="pro_produccion">
-			<input type="hidden" name="pro_mano_obra" value="{{$pro_mano_obra}}" id="pro_mano_obra">
+				<input type="hidden" name="pro_fecha" value="{{$fecha}}" id="pro_fecha">
+				<input type="hidden" name="rec_nombre" value="{{$rec_nombre}}" id="rec_nombre">
+				<input type="hidden" name="pro_produccion" value="{{$cantidad_produccion}}" id="pro_produccion">
+				<input type="hidden" name="pro_mano_obra" value="{{$pro_mano_obra}}" id="pro_mano_obra">
 
 			</div>	
 		</div>

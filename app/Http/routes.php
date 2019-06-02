@@ -49,6 +49,10 @@ Route::get('logout', 'LogController@logout');
 post('/getParam', 'ParametroController@getParam');
 Route::resource('parametro','ParametroController');
 
+Route::resource('insumo','InsumoController');
+
+Route::resource('insumousado','InsumoUsadoController');
+
 post('/storeSalario', 'SalarioController@storeSalario');
 Route::resource('salario','SalarioController');
 

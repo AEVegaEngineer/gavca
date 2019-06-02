@@ -84,6 +84,11 @@
                 $costosTotales+=$parametro->par_costo*$parametro->req_total;
                 $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);  
             }
+            foreach ($insumosrequeridos as $insumorequerido) 
+            {
+                $costosTotales+=$insumorequerido->ins_costo*$insumorequerido->ins_req_total;
+                $costosUnit+=$insumorequerido->ins_costo*($insumorequerido->ins_req_total/$prod);
+            }
             ?>
             @foreach($salarios as $salario)
                 <?php 
@@ -109,7 +114,10 @@
             $costoDirTotal = $costosTotales+$cos_tot_obra;
             $costoDirUnit = $costosUnit+$cos_unit_obra;
 
-            $total_cf = $miscelaneo->std_x_frasco*$prod;
+            if($produccion->pro_lote != null)
+                $total_cf = $miscelaneo->std_x_frasco*$prod;
+            else
+                $total_cf = 0;
             $unit_cf = $total_cf/$prod;
             $total_unit = $costoDirUnit+$unit_cf;
 
@@ -178,10 +186,40 @@
                 <td>{{number_format($req_unitario,$decimals = 2 , "," , ".")}}</td>
                 <td align="right">{{number_format($costo_total,$decimals = 2 , "," , ".")}}</td>
                 <td align="right" id="unit-{{$i}}">{{number_format($costo_unitario,$decimals = 2 , "," , ".")}}</td>
-                <td id="over-{{$i}}">{{number_format($costo_unitario/$total_unit*100,$decimals = 2 , "," , ".")}}%</td>
+                <td id="over-{{$i}}" align="right">{{number_format($costo_unitario/$total_unit*100,$decimals = 2 , "," , ".")}}%</td>
                 
             </tr>
         <?php 
+            $costosTotales+=$parametro->par_costo*$parametro->req_total;
+            $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);  
+            $i++;
+        ?>
+        @endforeach
+        @foreach($insumosrequeridos as $insumorequerido)            
+            <?php
+            
+            $req_total = $insumorequerido->ins_req_total;
+            $costo = $insumorequerido->ins_costo;
+            $costo_total = $costo*$req_total;
+            $req_unitario = round_a($req_total/$prod,5);
+            $costo_unitario = $costo*$req_unitario;
+            
+            ?>
+            <tr>
+                <td>{{$insumorequerido->ins_nombre}}</td>
+                <td>{{$insumorequerido->ins_unidad}}</td>           
+
+                <td align="right">{{number_format($costo,$decimals = 2 , "," , ".")}}</td>
+                <td>{{number_format($insumorequerido->ins_req_total,$decimals = 2 , "," , ".")}}</td>
+                <td>{{number_format($req_unitario,$decimals = 2 , "," , ".")}}</td>
+                <td align="right">{{number_format($costo_total,$decimals = 2 , "," , ".")}}</td>
+                <td align="right" id="unit-{{$i}}">{{number_format($costo_unitario,$decimals = 2 , "," , ".")}}</td>
+                <td id="over-{{$i}}" align="right">{{number_format($costo_unitario/$total_unit*100,$decimals = 2 , "," , ".")}}%</td>
+                
+            </tr>
+        <?php   
+            $costosTotales+=$insumorequerido->ins_costo*$insumorequerido->ins_req_total;
+            $costosUnit+=$insumorequerido->ins_costo*($insumorequerido->ins_req_total/$prod);          
             $i++;
         ?>
         @endforeach
@@ -190,7 +228,7 @@
                 <td colspan = "5" align="right">TOTAL MATERIA PRIMA E INSUMOS</td>
                 <td align="right">{{number_format($costosTotales,$decimals = 2 , "," , ".")}}</td> 
                 <td align="right" id="totalMat">{{number_format($costosUnit,$decimals = 2 , "," , ".")}}</td> 
-                <td id="matOver">{{number_format(($costosUnit/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
+                <td id="matOver" align="right">{{number_format(($costosUnit/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
             </tr>           
             <tr>
                 <td>MANO DE OBRA</td>
@@ -201,16 +239,17 @@
                 <td>{{number_format($req/$prod,$decimals = 4 , "," , ".")}}</td>
                 <td align="right">{{number_format($cos_tot_obra,$decimals = 2 , "," , ".")}}</td>
                 <td align="right">{{number_format($cos_unit_obra,$decimals = 2 , "," , ".")}}</td>
-                <td>{{number_format(($cos_unit_obra/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
+                <td align="right">{{number_format(($cos_unit_obra/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
             </tr>
             <tr class="success">
 
                 <td colspan = "5" align="right">TOTAL COSTOS DIRECTOS</td>
                 <td align="right">{{number_format($costoDirTotal,$decimals = 2 , "," , ".")}}</td> 
                 <td align="right">{{number_format($costoDirUnit,$decimals = 2 , "," , ".")}}</td> 
-                <td>{{number_format(($costoDirUnit/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
+                <td align="right">{{number_format(($costoDirUnit/$total_unit)*100,$decimals = 2 , "," , ".")}}%</td>
             </tr>
             <!--CALCULOS PARA PROCESO B-->
+            <?php if($produccion->pro_lote != null){ ?>
             <tr>
                 <td>ESTANDAR DE COSTOS FIJOS POR UNIDAD PRODUCIDA</td>
                 <td>STD UNITARIO</td>               
@@ -227,6 +266,7 @@
                 <td align="right" id="total">{{number_format($total_unit,$decimals = 2 , "," , ".")}}</td> 
                 <td id="totalOver">100%</td>
             </tr>
+            <?php } ?>
             <input type="hidden" name="rec_nombre" id="rec_nombre" value="{{$rec_nombre}}">
             <input type="hidden" name="pro_fecha" id="pro_fecha" value="{{$req_fecha}}">
             <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">

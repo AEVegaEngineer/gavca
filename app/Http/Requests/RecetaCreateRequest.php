@@ -29,5 +29,16 @@ class RecetaCreateRequest extends Request
             'rec_proc' => 'required',
             'rec_unidad' => 'required',
         ];
+
     }
+    public function messages()
+    {
+        return [
+            'rec_nombre.required' => 'El nombre de la receta es requerido',
+            'rec_nombre.unique:recetas' => 'El nombre de la receta ya se encuentra registrado',
+            'rec_proc.required' => 'El proceso de la receta es requerida',
+            'rec_unidad.required' => 'La unidad de la receta es requerida',
+        ];
+    }
+    
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use DB;
 use gavca\ingrediente;
 use gavca\parametro;
+use gavca\insumo;
+use gavca\insumousado;
 use gavca\receta;
 use gavca\aumento;
 use gavca\salario;
@@ -64,7 +66,7 @@ class IngredienteController extends Controller
             $ing = ingrediente::where('ing_ingrediente', $ingrediente)->get();
             
             if($found == 1){
-                return response()->json(['response' => array('message' => 'Error: El parámetro ya existe en esta receta')]);
+                return response()->json(['response' => array('message' => 'Error: El parámetro ya existe en este proceso productivo')]);
             }else{
                 ingrediente::create([
                     'rec_nombre' => $rec_nombre,
@@ -72,7 +74,7 @@ class IngredienteController extends Controller
                     'ing_ratio' => $ing_ratio,
                     'ing_default' => $ing_default,
                 ]);
-                return response()->json(['response' => array('message' => 'El parámetro se ha agregado a la receta')]);
+                return response()->json(['response' => array('message' => 'El parámetro se ha agregado al proceso productivo')]);
             }
         }
     }
@@ -91,13 +93,13 @@ class IngredienteController extends Controller
                 ->first();
             
             if($ingredientes!=null){
-                return response()->json(['response' => array('message' => 'Error: El parámetro ya existe en esta receta')]);
+                return response()->json(['response' => array('message' => 'Error: El parámetro ya existe en este proceso productivo')]);
             }else{
                 ingrediente::create([
                     'rec_nombre' => $rec_nombre,
                     'ing_ingrediente' => $producto,
                 ]);
-                return response()->json(['response' => array('message' => 'El parámetro se ha agregado a la receta')]);
+                return response()->json(['response' => array('message' => 'El parámetro se ha agregado al proceso productivo')]);
             }
         }
     }
@@ -162,17 +164,15 @@ class IngredienteController extends Controller
         $parametros_all = DB::table('parametros')->orderBy('par_nombre', 'asc')->get();
         $produccion = 1;
         $ide = $receta->id;
-        /*
-        Sentencia SQL:
-        SELECT * FROM `parametros` AND 'ingredientes' As par LEFT JOIN ingredientes AS ing On par.par_nombre = ing.ing_ingrediente WHERE ing.rec_nombre = 'M Guayaba 300'
-        */
+        $insumos = insumo::get();
+        $insumosusados = insumousado::where('rec_nombre',$id)->get();
         $parametros = parametro::leftJoin('ingredientes', 'ingredientes.ing_ingrediente', '=', 'parametros.par_nombre')
         ->where('ingredientes.rec_nombre', $id)
         ->select("ingredientes.id", 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
         ->get();
         //return $salarios;
         $rec_nombre = $id;
-        return view('ingrediente.edit',compact('dependencias','aumentos','salarios','receta','ide','rec_nombre','parametros','produccion','parametros_all','productosa','productosb'));
+        return view('ingrediente.edit',compact('dependencias','aumentos','salarios','receta','ide','rec_nombre','parametros','produccion','parametros_all','productosa','productosb','insumos','insumosusados'));
         
     }
 
@@ -198,7 +198,7 @@ class IngredienteController extends Controller
     {
         $rec_nombre = ingrediente::where('id', $id)->select('rec_nombre')->first();
         ingrediente::destroy($id);
-        return redirect('/ingrediente/'.$rec_nombre->rec_nombre.'/edit')->with('message','Ingrediente eliminado de la receta exitosamente');
+        return redirect('/ingrediente/'.$rec_nombre->rec_nombre.'/edit')->with('message','Ingrediente eliminado del proceso productivo exitosamente');
     }
     
 

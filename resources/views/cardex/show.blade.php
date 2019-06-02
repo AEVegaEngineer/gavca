@@ -21,7 +21,7 @@
 				<td>Entra</td>
 				<td>Sale</td>
 				<td>Disponible</td>	
-				<td align="right">Costo de Compra</td>			
+				<td align="right">Costo Unitario</td>			
 			</thead>
 			<?php $debe=0;$haber=0;$disponible=0; ?>
 

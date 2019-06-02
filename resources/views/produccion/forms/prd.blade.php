@@ -36,7 +36,7 @@
 		$header++;
 		if($header != 0){
 		?>
-			<p>Escoja el costo para los productos usados en esta receta según los costos de producción.</p>
+			<p>Escoja el costo para los productos usados en este proceso productivo según los costos de producción.</p>
 		<?php }	?>
     	<div class="col-xs-12 col-md-4">
     		<label>Escoja el costo para el producto {{$dependencia->dep_hijo}}: </label>	

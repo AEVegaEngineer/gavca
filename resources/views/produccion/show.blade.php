@@ -24,7 +24,17 @@
 			</thead>
 			<?php $totalEntra = 0; $totalSale = 0; ?>
 			@foreach($producciones as $produccion)
-			<?php $debe_haber = (isset($produccion->pro_costo)) ? true : false;?>
+			<?php
+			$debe_haber = false;
+			if($produccion->pro_concepto == "Producción de ".$producciones[0]->rec_nombre)
+			{
+				$debe_haber = true;
+			}
+			else if(isset($produccion->pro_costo))
+			{
+				$debe_haber = false;
+			}
+			?>
 			<tr>
 				<td>{{$produccion->pro_fecha}}</td>
 				<td>{{$produccion->pro_concepto}}</td>

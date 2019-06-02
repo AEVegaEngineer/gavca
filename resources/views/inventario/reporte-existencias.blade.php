@@ -12,14 +12,22 @@
     <body>
         <img src="img/gavcalogo.png" alt="logo de la empresa" style="display: inline-block;">
         <h3  style="display: inline-block; vertical-align: middle; margin-left: 5px; width: 500px">
-        Reporte de Existencias de productos de {{$proc}} para el mes de {{$mes_long}} del año {{$fecha_formateada->year}}</h3>
+        <?php 
+            if($proc == 'Proceso A'){
+                $proc = 'Productos Semiprocesados';
+                $p = 'PA';
+            }else if($proc == 'Proceso B'){
+                $proc = 'Productos Terminados';
+                $p = 'PB';
+            }else if($proc == 'Proceso C (Terminados)'){
+                $proc = 'Presentaciones';
+                $p = 'PC';
+            }
+        ?>
+        Reporte de Existencias de {{$proc}} para el mes de {{$mes_long}} del año {{$fecha_formateada->year}}</h3>
         <table class="table">
             <tr>
-                <?php if($proc == "Proceso C (Terminados)"){ ?>
-                <td>Producto Terminado</td>
-                <?php }else{?>
-                <td>Producto Intermedio {{$proc}}</td>
-                <?php }?>
+                <td>{{$proc}}</td>
                 <td>Unidad</td>
                 <td>Cantidad</td>
                 <td>Ultima Modificación</td>

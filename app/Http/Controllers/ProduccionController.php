@@ -8,6 +8,9 @@ use gavca\materiaprima;
 use gavca\requerimiento;
 use gavca\produccion;
 use gavca\ingrediente;
+use gavca\insumo;
+use gavca\insumousado;
+use gavca\insumorequerido;
 use gavca\receta;
 use gavca\aumento;
 use gavca\salario;
@@ -33,8 +36,7 @@ class ProduccionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin', ['except' => ['show','reporteCardex','index','verProduccion']]);
-        $this->middleware('tipo1', ['except' => ['show','reporteCardex','index','verProduccion']]);
+        $this->middleware('adminotipo1', ['except' => ['show','reporteCardex','index','verProduccion']]);
     }
     /**
      * MUESTRA LA LISTA DE LAS PRODUCCIONES
@@ -229,14 +231,18 @@ class ProduccionController extends Controller
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
             ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-            ->get();   
-
-        produccion::where('id',$id)->
-            update([
-                'pro_costo' => calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo),
-            ]);
-
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable'));
+            ->get(); 
+        $insumosrequeridos = insumorequerido::leftJoin('insumos', 'insumos.ins_nombre','=','insumo_requerido.ins_req_insumo')
+            ->where('insumo_requerido.rec_nombre',$rec_nombre)
+            ->where('insumo_requerido.ins_req_fecha',$req_fecha)
+            ->get();
+        $id = produccion::max('id');
+        $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
+        produccion::where('id',$id)
+            ->update([
+                'pro_costo' => $costosUnitarios,
+            ]);     
+        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable','insumosrequeridos'));
 
     }
 
@@ -264,14 +270,14 @@ class ProduccionController extends Controller
                     ->update(['dep_produccion' => $input[0]]);
             }
         }
-        
+        $insumosusados = insumousado::where('rec_nombre',$rec_nombre)->get();
         $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
         $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         $cantidad_produccion = $pro_produccion;
         $rec_etapa = receta::where('rec_nombre',$rec_nombre)->first()->rec_proc;
         
-        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa','ingredientes'));
+        return view('produccion.req',compact('rec_nombre','fecha','requerimientos','dependencias','cantidad_produccion','pro_mano_obra','rec_etapa','ingredientes','insumosusados'));
     }
     /**
      * CREA UNA PRODUCCIÓN CON LOS DATOS PASADOS POR EL METODO pass QUE USA LOS DATOS APORTADOS POR EL FORMULARIO REQ.BLADE.PHP Y LOS QUE YA TRAIA GUARDADOS EN POST DESDE EL FORM CREATE
@@ -286,8 +292,7 @@ class ProduccionController extends Controller
         $fecha = $request['pro_fecha'];
         $rec_nombre = $request['rec_nombre'];
         $pro_produccion = $request['pro_produccion'];
-        $pro_mano_obra = $request['pro_mano_obra'];
-        
+        $pro_mano_obra = $request['pro_mano_obra'];        
 
         /*CONTINUO CON EL REGISTRO*/
         $produccion_ya_existe = produccion::where('rec_nombre',$rec_nombre)
@@ -380,7 +385,6 @@ class ProduccionController extends Controller
                         'pro_produccion' => $requiere,
                         'pro_disponible' => $resta,
                         'pro_mano_obra' => $man_obr,
-                        'pro_costo' => $costo,
                         'pro_concepto' => 'Producción de '.$dependencia->dep_padre,
                     ]); 
                 }
@@ -540,7 +544,27 @@ class ProduccionController extends Controller
                 ->update(['mp_cantidad' => $materiaprima->mp_cantidad-$request["req_total"][$key]]);
 
         }
-        //MUESTRA EL FORMULARIO PARA LA EDICION DE LOS REQUERIMIENTOS DE LOS INGREDIENTES
+        /*
+        //ACTUALIZO LOS REQUERIMIENTOS DE LOS INGREDIENTES DE LA PRODUCCION (NO LAS DEPENDENCIAS)        
+        */
+        /*
+        ACTUALIZO LOS REQUERIMIENTOS DE LOS INSUMOS DE LA PRODUCCION      
+        */
+        if(isset($request["insing_insumo"]) && !empty($request["insing_insumo"]))
+        {
+           foreach ($request["insing_insumo"] as $key => $insumo) {
+                insumorequerido::create([
+                    'ins_req_fecha'=>$fecha,
+                    'rec_nombre'=>$rec_nombre,
+                    'ins_req_insumo'=>$request["insing_insumo"][$key],
+                    'ins_req_total'=>$request["ins_req_total"][$key],
+                ]);
+            } 
+        }
+        
+        /*
+        //ACTUALIZO LOS REQUERIMIENTOS DE LOS INSUMOS DE LA PRODUCCION      
+        */
         $produccion = produccion::where('rec_nombre',$rec_nombre)->first();
         $cantidad_produccion = $produccion->pro_produccion;
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();        
@@ -577,14 +601,19 @@ class ProduccionController extends Controller
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
             ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-            ->get();        
+            ->get(); 
+        $insumosrequeridos = insumorequerido::leftJoin('insumos', 'insumos.ins_nombre','=','insumo_requerido.ins_req_insumo')
+            ->where('insumo_requerido.rec_nombre',$rec_nombre)            
+            ->where('insumo_requerido.ins_req_fecha',$req_fecha)
+            ->get();       
         $id = produccion::max('id');
+        $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
         produccion::where('id',$id)->
             update([
-                'pro_costo' => calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo),
+                'pro_costo' => $costosUnitarios,
             ]);     
         $modificable = true;
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable'));
+        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable','insumosrequeridos','costosUnitarios'));
 
     }
 
@@ -692,6 +721,8 @@ class ProduccionController extends Controller
         $producciones = produccion::where('produccion.rec_nombre',$nombre)
                 ->orderBy('produccion.id','dsc')                
                 ->paginate(15);
+        //return produccion::where('produccion.rec_nombre',$nombre)
+        //        ->orderBy('produccion.id','dsc')->get();
         //$producciones = cardexMP::where('car_compra_id',$id)->get();
         return view('produccion.show',compact('producciones','existencia'));
         
@@ -748,7 +779,7 @@ class ProduccionController extends Controller
             ->whereYear('pro_fecha','=',$fecha_formateada->year)
             ->whereMonth('pro_fecha','=',$fecha_formateada->month)  
             ->orderBy('id', 'dsc')            
-            ->get();
+            ->get();            
         $pdf = PDF::loadView('produccion.reporte-producciones', compact('producciones','mes_long','fecha_formateada')); 
         $pdf->save(storage_path('reportes/Produccion/Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
         return $pdf->stream('Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
@@ -774,7 +805,11 @@ class ProduccionController extends Controller
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
             ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-            ->get(); 
+            ->get();
+        $insumosrequeridos = insumorequerido::leftJoin('insumos', 'insumos.ins_nombre','=','insumo_requerido.ins_req_insumo')
+            ->where('insumo_requerido.rec_nombre',$rec_nombre)
+            ->where('insumo_requerido.ins_req_fecha',$req_fecha)
+            ->get();
         $miscelaneo = miscelaneo::where('id','1')->first();
         $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
         $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
@@ -790,7 +825,7 @@ class ProduccionController extends Controller
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
             ->get();  
 
-        $pdf = PDF::loadView('produccion.reporte-produccion', compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos')); 
+        $pdf = PDF::loadView('produccion.reporte-produccion', compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','insumosrequeridos')); 
         $pdf->save(storage_path('reportes/Produccion/Productos/Producción de '.$rec_nombre.' de fecha '.$req_fecha.'.pdf'));
         return $pdf->stream('Producción de '.$rec_nombre.' de fecha '.$req_fecha.'.pdf');              
         
@@ -808,7 +843,9 @@ class ProduccionController extends Controller
         $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();
         $dependencias = dependencia::where('dep_padre',$rec_nombre)->get();
         $produccion = produccion::find($id);
-        return view('produccion.edit',compact('requerimientos','dependencias','produccion'));        
+        $insumosrequeridos = insumorequerido::where('rec_nombre',$rec_nombre)
+            ->where('ins_req_fecha',$fecha)->get();
+        return view('produccion.edit',compact('requerimientos','dependencias','produccion','insumosrequeridos'));        
     }
 
     /**
@@ -968,6 +1005,16 @@ class ProduccionController extends Controller
         }
         /*FIN DE ACTUALIZACIÓN DE LOS REQUERIMIENTOS Y LAS DEPENDENCIAS*/
 
+        /*MODIFICACIÓN DE LOS INSUMOS*/
+        foreach ($request['ins_req_total'] as $key => $ins_req_total) 
+        {
+            insumorequerido::where('rec_nombre',$rec_nombre) 
+                ->where('ins_req_fecha',$req_fecha)
+                ->where('ins_req_insumo',$request['ins_req_insumo'][$key])            
+                ->update(['ins_req_total' => $ins_req_total]);
+        }
+        /*FIN DE MODIFICACIÓN DE LOS INSUMOS*/
+
         /*CÁLCULO DE COSTOS UNITARIOS*/
 
         /*FIN DE CÁLCULO DE COSTOS UNITARIOS*/
@@ -1062,7 +1109,7 @@ function verificarModificable($producciones,$produccion,$id_buscado)
     return $modificable;
 }
 //CÁLCULO DE COSTOS UNITARIOS PARA REGISTRO Y ACTUALIZACIÓN DE PRODUCCIÓN
-function calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion,$costos,$miscelaneo)
+function calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo)
 {
     $costosUnit=0;
     $prod = $produccion->pro_produccion;
@@ -1078,6 +1125,10 @@ function calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion
     {
         $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
     }
+    foreach($insumosrequeridos as $insumorequerido)
+    {
+        $costosUnit+=$insumorequerido->ins_costo*($insumorequerido->ins_req_total/$prod);
+    }
     $req = $produccion->pro_mano_obra;
     foreach($salarios as $salario)
     {
@@ -1085,7 +1136,12 @@ function calcularCostosUnitarios($dependencias,$parametros,$salarios,$produccion
     }
     $cos_tot_obra = $req*$salario_integral;
     $cos_unit_obra = $cos_tot_obra / $prod;
-    $total_cf = $miscelaneo->std_x_frasco*$prod;
+
+    if($produccion->pro_etapa == "PB")
+        $total_cf = $miscelaneo->std_x_frasco*$prod;
+    else
+        $total_cf = 0;
+
     $unit_cf = $total_cf/$prod;
     $costoDirUnit = $costosUnit+$cos_unit_obra;
     $total_unit = $costoDirUnit+$unit_cf;

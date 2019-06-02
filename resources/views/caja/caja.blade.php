@@ -5,7 +5,7 @@
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 			    <div class="navbar-header">
-			      	<a class="navbar-brand" href="#">Cajas</a>
+			      	<a class="navbar-brand" href="#">Caja Banco</a>
 			    </div>
 			    <ul class="nav navbar-nav">
 			    	<?php if($caja == "Caja Chica"){ ?>

@@ -148,9 +148,12 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (F) Hacer tester en macro recorder para el input de compras, produccion y ventas
 - (X) El vinculo para arreglar la contraseña en el login
 - (X) Registro duplicado, comp_doc en tabla cardexmp, puede ser extraido por campo 
-- Tipo 1 no deberia poder registrar transferencias entre cuentas
-- El cálculo para costos indirectos solo debería sumarse en la producción b
+- (X) Tipo 1 no deberia poder registrar transferencias entre cuentas
 
+
+- (X) El cálculo para costos indirectos solo debería sumarse en la producción b
+- (X) Agregar parámetros insumos (gas, luz, electricidad, etc) a recetas y producción
+- Arreglar las carpetas de reportes para cardex e inventarios por los nuevos nombres
 
 car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 

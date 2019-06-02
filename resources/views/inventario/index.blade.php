@@ -3,27 +3,30 @@
 @section('content')
 	<div class="inventarios">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Inventario de Productos en {{$proc}}</h2>
+		<?php 
+			if($proc == 'Proceso A'){
+				$proc = 'Productos Semiprocesados';
+				$pro = 'Proceso A';
+				$p = 'PA';
+			}else if($proc == 'Proceso B'){
+				$proc = 'Productos Terminados';
+				$pro = 'Proceso B';
+				$p = 'PB';
+			}else if($proc == 'Proceso C (Terminados)'){
+				$proc = 'Presentaciones';
+				$pro = 'Proceso C (Terminados)';
+				$p = 'PC';
+			}
+		?>
+		<h2 class="form-signin-heading">Inventario de {{$proc}}</h2>
 		<?php if(Auth::user()->privilegio == 'admin'){ ?>
-			<?php 
-				if($proc == 'Proceso A'){
-					$p = 'PA';
-				}else if($proc == 'Proceso B'){
-					$p = 'PB';
-				}else if($proc == 'Proceso C (Terminados)'){
-					$p = 'PC';
-				}
-			?>
+			
 			<a href="/produccion/{{$p}}/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Productos de {{$proc}}</a>
 		<?php } ?>
-		{!!link_to_route('inventario.reporte', $title = 'Generar reporte', array($fecha = $fecha_caja_actual, $inventario=$proc), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
+		{!!link_to_route('inventario.reporte', $title = 'Generar reporte', array($fecha = $fecha_caja_actual, $inventario=$pro), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
-			<thead>
-				<?php if($proc == "Proceso C (Terminados)"){ ?>
-				<th>Producto Terminado</th>
-				<?php }else{?>
-				<th>Producto Intermedio {{$proc}}</th>
-				<?php }?>
+			<thead>				
+				<th>{{$proc}}</th>
 				<th>Unidad</th>
 				<th>Cantidad</th>
 				<th>Ultima Modificación</th>

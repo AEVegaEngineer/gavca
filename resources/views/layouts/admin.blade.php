@@ -64,10 +64,10 @@
                         </li>  
                         <?php } ?>
                         <li>
-                            <a href="#"><i class="fa fa-list fa-fw"></i> Cajas<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-list fa-fw"></i> Caja Banco<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{!!URL::to('/caja')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Cajas</a>
+                                    <a href="{!!URL::to('/caja')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Caja Banco</a>
                                 </li>
                                 <?php if(Auth::user()->privilegio == 'admin'){ ?>
                                 <li>
@@ -85,18 +85,18 @@
                             </ul>
                         </li> 
                         <li>
-                            <a href="#"><i class="fa fa-list fa-fw"></i> Recetas<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-list fa-fw"></i> Procesos Productivos<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{!!URL::to('/receta')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Recetas</a>
+                                    <a href="{!!URL::to('/receta')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Procesos Productivos</a>
                                 </li>
                                 <?php if(Auth::user()->privilegio == "admin"){?>
                                 <li>
-                                    <a href="{!!URL::to('/receta/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nueva receta</a>
+                                    <a href="{!!URL::to('/receta/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo proceso</a>
                                 </li> 
                                 
                                 <li>
-                                    <a href="{!!URL::to('/receta/view_trash')!!}"><i class='fa fa-trash fa-fw'></i> Papelera de reciclaje de recetas</a>
+                                    <a href="{!!URL::to('/receta/view_trash')!!}"><i class='fa fa-trash fa-fw'></i> Papelera de reciclaje de procesos</a>
                                 </li>                             <?php } ?>                              
                             </ul>
                         </li> 
@@ -133,13 +133,13 @@
                                     <a href="{!!URL::to('/materiaprima')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Materias Primas</a>
                                 </li>   
                                 <li>
-                                    <a href="{!!URL::to('/InventarioPA')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Productos en Proceso A</a>
+                                    <a href="{!!URL::to('/InventarioPA')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Productos Semiprocesados</a>
                                 </li>
                                 <li>
-                                    <a href="{!!URL::to('/InventarioPB')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Productos en Proceso B</a>
+                                    <a href="{!!URL::to('/InventarioPB')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Productos Terminados</a>
                                 </li>
                                 <li>
-                                    <a href="{!!URL::to('/InventarioPC')!!}"><i class='fa fa-list-ol fa-fw'></i> Inventario de Productos en Proceso C (Terminados)</a>
+                                    <a href="{!!URL::to('/InventarioPC')!!}"><i class='fa fa-list-ol fa-fw'></i> Presentaciones </a>
                                 </li>
 
                             </ul>
@@ -192,7 +192,20 @@
                                 </li> 
                                 <?php } ?>                          
                             </ul>
-                        </li>    
+                        </li>  
+                        <li>
+                            <a href="#"><i class="fa fa-cubes fa-fw"></i> Insumos<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!!URL::to('/insumo')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Insumos</a>
+                                </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
+                                <li>
+                                    <a href="{!!URL::to('/insumo/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo Insumo</a>
+                                </li> 
+                                <?php } ?>                          
+                            </ul>
+                        </li>  
                         <li>
                             <a href="#"><i class="fa fa-cubes fa-fw"></i> Parámetros Calculados<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

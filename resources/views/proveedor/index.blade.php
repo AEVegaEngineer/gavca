@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de Proveedor</h2>
+		<h2 class="form-signin-heading">Lista de Proveedores</h2>
 		<table class="table">
 			<thead>
 				<th>Nombre del Proveedor</th>
