@@ -6,7 +6,7 @@
 		    {!!Form::label('Nombre de receta: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-5">		    
-			{!!Form::text('rec_nombre',null,['class'=>'form-control input-lg','placeholder'=>'Ingresa el nombre de la receta'])!!}
+			{!!Form::text('rec_nombre',null,['class'=>'form-control input-lg','placeholder'=>'Ingresa el nombre de la receta','required'=>'required'])!!}
 		</div>
     </div>
     <div class="row margenBotSm">
@@ -14,7 +14,7 @@
 		    {!!Form::label('¿Activar receta?')!!}		
 		</div>
 		<div class="col-md-5 col-xs-12">		    
-			{!!Form::select('rec_activo', ['si' => 'Sí', 'no' => 'No'], null, ['class'=>'form-control','placeholder' => 'Escoje si la receta estará activa...'])!!}
+			{!!Form::select('rec_activo', ['si' => 'Sí', 'no' => 'No'], null, ['class'=>'form-control','placeholder' => 'Escoje si la receta estará activa...','required'=>'required'])!!}
 		</div>	 		
     </div>
     <div class="row margenBotSm">
@@ -22,7 +22,7 @@
 		    {!!Form::label('¿Que proceso llevará a cabo esta receta? ')!!}		
 		</div>
 		<div class="col-md-5 col-xs-12">		    
-			{!!Form::select('rec_proc', ['PA' => 'Proceso A', 'PB' => 'Proceso B', 'PC' => 'Proceso C'], null, ['class'=>'form-control','placeholder' => 'Escoje el proceso...'])!!}
+			{!!Form::select('rec_proc', ['PA' => 'Producto Semiprocesado', 'PB' => 'Producto Terminado', 'PC' => 'Presentación','required'=>'required'], null, ['class'=>'form-control'])!!}
 		</div>	 		
     </div>
     <div class="row margenBotSm">
@@ -30,7 +30,7 @@
 		    {!!Form::label('Unidad de la receta')!!}		
 		</div>
 		<div class="col-md-5 col-xs-12">		    
-			{!!Form::text('rec_unidad', null, ['class'=>'form-control','placeholder' => 'Unidad, Ej. KILOS'])!!}
+			{!!Form::text('rec_unidad', null, ['class'=>'form-control','placeholder' => 'Unidad, Ej. KILOS','required'=>'required'])!!}
 		</div>	 		
     </div>
 </div>

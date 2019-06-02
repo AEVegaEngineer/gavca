@@ -41,43 +41,43 @@
 			<tbody>
 				<tr>
 					<td>SALARIO MENSUAL BASE</td>
-					<td align="right">{{bcdiv($sal_anual = $sal_cargado*12, '1', 2)}}</td>
-					<td align="right">{{bcdiv($sal_anual = $sal_cargado, '1', 2)}}</td>
-					<td align="right">{{bcdiv($sal_diario = $sal_cargado/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $sal_anual = $sal_cargado*12 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $sal_anual = $sal_cargado , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $sal_diario = $sal_cargado/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 					<td>BONO VACACIONAL (15 DIAS AL AÑO)</td>
-					<td align="right">{{bcdiv($bono_vac_anual = $sal_diario*15, '1', 2)}}</td>
-					<td align="right">{{bcdiv($bono_vac_mensual = $bono_vac_anual/12, '1', 2)}}</td>
-					<td align="right">{{bcdiv($bono_vac_diario = $bono_vac_mensual/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $bono_vac_anual = $sal_diario*15 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $bono_vac_mensual = $bono_vac_anual/12 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $bono_vac_diario = $bono_vac_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 					<td>VACACIONES (15 DIAS EL PRIMER AÑO, TOMAMOS 21)</td>
-					<td align="right">{{bcdiv($vac_anual = $sal_diario*21, '1', 2)}}</td>
-					<td align="right">{{bcdiv($vac_mensual = $vac_anual/12, '1', 2)}}</td>
-					<td align="right">{{bcdiv($vac_diario = $vac_mensual/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $vac_anual = $sal_diario*21 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $vac_mensual = $vac_anual/12 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $vac_diario = $vac_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 
 					<td>BONO DE FIN DE AÑO (30 DÍAS AL AÑO)</td>
-					<td align="right">{{bcdiv($bon_fin_anual = $sal_diario*30, '1', 2)}}</td>
-					<td align="right">{{bcdiv($bon_fin_mensual = $bon_fin_anual/12, '1', 2)}}</td>
-					<td align="right">{{bcdiv($bon_fin_diario = $bon_fin_mensual/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $bon_fin_anual = $sal_diario*30 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $bon_fin_mensual = $bon_fin_anual/12 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $bon_fin_diario = $bon_fin_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 
 					<td>CESTA TIKET</td>
 					<?php $c_tick_mensual = ($cant_cesta_ticket*$u_tributaria)*30 ?>
-					<td align="right">{{bcdiv($c_tick_anual = $c_tick_mensual*$cant_cesta_ticket, '1', 2)}}</td>
-					<td align="right">{{bcdiv($c_tick_mensual, '1', 2)}}</td>
-					<td align="right">{{bcdiv($c_tick_diario = $c_tick_mensual/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $c_tick_anual = $c_tick_mensual*$cant_cesta_ticket , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $c_tick_mensual , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $c_tick_diario = $c_tick_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 
 					<td>PRESTACIONES (5 DIAS DE SALARIO AL AÑO)</td>
-					<td align="right">{{bcdiv($pres_anual = $sal_diario*5, '1', 2)}}</td>
-					<td align="right">{{bcdiv($pres_mensual = $pres_anual/12, '1', 2)}}</td>
-					<td align="right">{{bcdiv($pres_diario = $pres_mensual/30, '1', 2)}}</td>
+					<td align="right">{{number_format ( $pres_anual = $sal_diario*5 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $pres_mensual = $pres_anual/12 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $pres_diario = $pres_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -87,9 +87,9 @@
 				</tr>
 				<tr>
 					<td><b>TOTAL SALARIO INTEGRAL</b></td>
-					<td align="right"><b>{{bcdiv($total_sal_anual = $sal_anual+$bono_vac_anual+$vac_anual+$bon_fin_anual+$c_tick_anual+$pres_anual, '1', 2)}}</b></td>
-					<td align="right"><b>{{bcdiv($total_sal_mensual = $sal_cargado+$bono_vac_mensual+$vac_mensual+$bon_fin_mensual+$c_tick_mensual+$pres_mensual, '1', 2)}}</b></td>
-					<td align="right" id="salario_integral"><b>{{bcdiv($total_sal_mensual/20, '1', 2)}}</b></td>
+					<td align="right"><b>{{number_format ( $total_sal_anual = $sal_anual+$bono_vac_anual+$vac_anual+$bon_fin_anual+$c_tick_anual+$pres_anual , $decimals = 2 , "," , "." )}}</b></td>
+					<td align="right"><b>{{number_format ( $total_sal_mensual = $sal_cargado+$bono_vac_mensual+$vac_mensual+$bon_fin_mensual+$c_tick_mensual+$pres_mensual , $decimals = 2 , "," , "." )}}</b></td>
+					<td align="right" id="salario_integral"><b>{{number_format ( $total_sal_mensual/20 , $decimals = 2 , "," , "." )}}</b></td>
 				</tr>
 			</tbody>			
 		</table>

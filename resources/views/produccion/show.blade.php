@@ -17,9 +17,9 @@
 			<thead>
 				<td>Fecha</td>
 				<td>Concepto</td>
-				<td>Entra</td>
-				<td>Sale</td>
-				<td>Disponible</td>
+				<td align="right">Entra</td>
+				<td align="right">Sale</td>
+				<td align="right">Disponible</td>
 				<td align="right">Costo Producción</td>
 			</thead>
 			<?php $totalEntra = 0; $totalSale = 0; ?>
@@ -40,9 +40,9 @@
 				<td>{{$produccion->pro_concepto}}</td>
 				<?php 
 				
-				echo ''.($debe_haber ? '<td>'.$produccion->pro_produccion.'</td><td></td>' : '<td></td><td>'.$produccion->pro_produccion.'</td>');
+				echo ''.($debe_haber ? '<td align="right">'.number_format ( $produccion->pro_produccion , $decimals = 2 , "," , "." ).'</td><td></td>' : '<td></td><td align="right">'.number_format ( $produccion->pro_produccion , $decimals = 2 , "," , "." ).'</td>');
 				?>
-				<td>{{$produccion->pro_disponible}}</td>
+				<td align="right">{{number_format ( $produccion->pro_disponible , $decimals = 2 , "," , "." )}}</td>
 				<td align="right">
 					<?php if (isset($produccion->pro_costo)) echo number_format ( $produccion->pro_costo , $decimals = 2 , "," , "." );?>					
 				</td>

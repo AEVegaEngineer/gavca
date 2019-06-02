@@ -531,17 +531,19 @@ class ProduccionController extends Controller
                 ->first();
             
             /*AQUI VA EL LOG DE CARDEXMP PARA RESTAR LAS MATERIAS PRIMAS DEL CONSUMO POR PARTE DE LA PRODUCCIÓN */
+            $prev = cardexmp::where('mp_codigo',$materiaprima->mp_codigo)->latest()->first()->car_valor_actual;
+            
             $concepto = "Producción de ".$rec_nombre;
             cardexmp::create([
                     'mp_codigo' => $materiaprima->mp_codigo,
-                    'car_valor_anterior' => $materiaprima->mp_cantidad,
-                    'car_valor_actual' => $materiaprima->mp_cantidad-$request["req_total"][$key],
+                    'car_valor_anterior' => $prev,
+                    'car_valor_actual' => $prev-$request["req_total"][$key],
                     'car_concepto' => $concepto,
                     'car_fecha' => $fecha,
                 ]);
             /*ACTUALIZO LA CANTIDAD DE MATERIA PRIMA LUEGO DE HABER HECHO LA PRODUCCIÓN*/
             materiaprima::where('mp_codigo',$materiaprima->mp_codigo)
-                ->update(['mp_cantidad' => $materiaprima->mp_cantidad-$request["req_total"][$key]]);
+                ->update(['mp_cantidad' => $prev-$request["req_total"][$key]]);
 
         }
         /*
@@ -742,11 +744,11 @@ class ProduccionController extends Controller
         $mes_long = getMesLong($fecha);   
 
         if($etapa == "PA")
-            $etapa = "Proceso A";
+            $etapa = "Producto Semiterminado";
         else if($etapa == "PB")
-            $etapa = "Proceso B";
+            $etapa = "Producto Terminado";
         else if($etapa == "PC")
-            $etapa = "Proceso C (Terminados)";
+            $etapa = "Presentación";
         
         //Devuelve una vista distinta para las materias primas
         $existencia = produccion::where('rec_nombre',$rec_nombre)

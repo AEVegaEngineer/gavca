@@ -72,16 +72,19 @@ class InventarioController extends Controller
         {
             $inventarios = producciona::leftJoin('recetas', 'recetas.rec_nombre', '=', 'producciona.rec_nombre')
                 ->get();
+            $inventario = "Producto Semiterminado";
         }
         else if($inventario == "Proceso B")
         {
             $inventarios = produccionb::leftJoin('recetas', 'recetas.rec_nombre', '=', 'produccionb.rec_nombre')
                 ->get();
+            $inventario = "Producto Terminado";
         }
         else if($inventario == "Proceso C (Terminados)")
         {
             $inventarios = produccionc::leftJoin('recetas', 'recetas.rec_nombre', '=', 'produccionc.rec_nombre')
-                ->get();            
+                ->get();   
+            $inventario = "Presentación";         
         }
         else if($inventario == "Materia Prima")
         {

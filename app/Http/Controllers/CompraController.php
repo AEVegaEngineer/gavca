@@ -209,6 +209,14 @@ class CompraController extends Controller
      */
     public function pass(CompraCreateRequest $request)
     {
+        //DETECTA SI YA FUE REGISTRADA UNA COMPRA CON LA MISMA FACTURA PARA EL MISMO PROVEEDOR
+        $compra_existe = compra::where('comp_doc',$request['comp_doc'])
+            ->where('comp_proveedor',$request['comp_proveedor'])
+            ->first();
+        if($compra_existe !== null)
+        { 
+            return redirect('/compra')->with('message-error','La factura de compra ya ha sido registrada para este proveedor');
+        }
         filtrarCajaCerradaONoSeleccionada();
         $comp_fecha = $request['comp_fecha'];
         $proveedor = $request['comp_proveedor'];
