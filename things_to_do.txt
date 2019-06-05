@@ -153,7 +153,7 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 
 - (X) El cálculo para costos indirectos solo debería sumarse en la producción b
 - (X) Agregar parámetros insumos (gas, luz, electricidad, etc) a recetas y producción
-- Arreglar las carpetas de reportes para cardex e inventarios por los nuevos nombres
+- (X) Arreglar las carpetas de reportes para cardex e inventarios por los nuevos nombres
 
 car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 

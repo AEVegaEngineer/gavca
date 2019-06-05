@@ -25,8 +25,16 @@ class CompraCreateRequest extends Request
     {
         return [
             'comp_fecha' => 'required',
-            'comp_doc' => 'required',
+            'comp_doc' => 'required|unique:compras',
             'comp_proveedor' => 'required',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'comp_fecha.required' => 'La fecha de compra es requerida',
+            'comp_doc.unique:compras' => 'La factura de compras ya esta registrada',
+            'comp_proveedor.required' => 'El proveedor es requerido',
         ];
     }
 }

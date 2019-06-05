@@ -535,6 +535,7 @@ class CompraController extends Controller
             ->update(['cb_activo' => $statusChangeTo]);
         //resto la cantidad de materia prima que se compro del inventario            
         $elementos = cardexmp::where('car_compra_id',$id)->get();
+        
         foreach ($elementos as $key => $elemento) {
             $cantidad = $elemento->car_valor_actual - $elemento->car_valor_anterior;
             $existencia = materiaprima::where('mp_codigo',$elemento->mp_codigo)->first()->mp_cantidad;
@@ -542,6 +543,12 @@ class CompraController extends Controller
                 materiaprima::where('mp_codigo',$elemento->mp_codigo)->update(['mp_cantidad' => $existencia-$cantidad]);
             else
                 materiaprima::where('mp_codigo',$elemento->mp_codigo)->update(['mp_cantidad' => $existencia+$cantidad]);
+            cardexMP::create([
+                'mp_codigo' => $elemento->mp_codigo,
+                'car_valor_anterior' => $elemento->car_valor_actual,
+                'car_valor_actual' => $elemento->car_valor_actual-$cantidad,  
+                'car_compra_id' => $id,  
+            ]);
         }
         return redirect($link == '/caja' ? $link.'/'.$entidad : $link)->with('message',$message);  
     }
