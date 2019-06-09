@@ -15,5 +15,5 @@
 </div>
 @stop
 @section('scripts')
-	{!!Html::script('js/editNumber.js')!!}
+	{!!Html::script('js/editNumber.js?1')!!}
 @endsection

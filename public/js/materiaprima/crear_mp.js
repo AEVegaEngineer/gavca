@@ -78,6 +78,22 @@ $(document).ready(function() {
 
 		var seleccion = $("#sel_param").find(":selected").text();
 		var texto = seleccion.substr(11);
+		$flag = true;
+		/*SECCIÓN VALIDAR QUE NO EXISTA EL PARÁMETRO SELECCIONADO EN LA LISTA*/
+		for(var i=0;i<cont;i++)
+		{
+			var nombre = $("#nombre-"+i).html();
+			$flag = (texto == nombre ? false : true);
+			if(!$flag)break;
+		}
+		if(!$flag)
+		{
+			alert("Este elemento ya ha sido agregado a la lista");
+			return;
+		}
+		/*FIN DE SECCIÓN VALIDAR QUE NO EXISTA EL PARÁMETRO SELECCIONADO EN LA LISTA*/
+		
+		
 		var valor = $("#sel_param").find(":selected").val();
 		var res = valor.substr(0, 2);
 		var per = "";
@@ -93,11 +109,11 @@ $(document).ready(function() {
 		    headers:{'X-CSRF-TOKEN': token},
 		    data: {par_nombre: texto},
 		    success: function( data ) {
-		    	console.log(data);
+		    	/*console.log(data);*/
 		       	$.each(data, function (i, item) {
 					//console.log(item["parametro"]["par_unidad"]);
 		           	if(item!==null){
-			           	console.log(item["par_unidad"]);
+			           	/*console.log(item["par_unidad"]);*/
 			            useReturnData(item);	
 		            }
 		        }); 					
@@ -108,11 +124,11 @@ $(document).ready(function() {
 		});
 		function useReturnData(data){
 		    param = data;
-		    console.log(param);
+		    /*console.log(param);*/
 
 		    /*SE DEBEN USAR LAS VARIABLES DENTRO DEL AMBITO DE ESTA FUNCION*/
 
-		    $("#content tr:last").after("<tr><td id='nombre-"+cont+"'>"+texto+"</td><td class='codigo'>"+valor+"<input type='hidden' name='codigo[]' value='"+valor+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"' required=''></td><td>"+param["par_unidad"]+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+param["par_costo"]+"' required=''></td><td><input type='checkbox' class='form-control' name='update[]' id='update-"+cont+"' value='"+valor+"'></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%' required=''></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"' required=''></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"' required=''></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
+		    $("#content tr:last").after("<tr><td id='nombre-"+cont+"'>"+texto+"</td><td class='codigo'>"+valor+"<input type='hidden' name='codigo[]' value='"+valor+"'></td><td>"+per+"</td><td width='9%'><input type='text' class='form-control' name='qty[]' id='qty-"+cont+"' required='' tabindex="+cont+1+"></td><td>"+param["par_unidad"]+"</td><td><input type='text' class='form-control' name='cost[]' id='cost-"+cont+"' value='"+param["par_costo"]+"' required=''></td><td><input type='checkbox' class='form-control' name='update[]' id='update-"+cont+"' value='"+valor+"'></td><td width='7%'><input class='form-control' type='text' name='alicuota[]' id='alicuota-"+cont+"' value='12%' required=''></td><td><input class='form-control' type='text' name='ivamonto[]' id='ivamonto-"+cont+"' required=''></td><td><input class='form-control' type='text' name='costoProducto[]' id='costoProducto-"+cont+"' required=''></td><td><a href='#' class='btn btn-danger btn-sm' id='remove-"+cont+"'>Quitar</a></td></tr>");
 		   	//boton de editar
 			/*<a href='/parametro/"+param["id"]+"/edit' class='btn btn-warning btn-xs' id='edit-"+cont+"' target='_blank'>Editar</a>*/
 			cont++;

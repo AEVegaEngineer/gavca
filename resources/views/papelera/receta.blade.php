@@ -30,14 +30,14 @@
 				</td>
 				<td>{{$receta->rec_activo}}</td>
 				<td>
-					
-					<?php if($receta->rec_activo == "si"){?>
-					<a href="/produccion/{{$receta->rec_nombre}}/create" class="btn btn-warning btn-sm">Ejecutar Receta</a>			
-					<?php }?>		
-					{!!link_to_route('receta.edit', $title = 'Editar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-					{!!link_to_route('receta.trash', $title = 'Volver a activar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
-					{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-sm'])!!}
-					
+					{!!Form::open(['route'=>['receta.destroy',$receta->id],'method'=>'DELETE'])!!}
+						<?php if($receta->rec_activo == "si"){?>
+						<a href="/produccion/{{$receta->rec_nombre}}/create" class="btn btn-warning btn-sm">Ejecutar Receta</a>			
+						<?php }?>		
+						{!!link_to_route('receta.edit', $title = 'Editar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+						{!!link_to_route('receta.trash', $title = 'Volver a activar', $parameters = $receta->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+						{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-sm'])!!}
+					{!!Form::close()!!}
 				</td>
 			</tbody>
 		@endforeach

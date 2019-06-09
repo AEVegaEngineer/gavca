@@ -15,5 +15,5 @@
 </div>
 @stop
 @section('scripts')
-	{!!Html::script('js/insumo/editNumberInsumo.js')!!}
+	{!!Html::script('js/insumo/editNumberInsumo.js?1')!!}
 @endsection

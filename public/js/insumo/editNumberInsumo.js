@@ -1,7 +1,7 @@
 $(document).ready(function(){
-	$numero = $('input[name=ins_costo]').val();	
+	/*$numero = $('input[name=ins_costo]').val();	
 	$new = addCommas($numero);
-	$('input[name=ins_costo]').val($new);
+	$('input[name=ins_costo]').val($new);*/
 });
 
 function addCommas(nStr)

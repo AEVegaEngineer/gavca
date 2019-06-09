@@ -183,7 +183,12 @@ function crearCodigoParametro($pattern){
     $ultimoParametro = parametro::orderBy('updated_at','dsc')->first()->par_codigo;
     $ultimoParametro = str_replace("MI","",$ultimoParametro);
     $ultimoParametro = str_replace("MP","",$ultimoParametro);
+    $ultimoParametro_1 = (int)$ultimoParametro+1;
+    $ultimoParametro = parametro::orderBy('id','dsc')->first()->par_codigo;
+    $ultimoParametro = str_replace("MI","",$ultimoParametro);
+    $ultimoParametro = str_replace("MP","",$ultimoParametro);
     $ultimoParametro = (int)$ultimoParametro+1;
+    $ultimoParametro = ($ultimoParametro_1>$ultimoParametro ? $ultimoParametro_1 : $ultimoParametro );
     $patron = $pattern;
     //cuento digitos
     $n = 0; 

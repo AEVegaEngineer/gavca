@@ -22,7 +22,7 @@
 		    {!!Form::label('Costo: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-5">	
-			{!!Form::number('ins_costo', null,['class'=>'form-control input-lg','placeholder'=>'Ingresa el costo con formato. Ej: 2,000.00
+			{!!Form::number('ins_costo', null,['class'=>'form-control input-lg','placeholder'=>'Ingresa el costo con formato. Ej: 2000,00
 ','step'=>'0.0001','min'=>'0.0001'])!!}	  
 			
 		</div>

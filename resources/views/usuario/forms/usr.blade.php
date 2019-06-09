@@ -31,7 +31,7 @@
 		    {!!Form::label('Privilegio: ')!!}
 		</div>
 		<div class="col-md-5 col-xs-12">		    
-			{!!Form::select('privilegio', ['admin' => 'Administrador', 'tipo1' => 'Tipo 1', 'tipo2' => 'Tipo 2'], null, ['placeholder' => 'Escoje un privilegio para el usuario...'])!!}
+			{!!Form::select('privilegio', ['admin' => 'Administrador', 'tipo1' => 'Tipo 1', 'tipo2' => 'Tipo 2'], null, ['class'=>'form-control'])!!}
 		</div>	 		
     </div>
     <?php } ?>

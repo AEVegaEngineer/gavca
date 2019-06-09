@@ -6,7 +6,7 @@
     		{!!Form::label('Código del cliente: ')!!}
     	</div>
     	<div class='col-xs-12 col-md-5'>
-    		{!!Form::text('cli_codigo', $codigo,['class'=>'form-control','placeholder'=>'Ingresa el Código del cliente', 'required'=>'required','readonly'=>'readonly'])!!}    		
+    		{!!Form::text('cli_codigo', null,['class'=>'form-control','placeholder'=>'Ingresa el Código del cliente', 'required'=>'required','readonly'=>'readonly'])!!}    		
     	</div>
     </div>
 	<div class='row margenBotSm'>

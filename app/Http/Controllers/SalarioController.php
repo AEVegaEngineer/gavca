@@ -8,6 +8,7 @@ use gavca\salario;
 use gavca\aumento;
 use gavca\Http\Requests;
 use gavca\Http\Requests\SalarioUpdateRequest;
+use gavca\Http\Requests\SalarioCreateRequest;
 use gavca\Http\Controllers\Controller;
 
 class SalarioController extends Controller
@@ -56,7 +57,7 @@ class SalarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeSalario(Request $request)
+    public function storeSalario(SalarioCreateRequest $request)
     {
         //retorna por post
         if ($request->isMethod('post')){  
@@ -66,7 +67,7 @@ class SalarioController extends Controller
             salario::where('id', 1)
               ->update(['salario_integral' => $salario_integral]);
 
-            return response()->json(['response' => array('message' => 'El salario  se ha actualizado')]);        
+            return response()->json(['response' => array('message' => 'El salario  se ha actualizado')]);      
             
         }
     }
@@ -107,6 +108,23 @@ class SalarioController extends Controller
         $salario = salario::find($id);
         $salario->fill($request->all());
         $salario->save();
+
+        $sal_cargado = $request['sal_mensual'];
+        $aumentos = aumento::All(); 
+        foreach($aumentos as $aumento)  
+        {
+            $aumento_escalar = ($aumento->aum_aumento * 0.01) + 1;
+            $sal_cargado *= $aumento_escalar; 
+        }        
+        $sal_diario = $sal_cargado/20;
+        $bono_vac_diario = $sal_diario*15/12/30;
+        $vac_diario = $sal_diario*21/12/30;
+        $bon_fin_diario = $sal_diario*30/12/30;
+        $c_tick_diario = ($request['unidad_tributaria']*$request['cant_cesta_ticket']);
+        $pres_diario = $sal_diario*5/12/30;
+        $salario_integral = $sal_diario+$bono_vac_diario+$vac_diario+$bon_fin_diario+$c_tick_diario+$pres_diario;
+        salario::where('id', 1)
+              ->update(['salario_integral' => $salario_integral]);
 
         return redirect('/salario/1/edit')->with('message','Salario y unidad tributaria actualizados exitosamente');
     }

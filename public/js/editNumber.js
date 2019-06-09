@@ -1,7 +1,9 @@
 $(document).ready(function(){
+    /*
 	$numero = $('input[name=par_costo]').val();	
 	$new = addCommas($numero);
 	$('input[name=par_costo]').val($new);
+    */
 });
 
 function addCommas(nStr)

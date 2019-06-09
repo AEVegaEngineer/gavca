@@ -18,9 +18,9 @@
 			<a href="#" class="btn btn-primary btn-sm" id="add">Agregar Producto a Compra</a>
 			<br>
 			<br>
+			<!--
 			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Crear nuevo Producto y Agregarlo a Compra</button>
-			<br>
-			<br>	
+			-->	
 			<b><p id="error-msg" align="right"></p></b>	
 			{!!Form::submit('Guardar Cambios y Terminar',['class'=>'btn btn-success pull-right'])!!}
 			<hr>
@@ -149,5 +149,5 @@
 	</div>	
 	<script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript"></script>	
 
-	<script src="{{ asset('/js/materiaprima/crear_mp.js?121') }}" type="text/javascript"></script>
+	<script src="{{ asset('/js/materiaprima/crear_mp.js?122') }}" type="text/javascript"></script>
 @endsection

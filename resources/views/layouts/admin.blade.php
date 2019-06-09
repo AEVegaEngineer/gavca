@@ -99,6 +99,19 @@
                                     <a href="{!!URL::to('/receta/view_trash')!!}"><i class='fa fa-trash fa-fw'></i> Papelera de reciclaje de procesos</a>
                                 </li>                             <?php } ?>                              
                             </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-check-square fa-fw"></i> Proveedores<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!!URL::to('/proveedor')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver proveedores</a>
+                                </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>  
+                                    <li>
+                                        <a href="{!!URL::to('/proveedor/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo proveedor</a>
+                                    </li>                   
+                                <?php } ?>
+                            </ul>
                         </li> 
                         <li>
                             <a href="#"><i class="fa fa-check-square fa-fw"></i> Compras<span class="fa arrow"></span></a>
@@ -110,20 +123,7 @@
                                 <li>
                                     <a href="{!!URL::to('/compra/create')!!}"><i class='fa fa-plus fa-fw'></i> Ingresar una nueva compra</a>
                                 </li>
-                                <?php } ?>
-                                <li>
-                                    <a href="#"><i class="fa fa-bus fa-fw"></i> Proveedores<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="{!!URL::to('/proveedor')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver proveedores</a>
-                                        </li>
-                                        <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>  
-                                        <li>
-                                            <a href="{!!URL::to('/proveedor/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear nuevo proveedor</a>
-                                        </li>                   
-                                        <?php } ?>      
-                                    </ul>
-                                </li>                             
+                                <?php } ?>                                                           
                             </ul>
                         </li> 
                         <li>
@@ -152,7 +152,19 @@
                                 </li>                               
                             </ul>
                         </li>  
-                        
+                        <li>
+                            <a href="#"><i class="fa fa-line-chart fa-fw"></i> Clientes<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{!!URL::to('/cliente')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Clientes</a>
+                                </li>
+                                <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
+                                    <li>
+                                        <a href="{!!URL::to('/cliente/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear Nuevo Cliente</a>
+                                    </li>   
+                                <?php } ?> 
+                            </ul>
+                        </li>
                         <li>
                             <a href="#"><i class="fa fa-line-chart fa-fw"></i> Ventas<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -163,20 +175,7 @@
                                 <li>
                                     <a href="{!!URL::to('/venta/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear Nueva Venta</a>
                                 </li> 
-                                <?php } ?>
-                                <li>
-                                    <a href="#"><i class="fa fa-user fa-fw"></i> Clientes<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="{!!URL::to('/cliente')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Clientes</a>
-                                        </li>  
-                                        <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
-                                        <li>
-                                            <a href="{!!URL::to('/cliente/create')!!}"><i class='fa fa-plus fa-fw'></i> Crear Nuevo Cliente</a>
-                                        </li>   
-                                        <?php } ?>                          
-                                    </ul>
-                                </li>                                                               
+                                <?php } ?>                                                                                              
                             </ul>
                         </li>    
                         

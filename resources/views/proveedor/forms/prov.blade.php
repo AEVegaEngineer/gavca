@@ -8,7 +8,7 @@
     		{!!Form::label('Código del proveedor: ')!!}
     	</div>
     	<div class='col-xs-12 col-md-5'>
-    		{!!Form::text('prov_codigo', $codigo,['class'=>'form-control','placeholder'=>'Ingresa el Código del proveedor', 'required'=>'required','readonly'=>'readonly'])!!}    		
+    		{!!Form::text('prov_codigo', null,['class'=>'form-control','placeholder'=>'Ingresa el Código del proveedor', 'required'=>'required','readonly'=>'readonly'])!!}    		
     	</div>
     </div>
 	<div class='row margenBotSm'>

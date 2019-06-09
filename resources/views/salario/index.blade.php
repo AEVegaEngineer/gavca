@@ -14,7 +14,7 @@
 		@endforeach
 		<?php 
 		//echo 'sal_cargado: '.$sal_cargado.'<br';
-		?>
+		?>		
 		@foreach($aumentos as $aumento)
 		<?php 
 		$aumento_escalar = ($aumento->aum_aumento * 0.01) + 1;
@@ -40,10 +40,10 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>SALARIO MENSUAL BASE</td>
+					<td>SALARIO MENSUAL</td>
 					<td align="right">{{number_format ( $sal_anual = $sal_cargado*12 , $decimals = 2 , "," , "." )}}</td>
-					<td align="right">{{number_format ( $sal_anual = $sal_cargado , $decimals = 2 , "," , "." )}}</td>
-					<td align="right">{{number_format ( $sal_diario = $sal_cargado/30 , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $sal_mensual = $sal_cargado , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $sal_diario = $sal_cargado/20 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
 				<tr>
 					<td>BONO VACACIONAL (15 DIAS AL AÑO)</td>
@@ -68,7 +68,7 @@
 
 					<td>CESTA TIKET</td>
 					<?php $c_tick_mensual = ($cant_cesta_ticket*$u_tributaria)*30 ?>
-					<td align="right">{{number_format ( $c_tick_anual = $c_tick_mensual*$cant_cesta_ticket , $decimals = 2 , "," , "." )}}</td>
+					<td align="right">{{number_format ( $c_tick_anual = $c_tick_mensual*12 , $decimals = 2 , "," , "." )}}</td>
 					<td align="right">{{number_format ( $c_tick_mensual , $decimals = 2 , "," , "." )}}</td>
 					<td align="right">{{number_format ( $c_tick_diario = $c_tick_mensual/30 , $decimals = 2 , "," , "." )}}</td>
 				</tr>
@@ -88,8 +88,8 @@
 				<tr>
 					<td><b>TOTAL SALARIO INTEGRAL</b></td>
 					<td align="right"><b>{{number_format ( $total_sal_anual = $sal_anual+$bono_vac_anual+$vac_anual+$bon_fin_anual+$c_tick_anual+$pres_anual , $decimals = 2 , "," , "." )}}</b></td>
-					<td align="right"><b>{{number_format ( $total_sal_mensual = $sal_cargado+$bono_vac_mensual+$vac_mensual+$bon_fin_mensual+$c_tick_mensual+$pres_mensual , $decimals = 2 , "," , "." )}}</b></td>
-					<td align="right" id="salario_integral"><b>{{number_format ( $total_sal_mensual/20 , $decimals = 2 , "," , "." )}}</b></td>
+					<td align="right"><b>{{number_format ( $total_sal_mensual = $sal_mensual+$bono_vac_mensual+$vac_mensual+$bon_fin_mensual+$c_tick_mensual+$pres_mensual , $decimals = 2 , "," , "." )}}</b></td>
+					<td align="right" id="salario_integral"><b>{{number_format ($sal_diario+$bono_vac_diario+$vac_diario+$bon_fin_diario+$c_tick_diario+$pres_diario , $decimals = 2 , "," , "." )}}</b></td>
 				</tr>
 			</tbody>			
 		</table>
@@ -108,6 +108,3 @@
 	</div>
 @endsection
 
-@section('scripts')
-	{!!Html::script('js/salario/salario.js')!!}
-@endsection

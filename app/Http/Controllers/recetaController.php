@@ -150,6 +150,6 @@ class recetaController extends Controller
     public function destroy($id)
     {
         receta::destroy($id);
-        return redirect('/receta')->with('message','Receta eliminada exitosamente');
+        return redirect('/receta/view_trash')->with('message','Receta eliminada exitosamente');
     }
 }

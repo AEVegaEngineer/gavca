@@ -40,7 +40,15 @@
 					?>					
 				</td>
 				<?php 
-				echo ''.($debe_haber ? '<td>Compra de factura: '.$cardex->comp_doc.'</td>' : '<td>'.$cardex->car_concepto.'</td>');
+				if($debe_haber)
+				{
+					if($cantidad<0)						
+						echo '<td>Reembolso de compra de factura: '.$cardex->comp_doc.'</td>';
+					else
+						echo '<td>Compra de factura: '.$cardex->comp_doc.'</td>';
+				}else{
+					echo '<td>'.$cardex->car_concepto.'</td>';
+				}				
 				?>
 				
 				<?php 
@@ -60,7 +68,17 @@
 				}
 				else
 				{
-					echo ''.($debe_haber ? '<td>'.$cantidad.'</td><td></td>' : '<td></td><td>'.$cantidad*(-1).'</td>');
+					if($debe_haber)
+					{
+						if($cantidad<0)						
+							echo '<td></td><td>'.$cantidad*(-1).'</td>';
+						else
+							echo '<td>'.$cantidad.'</td><td></td>';
+					}else
+					{
+						echo '<td></td><td>'.$cantidad*(-1).'</td>';
+					}
+					/*echo ''.($debe_haber ? '<td>'.$cantidad.'</td><td></td>' : '<td></td><td>'.$cantidad*(-1).'</td>');*/
 				}
 				?>	
 				<td>{{(int)$cardex->car_valor_actual}}</td>

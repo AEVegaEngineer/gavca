@@ -129,7 +129,7 @@ class ProveedorController extends Controller
             'prov_cred_o_cont' => $request['prov_cred_o_cont'],
         ]);  
         $proveedores = proveedor::paginate(15);
-        return view('proveedor.index',compact('proveedores'))->with('message','El proveedor se ha guardado exitosamente.');
+        return redirect('/proveedor')->with('message','Proveedor registrado exitosamente');
     }
 
     /**
@@ -168,8 +168,7 @@ class ProveedorController extends Controller
         $proveedor->fill($request->all());
         $proveedor->save();
 
-        $proveedores = proveedor::paginate(15);
-        return view('proveedor.index',compact('proveedores'))->with('message','El proveedor se ha actualizado exitosamente.');
+        return redirect('/proveedor')->with('message','El proveedor se ha actualizado exitosamente.');        
     }
 
     /**

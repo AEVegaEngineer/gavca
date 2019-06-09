@@ -38,38 +38,36 @@ class ClienteController extends Controller
     public function create()
     {
         //Función para crear código y pasarlo al formulario
-        //para crear un nuevo cliente
+        //para crear un nuevo cliente           
         function crearCodigo(){
             $numero = 0;
             $n = 0;
-            //itero para buscar el numero
-            for ($i=0; $i < 99999; $i++) { 
-                $pattern = "C";
-                //cuento digitos
-                $n = 0; 
-                $floor = $i;           
-                do{
-                    $floor = floor($floor / 10);
-                    $n++;
-                } while ($floor > 0);
-                    
-                //segun la cantidad de numeros agrego ceros para completar 5 cifras
-                $limit = 5-$n;
-                //return $limit;
-                for ($j=0; $j < $limit; $j++) { 
-                    $pattern = $pattern."0";
-                }            
-                //concateno el patron con el numero
-                $code = $pattern.$i;  
-                //si no hay ningun numero como este registrado sal del loop y registre
-                $cliente = cliente::where('cli_codigo', '=', $code)->first();
-                if ($cliente === null) {
-                    break;
-                }                    
-            }
+            //itero para buscar el numero            
+            $ultimoCliente = cliente::orderBy('id','dsc')->take(1)->pluck('cli_codigo');
+            $ultimoCliente = str_replace("C","",$ultimoCliente);
+            $ultimoCliente = (int)$ultimoCliente+1;
+            $patron = "C";
+            //cuento digitos
+            $n = 0; 
+            $floor = $ultimoCliente;           
+            do{
+                $floor = floor($floor / 10);
+                $n++;
+            } while ($floor > 0);
+                
+            //segun la cantidad de numeros agrego ceros para completar 5 cifras
+            $limit = 5-$n;
+            //return $limit;
+            for ($j=0; $j < $limit; $j++) { 
+                $patron = $patron."0";
+            }            
+            //concateno el patron con el numero
+            $code = $patron.$ultimoCliente; 
+
             return $code;
-        }            
-        $codigo = crearCodigo(); 
+        }
+        
+        $codigo = crearCodigo();   
         return view('cliente.create',compact('codigo'));
     }    
 
@@ -131,9 +129,7 @@ class ClienteController extends Controller
         $cliente->fill($request->all());
         $cliente->save();
 
-        $clientes = cliente::paginate(15);
-        $request->session()->flash('message', 'El cliente se ha actualizado exitosamente.');  
-        return view('cliente.index',compact('clientes'));
+        return redirect('/cliente')->with('message','El cliente se ha actualizado exitosamente.');
     }
 
     /**

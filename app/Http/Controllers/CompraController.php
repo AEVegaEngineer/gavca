@@ -361,9 +361,7 @@ class CompraController extends Controller
         }else{
             $fecha = session('caja_fecha');        
             if(isset($fecha)){
-                \Session::flash('message-error', 'Ya has creado esta factura con este mismo proveedor.');
-                $bancos = banco::lists('ban_nombre', 'ban_nombre');
-                return view('compra.create',compact('bancos','fecha'));
+                return redirect('/compra/create')->with('message-error','Ya has creado esta factura con este mismo proveedor.');
             }else{
                 return 'error, debes establecer una fecha en caja';
             }           
