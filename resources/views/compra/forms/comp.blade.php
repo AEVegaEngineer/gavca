@@ -67,6 +67,7 @@
 	    </div>  
     </div>    
     <input type="hidden" name="codigo" value="{{ Session::get('codigo') }}" id="codigo">
+    <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
 </div>
 </div>
 <!-- Jquery -->
@@ -75,7 +76,7 @@
     {!!Html::script('js/bootstrap-datepicker.js')!!}
     <!-- Languaje -->
     {!!Html::script('locales/bootstrap-datepicker.es.min.js')!!}
-<script src="{{ asset('/js/proveedor/getProveedor.js') }}" type="text/javascript"></script>
+<script src="{{ asset('/js/proveedor/getProveedor.js?1') }}" type="text/javascript"></script>
 <script type="text/javascript">
 	$('.datepicker').datepicker({
 	    format: "yyyy-mm-dd",

@@ -4,7 +4,7 @@
 	@include('alerts.success')
 	@include('alerts.errors')
 	@include('alerts.request')
-		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Base de datos de Compras</h2> 
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Lista de Compras</h2> 
 		
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<h2 class="form-signin-heading">Actualización de receta {!!$receta->name!!}</h2>
+<h2 class="form-signin-heading">Actualización de Proceso Productivo {!!$receta->name!!}</h2>
 @include('alerts.request')
 <div class="row">
 	<div class="form-group">
