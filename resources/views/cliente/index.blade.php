@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Base de datos de cliente</h2>
+		<h2 class="form-signin-heading">Lista de Clientes</h2>
 		<table class="table">
 			<thead>
 				<th>Nombre del cliente</th>

@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="form-group">
 		{!!Form::model($cliente,['route'=>['cliente.update',$cliente->id],'method'=>'put'])!!}
-		@include('cliente.forms.cli')
+		@include('cliente.forms.cliupd')
 		<input type="hidden" name="id" value="<?php echo $cliente->id; ?>">
 		<div class="col-md-3 col-xs-12">
 		{!!Form::submit('Actualizar',['class'=>'btn btn-success btn-block'])!!}

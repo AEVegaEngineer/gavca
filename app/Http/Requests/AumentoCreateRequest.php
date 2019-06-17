@@ -25,7 +25,7 @@ class AumentoCreateRequest extends Request
     {
         return [            
             'aum_descripcion' => 'required',
-            'aum_aumento' => 'required|integer',
+            'aum_aumento' => 'required|numeric',
         ];
     }
     protected function getValidatorInstance()

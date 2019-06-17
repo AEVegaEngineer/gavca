@@ -155,8 +155,32 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (X) Agregar parámetros insumos (gas, luz, electricidad, etc) a recetas y producción
 - (X) Arreglar las carpetas de reportes para cardex e inventarios por los nuevos nombres
 
-car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
+CAMBIOS DE FILTRADO
 
+- del inventario de materias primas se quitó:
+<?php if(Auth::user()->privilegio == 'admin'){ ?>
+							{!!link_to_route('ajustes.inventario', $title = 'Ajustar', $parameters = array("materiaprima",$materiaprima->mp_codigo), $attributes = ['class'=>'btn btn-warning btn-xs'])!!}
+						<?php } ?>
+A PARTIR DEL 15-06-19,  
+LUEGO DE HABER FILTRADO LAS COSAS ESENCIALES PARA PRESENTARLAS DE TESIS
+SE ENCONTRARON LOS SIGUIENTES ERRORES:
+
+- Cuando se corre una producción arroja un costo X, si luego se cambia el costo de la mano de obra y se vuelve a ver esa producción, el costo total ha cambiado. Para corregirlo se debe crear una columna nueva en la tabla producciones que almacene este dato.
+
+- Usuario Tipo 2 No debe poder hacer nada dentro de Ver Ingredientes en Procesos Productivos
+
+- Última corrida de producción de Producto Terminado se guardó con error en producto semiterminado 1, le pone costo, la producción no se muestra en la lista de producciones.
+UPDATE: al parecer la corrida se hizo de PB y la producción la tomó de PC, hay confusión con las dependencias obviamente. Evidencia en imagenes/errorPT.png
+Los cardex parecen estar funcionando bien
+Es posible que el error se esté dando por los cambios a los formularios, tabindex y eso?
+Corrí produccion de 48 productos terminados, tomé 25 ejemplos 2 y 26 ejemplos 1, me dio como resultado una Producción de Producto Semiprocesado Ejemplo 1 de fecha 2019-05-02, imagen errorPT3.png
+
+- Arreglar privilegios de tipo 2 para generar reportes
+- Tipo2 no puede eliminar ni editar parametros
+
+
+
+car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
 Se colocó el foreign key en dependencias.dep_produccion que referenciaba a produccion.id como set null ya que cuando se hacia una limpieza desde los ajustes eliminaba las dependencias de las recetas
 

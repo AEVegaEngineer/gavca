@@ -89,10 +89,18 @@ class ProduccionController extends Controller
                 ->where('dependencias.dep_padre',$id)
                 ->whereNotNull('produccion.pro_costo')
                 ->orderBy('produccion.pro_fecha', 'dsc')
-                ->take(15) 
+                ->take(15)
                 // el take 15 tomara solo 15 producciones en general
                 ->get(['produccion.id', 'produccion.pro_fecha','produccion.rec_nombre','produccion.pro_costo']);
             //return $producciones;
+            /*VALIDO SI LA PRODUCCIÓN YA FUE CREADA PARA ESTA FECHA*/
+            $produccion_ya_existe = produccion::where('rec_nombre',$id)
+                ->where('pro_fecha',$fecha)
+                ->whereNotNull('pro_costo')
+                ->first();
+            if($produccion_ya_existe!==null){
+                return redirect('/receta')->with('message','No puedes crear una producción para este proceso con esta fecha porque ya ha sido creada, modifícala o crea una nueva.');            
+            }  
             return view('produccion.create',compact('receta','dependencias','producciones','fecha'));
         }else{
             $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
@@ -221,27 +229,31 @@ class ProduccionController extends Controller
             ->select("produccion.pro_produccion", 'recetas.rec_unidad', 'dependencias.dep_hijo')
             ->orderBy('produccion.id','dsc')
             ->take($cuenta)
-            ->get();
+            ->get();        
         $costos = DB::table('produccion')
             ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
             ->where('dependencias.dep_padre',$rec_nombre)
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
-            ->get();        
+            ->get();  
+
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
             ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
             ->get(); 
-        $insumosrequeridos = insumorequerido::leftJoin('insumos', 'insumos.ins_nombre','=','insumo_requerido.ins_req_insumo')
+        $insumosrequeridos = insumo::leftJoin('insumo_requerido', 'insumo_requerido.ins_req_insumo','=','insumos.ins_nombre')
             ->where('insumo_requerido.rec_nombre',$rec_nombre)
             ->where('insumo_requerido.ins_req_fecha',$req_fecha)
+            ->select('insumo_requerido.id','insumo_requerido.ins_req_total', 'insumos.ins_nombre', 'insumos.ins_unidad', 'insumos.ins_costo')
             ->get();
         $id = produccion::max('id');
+
         $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
         produccion::where('id',$id)
             ->update([
                 'pro_costo' => $costosUnitarios,
-            ]);     
+            ]);  
+          
         return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable','insumosrequeridos'));
 
     }
@@ -294,25 +306,18 @@ class ProduccionController extends Controller
         $pro_produccion = $request['pro_produccion'];
         $pro_mano_obra = $request['pro_mano_obra'];        
 
-        /*CONTINUO CON EL REGISTRO*/
+        /*VALIDO SI LA PRODUCCIÓN YA FUE CREADA PARA ESTA FECHA*/
         $produccion_ya_existe = produccion::where('rec_nombre',$rec_nombre)
             ->where('pro_fecha',$fecha)
             ->whereNotNull('pro_costo')
             ->first();
         if($produccion_ya_existe!==null){
-            \Session::flash('message', 'No puedes crear una producción con esa fecha para esa receta porque ya ha sido creada, modifícala o crea una nueva.');
-            $recetas = DB::table('recetas')
-                ->where('rec_activo','si')
-                ->orderBy('rec_proc', 'asc')
-                ->orderBy('rec_nombre', 'asc')
-                ->orderBy('rec_activo', 'desc')
-                ->paginate(15);
-            return view('receta.index',compact('recetas'));
+            return redirect('/receta')->with('message','No puedes crear una producción para este proceso con esta fecha porque ya ha sido creada, modifícala o crea una nueva.');            
         }       
 
         //REVISO CUAL PRODUCCION SE ESTA LLEVANDO A CABO Y GUARDO ESE VALOR AL CREAR LA PRODUCCION
         $receta = receta::where('rec_nombre',$request['rec_nombre'])->first();
-
+        //return $rec_nombre."<br>".$receta->rec_proc;
         
 
         /*SE DEBE REVISAR SI HAY EXISTENCIA DE MATERIA PRIMA COMPRADA PARA CREAR LA PRODUCCION*/
@@ -574,48 +579,8 @@ class ProduccionController extends Controller
         /**/
         /**/
         /*RETORNANDO LA VISTA COMO EL METODO DE ARRIBA VERPRODUCCION*/
-        $req_fecha = str_replace("-","/",$fecha);
-        //return "aqui estoo ".$rec_nombre." ".$req_fecha;
-        $recetas = receta::where('rec_nombre',$rec_nombre)->first();
-        $produccion = produccion::where('rec_nombre',$rec_nombre)
-            ->where('pro_fecha', $req_fecha)
-            ->first();
-        $aumentos = aumento::All();
-        $salarios = salario::All();
-        $miscelaneo = miscelaneo::where('id','1')->first();
-        
-        $cuenta = dependencia::where('dep_padre',$rec_nombre)->count();
-        $dependencias = dependencia::leftJoin('recetas', 'recetas.rec_nombre', '=', 'dependencias.dep_hijo')
-            ->leftJoin('produccion', 'produccion.rec_nombre', '=', 'dependencias.dep_hijo')
-            ->where('produccion.id', '<', produccion::max('id'))
-            ->select("produccion.pro_produccion", 'recetas.rec_unidad', 'dependencias.dep_hijo')
-            ->orderBy('produccion.id','dsc')
-            ->take($cuenta)
-            ->get();
-
-        $costos = DB::table('produccion')
-            ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
-            ->where('dependencias.dep_padre',$rec_nombre)
-            ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
-            ->get();
-        
-        $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
-            ->where('requerimientos.req_fecha', $req_fecha)
-            ->where('requerimientos.rec_nombre', $rec_nombre)
-            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
-            ->get(); 
-        $insumosrequeridos = insumorequerido::leftJoin('insumos', 'insumos.ins_nombre','=','insumo_requerido.ins_req_insumo')
-            ->where('insumo_requerido.rec_nombre',$rec_nombre)            
-            ->where('insumo_requerido.ins_req_fecha',$req_fecha)
-            ->get();       
         $id = produccion::max('id');
-        $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
-        produccion::where('id',$id)->
-            update([
-                'pro_costo' => $costosUnitarios,
-            ]);     
-        $modificable = true;
-        return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable','insumosrequeridos','costosUnitarios'));
+        return redirect('/verProduccion/'.$id);        
 
     }
 

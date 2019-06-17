@@ -21,7 +21,7 @@
 		<h2 class="form-signin-heading">Inventario de {{$proc}}</h2>
 		<?php if(Auth::user()->privilegio == 'admin'){ ?>
 			
-			<a href="/produccion/{{$p}}/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Productos de {{$proc}}</a>
+			<!--<a href="/produccion/{{$p}}/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Productos de {{$proc}}</a>-->
 		<?php } ?>
 		{!!link_to_route('inventario.reporte', $title = 'Generar reporte', array($fecha = $fecha_caja_actual, $inventario=$pro), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">

@@ -36,7 +36,7 @@
 			{!!Form::submit('Actualizar',['class'=>'btn btn-success btn-block'])!!}
 		</div>
 		<div class="col-md-4 col-xs-12">
-			<a href="/salario" class="btn btn-success btn-block">Guardar todos los cambios y volver</a>
+			<a href="/salario" class="btn btn-success btn-block">Volver a Cálculo de Salarios</a>
 		</div>
 	</div>
 		

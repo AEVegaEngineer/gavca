@@ -45,7 +45,7 @@
 		<input type="hidden" id="deuda" value="{{$deuda}}">
 		<div class="row">
 			<div class="col-md-12">
-				{!!Form::submit('Pagar deuda',['class'=>'btn btn-lg btn-success'])!!}
+				{!!Form::submit('Cobrar deuda',['class'=>'btn btn-lg btn-success'])!!}
 			</div>
 		</div>
 	{!!Form::close()!!}		

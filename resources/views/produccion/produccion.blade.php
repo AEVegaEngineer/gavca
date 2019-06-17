@@ -6,12 +6,13 @@
 		<h2 class="form-signin-heading margenBotLg">Producción de {!!$rec_nombre!!} de fecha {!!$req_fecha!!}</h2>
 		<div class="row">					
 			<div class="col-md-6 col-xs-12">
-				<?php if($modificable){ ?>
-					{!!link_to_route('produccion.edit', $title = 'Modificar producción de '.$rec_nombre, $parameters = $produccion->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}	
-				<?php }else{ ?>
-					<p>Esta producción no es modificable ya que ha sido utilizada por una venta u otra producción de etapa superior.</p>
+				<?php if(0){ ?>
+					<?php if($modificable){ ?>
+						{!!link_to_route('produccion.edit', $title = 'Modificar producción de '.$rec_nombre, $parameters = $produccion->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}	
+					<?php }else{ ?>
+						<p>Esta producción no es modificable ya que ha sido utilizada por una venta u otra producción de etapa superior.</p>
+					<?php } ?>
 				<?php } ?>
-
 			</div>		
 			<?php 
 			$req = $produccion->pro_mano_obra;

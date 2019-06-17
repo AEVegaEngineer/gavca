@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="form-group">
 		{!!Form::model($proveedor,['route'=>['proveedor.update',$proveedor->id],'method'=>'put'])!!}
-		@include('proveedor.forms.prov')
+		@include('proveedor.forms.provupd')
 		<div class="col-md-3 col-xs-12">
 		{!!Form::submit('Actualizar',['class'=>'btn btn-success btn-block'])!!}
 		</div>

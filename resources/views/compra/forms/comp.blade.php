@@ -66,7 +66,6 @@
 			</div>
 	    </div>  
     </div>    
-    <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
     <input type="hidden" name="codigo" value="{{ Session::get('codigo') }}" id="codigo">
 </div>
 </div>

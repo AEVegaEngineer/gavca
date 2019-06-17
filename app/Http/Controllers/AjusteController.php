@@ -48,6 +48,7 @@ class AjusteController extends Controller
         DB::statement("DELETE FROM `cuentasxpagar` WHERE 1");
         DB::statement("DELETE FROM `cuentasxcobrar` WHERE 1");
         DB::statement("DELETE FROM `cardexmp` WHERE 1");
+        DB::statement("DELETE FROM `insumo_requerido` WHERE 1");
         \Session::flash('message', "Las bases de datos han sido reiniciadas exitosamente.");  
 
         //Inicio de una nueva caja para operaciones.
