@@ -450,27 +450,68 @@ class ProduccionController extends Controller
             ->orderBy('produccion.id','dsc')                
             ->take(1)
             ->pluck('pro_disponible');
-        if($receta->rec_proc == "PB"){
-            $lote = DB::table('produccion')
-                ->where('pro_etapa','PB')
-                ->where('rec_nombre',$rec_nombre)
-                ->max('pro_lote');
-            if($lote === null)
-                $lote = 0;
-            $lote++;                                   
+        $producciones = produccion::where('pro_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
+        if($producciones === null){
+            
+            if($receta->rec_proc == "PB"){
+                    $lote = DB::table('produccion')
+                        ->where('pro_etapa','PB')
+                        ->where('rec_nombre',$rec_nombre)
+                        ->max('pro_lote');
+                    if($lote === null)
+                        $lote = 0;
+
+                produccion::create([
+                    'pro_fecha' => $fecha,
+                    'rec_nombre' => $rec_nombre,
+                    'pro_etapa' => $receta->rec_proc,
+                    'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
+                    'pro_mano_obra' => $pro_mano_obra,
+                    'pro_lote' => $lote+1,
+                    'pro_concepto' => 'Producción de '.$rec_nombre,
+                ]);                        
+            }else{
+                produccion::create([
+                    'pro_fecha' => $fecha,
+                    'rec_nombre' => $rec_nombre,
+                    'pro_etapa' => $receta->rec_proc,
+                    'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
+                    'pro_mano_obra' => $pro_mano_obra,
+                    'pro_concepto' => 'Producción de '.$rec_nombre,
+                ]);
+            }
         }else{
-            $lote = null;
+            if($receta->rec_proc == "PB"){
+                $lote = DB::table('produccion')
+                    ->where('pro_etapa','PB')
+                    ->where('rec_nombre',$rec_nombre)
+                    ->max('pro_lote');
+                if($lote === null)
+                    $lote = 0;
+                produccion::where('pro_fecha',$fecha)->where('rec_nombre',$rec_nombre)->update([
+                    'pro_fecha' => $fecha,
+                    'rec_nombre' => $rec_nombre,
+                    'pro_etapa' => $receta->rec_proc,
+                    'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
+                    'pro_mano_obra' => $pro_mano_obra,
+                    'pro_lote' => $lote+1,
+                    'pro_concepto' => 'Producción de '.$rec_nombre,
+                ]);
+            }else{
+                produccion::where('pro_fecha',$fecha)->where('rec_nombre',$rec_nombre)->update([
+                    'pro_fecha' => $fecha,
+                    'rec_nombre' => $rec_nombre,
+                    'pro_etapa' => $receta->rec_proc,
+                    'pro_produccion' => $pro_produccion,
+                    'pro_disponible' => $disponible+$pro_produccion,
+                    'pro_mano_obra' => $pro_mano_obra,
+                    'pro_concepto' => 'Producción de '.$rec_nombre,
+                ]);
+            }
         }
-        produccion::create([
-            'pro_fecha' => $fecha,
-            'rec_nombre' => $rec_nombre,
-            'pro_etapa' => $receta->rec_proc,
-            'pro_produccion' => $pro_produccion,
-            'pro_disponible' => $disponible+$pro_produccion,
-            'pro_mano_obra' => $pro_mano_obra,
-            'pro_lote' => $lote,
-            'pro_concepto' => 'Producción de '.$rec_nombre,
-        ]); 
         /*FIN DE SECCION PARA GUARDAR LA PRODUCCIÓN EN CURSO*/
         /*
         Obtengo todos los ingredientes que pertenezcan a esta receta y creo sus campos de requerimientos, lo que significa que la fecha del requerimiento sera la misma fecha que la de la producción.

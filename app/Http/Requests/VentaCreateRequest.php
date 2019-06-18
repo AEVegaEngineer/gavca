@@ -30,4 +30,14 @@ class VentaCreateRequest extends Request
             'ven_condicion' => 'required',
         ];
     }
+    public function messages()
+    {
+        return [
+            'cli_codigo.required' => 'El código del cliente es requerido',
+            'ven_fecha.required' => 'La fecha de la venta es requerida',
+            'ven_factura.required' => 'La factura de de la venta es requerida',
+            'ven_factura.unique:ventas' => 'La factura ya se encuentra registrada',
+            'ven_condicion.required' => 'La condición de la venta es requerida',
+        ];
+    }
 }

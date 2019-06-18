@@ -44,4 +44,11 @@ class CostofijoUpdateRequest extends Request
 
         return parent::getValidatorInstance();
     }
+    public function messages()
+    {
+        return [
+            'cf_concepto.required' => 'El concepto es requerido',
+            'cf_montomes.required' => 'El monto es requerido',
+        ];
+    }
 }

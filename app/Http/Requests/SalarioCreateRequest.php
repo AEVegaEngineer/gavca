@@ -39,4 +39,11 @@ class SalarioCreateRequest extends Request
 
         return parent::getValidatorInstance();
     }
+    public function messages()
+    {
+        return [
+            'salario.required' => 'El salario mensual es requerido',
+            'salario.Numeric' => 'El salario mensual debe ser Numérico',
+        ];
+    }
 }

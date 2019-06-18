@@ -40,4 +40,15 @@ class SalarioUpdateRequest extends Request
 
         return parent::getValidatorInstance();
     }
+    public function messages()
+    {
+        return [
+            'sal_mensual.required' => 'El salario mensual es requerido',
+            'sal_mensual.Numeric' => 'El salario mensual debe ser Numérico',
+            'unidad_tributaria.required' => 'La unidad tributaria es requerida',
+            'unidad_tributaria.Numeric' => 'La unidad tributaria debe ser Numérica',
+            'cant_cesta_ticket.required' => 'La cantidad de unidades tributarias por cesta ticket es requerida',
+            'cant_cesta_ticket.Numeric' => 'La cantidad de unidades tributarias por cesta ticket debe ser Numérica',
+        ];
+    }
 }

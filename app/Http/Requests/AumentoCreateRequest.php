@@ -40,4 +40,13 @@ class AumentoCreateRequest extends Request
 
         return parent::getValidatorInstance();
     }
+    public function messages()
+    {
+        $id = $this->input('id');
+        return [
+            'aum_descripcion.required' => 'La descripción es requerida',
+            'aum_aumento.required' => 'El monto es requerido',
+            'aum_aumento.numeric' => 'El monto debe ser numérico',
+        ];
+    }
 }

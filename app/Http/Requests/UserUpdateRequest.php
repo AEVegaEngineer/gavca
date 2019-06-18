@@ -34,4 +34,10 @@ class UserUpdateRequest extends Request
             //los usuarios que son tipo 1 y tipo 2 no pueden editar sus privilegios
         ];
     }
+    public function messages()
+    {
+        return [
+            'name.required' => 'El nombre es requerido',
+        ];
+    }
 }

@@ -25,13 +25,26 @@ class ClienteCreateRequest extends Request
     {
         $id = $this->input('id');
         return [
-            'cli_nombre' => 'uniqueClienteNombre:{$request->cli_codigo}',
+            'cli_nombre' => 'required',
             'cli_codigo' => 'required|unique:clientes,cli_codigo,'.$id,
             /*'cli_nombre' => 'required|unique:clientes,cli_nombre,'.$id,*/
             'cli_rif' => 'required',
             'cli_direccion' => 'required',
             'cli_contacto' => 'required',
             'cli_condiciones' => 'required',
+        ];
+    }
+    public function messages()
+    {
+        $id = $this->input('id');
+        return [
+            'cli_nombre.required' => 'El nombre del cliente es requerido',
+            'cli_codigo.required' => 'El nombre del código es requerido',
+            'cli_codigo.unique:clientes,cli_codigo,'.$id => 'El código del cliente debe ser único',
+            'cli_rif.required' => 'El RIF es requerido',
+            'cli_direccion.required' => 'La dirección es requerida',
+            'cli_contacto.required' => 'El contácto es requerido',
+            'cli_condiciones.required' => 'La condición del cliente es requerida',
         ];
     }
 }

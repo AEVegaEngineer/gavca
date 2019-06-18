@@ -598,6 +598,10 @@ class CajaBancoController extends Controller
         }        
         //return "entidad: ".$request["entidad"]." sc_fecha:".$request["fecha"]." Saldo:".$saldo_previo;
         $nuevo_saldo = $saldo_previo - $request["monto"];
+        if($nuevo_saldo < 0)
+        {
+            return Redirect::back()->with('message-error', 'No se encuentra suficiente saldo en la cuenta de orígen, no es posible generar la salida por ese monto.');
+        }
         cajabanco::create([
             'cb_entidad' => $request["entidad"],
             'cb_debe_haber' => 'HABER',
