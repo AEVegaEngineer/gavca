@@ -245,10 +245,10 @@ class ProduccionController extends Controller
             ->where('insumo_requerido.ins_req_fecha',$req_fecha)
             ->select('insumo_requerido.id','insumo_requerido.ins_req_total', 'insumos.ins_nombre', 'insumos.ins_unidad', 'insumos.ins_costo')
             ->get();
-        $id = produccion::max('id');
 
         $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
-        produccion::where('id',$id)
+        
+        produccion::where('id',$id_buscado)
             ->update([
                 'pro_costo' => $costosUnitarios,
             ]);  
@@ -1044,21 +1044,21 @@ function calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$s
         $req_unitario = $req_total/$prod;               
         $costo = $costos[$key]->pro_costo;
         $costo_unitario = $costo*$req_unitario;
-        $costosUnit+=$costo_unitario;            
+        $costosUnit+=$costo_unitario;
+
     }
     foreach($parametros as $parametro)
     {
         $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
+
     }
     foreach($insumosrequeridos as $insumorequerido)
     {
         $costosUnit+=$insumorequerido->ins_costo*($insumorequerido->ins_req_total/$prod);
     }
     $req = $produccion->pro_mano_obra;
-    foreach($salarios as $salario)
-    {
-        $salario_integral = $salario->salario_integral;
-    }
+    $salario_integral = $salarios[0]->salario_integral;
+    
     $cos_tot_obra = $req*$salario_integral;
     $cos_unit_obra = $cos_tot_obra / $prod;
 
@@ -1070,6 +1070,5 @@ function calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$s
     $unit_cf = $total_cf/$prod;
     $costoDirUnit = $costosUnit+$cos_unit_obra;
     $total_unit = $costoDirUnit+$unit_cf;
-
     return $total_unit;
 }
