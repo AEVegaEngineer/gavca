@@ -32,7 +32,7 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {        
+    {   
         $hoy = Carbon::today()->toDateString();
         //si tengo seleccionada una caja no me muestra el formulario para
         //seleccionar cajas, salta directamente a la fecha seleccionda.

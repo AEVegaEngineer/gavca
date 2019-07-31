@@ -28,7 +28,8 @@
 				@foreach($elementos as $key => $elemento)
 				<?php if($totalventa->ven_factura == $elemento->ven_factura){?>
 				<tr>
-					<td>{{$elemento->ven_fecha}}</td>
+					<?php $fecha = date_create($elemento->ven_fecha); ?>
+					<td>{{date_format($fecha,"d/m/Y")}}</td>
 					<td>{{$totalventa->ven_factura}}</td>
 					<td>{{$elemento->cli_codigo}}</td>			
 					<td>{{$elemento->ven_condicion}}</td>

@@ -32,7 +32,7 @@
 				<td align="right" id="">
 					{{number_format($costofijo->cf_montomes/$produccionmess->produccion,$decimals = 2 , "," , ".")}}
 				</td>
-				<td>{{$costofijo->updated_at}}</td>
+				<td>{{date_format($costofijo->updated_at,"d/m/Y")}}</td>
 				<td>
 					{!!Form::open(['route'=>['costofijo.destroy',$costofijo->id],'method'=>'DELETE'])!!}
 						<div class="btn-group-xs">
@@ -62,7 +62,7 @@
 				<td>Número de frascos producidos</td>
 			</thead>
 			<tr>
-				<td>{{$produccionmess->updated_at}}</td>
+				<td>{{date_format($produccionmess->updated_at,"d/m/Y")}}</td>
 				<td id="total">{{$produccionmess->produccion}}</td>
 			</tr>			
 		</table>
