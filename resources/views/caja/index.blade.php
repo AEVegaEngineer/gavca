@@ -10,11 +10,11 @@
 	{!!Form::open(['route'=>'caja.abrir','method'=>'POST'])!!}
 	<div class="row">
 		<div class="col-md-12 margenBotLg">
-			<h3>Selecciona una fecha para abrir el día de operación. Debes seleccionar una fecha igual o anterior a la actual ({{$hoy}}), sólo puedes seleccionar una fecha si el día anterior a la misma tiene sus cajas cerradas.</h3>
+			<h3>Selecciona una fecha para abrir el día de operación. Debes seleccionar una fecha igual o anterior a la actual {{date_format(date_create($hoy),"d/m/Y")}}, sólo puedes seleccionar una fecha si el día anterior a la misma tiene sus cajas cerradas.</h3>
 			<?php if($caja_actual != null){ ?>
-			<h3>Actualmente hay un día abierto de fecha {{$caja_actual}}</h3>
+			<h3>Actualmente hay un día abierto de fecha {{date_format(date_create($caja_actual),"d/m/Y")}}</h3>
 			<?php }else if($ultima_caja != null){?>
-			<h3>El último día que fue cerrado tiene fecha {{$ultima_caja}}</h3>
+			<h3>El último día que fue cerrado tiene fecha {{date_format(date_create($ultima_caja),"d/m/Y")}}</h3>
 			<?php } ?>
 		</div>		
 	</div>

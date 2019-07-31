@@ -27,8 +27,8 @@
 				if($produccion->pro_costo!=null){
 			?>
 			<tr>
-				<td>{{$produccion->rec_nombre}}</td>
-				<td>{{$produccion->pro_fecha}}</td>
+				<td>{{$produccion->rec_nombre}}</td>				
+				<td>{{date_format(date_create($produccion->pro_fecha),"d/m/Y")}}</td>
 				<td>{{$produccion->pro_produccion}}</td>
 				<td>{{$produccion->pro_etapa}}</td>
 				<td>{{number_format ( $produccion->pro_costo , $decimals = 2 , "," , "." )}}</td>

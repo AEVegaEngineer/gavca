@@ -35,7 +35,7 @@
 			</div>
 		</nav>
 		<?php 
-		echo "<h3>".$caja." - ".date("Y/m/d", strtotime(Session::get('caja_fecha')))."</h3>";
+		echo "<h3>".$caja." - ".date("d/m/Y", strtotime(Session::get('caja_fecha')))."</h3>";
 		
 		?>
 		<div class="row">
