@@ -149,5 +149,5 @@
 	</div>	
 	<script src="{{ asset('/js/jquery.min.js') }}" type="text/javascript"></script>	
 
-	<script src="{{ asset('/js/materiaprima/crear_mp.js?122') }}" type="text/javascript"></script>
+	<script src="{{ asset('/js/materiaprima/crear_mp.js?123') }}" type="text/javascript"></script>
 @endsection

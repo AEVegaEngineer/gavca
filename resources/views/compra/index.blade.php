@@ -27,11 +27,13 @@
 			</thead>
 			@foreach($compras as $compra)
 			<tbody>
-				<td>{{date("Y/m/d", strtotime($compra->comp_fecha))}}</td>
+				<td>{{date("d/m/Y", strtotime($compra->comp_fecha))}}</td>
 				<td>{{$compra->comp_doc}}</td>
 				<td>{{$compra->comp_proveedor}}</td>
 				<td>{{$compra->comp_cred_cont}}</td>
-				<td>{{$compra->comp_entidad}}</td>					
+				<?php $entidad = ($compra->comp_entidad == "") ? "Cuenta por pagar": $compra->comp_entidad?>
+				<td>{{$entidad}}</td>	
+
 				<td align="right">{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</td>
 				<td>					
 					{!!Form::open(['route'=>['compra.destroy',$compra->id],'method'=>'DELETE'])!!}

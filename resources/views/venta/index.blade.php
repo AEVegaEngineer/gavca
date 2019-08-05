@@ -33,7 +33,8 @@
 					<td>{{$totalventa->ven_factura}}</td>
 					<td>{{$elemento->cli_codigo}}</td>			
 					<td>{{$elemento->ven_condicion}}</td>
-					<td>{{$elemento->ven_entidad}}</td>
+					<?php $entidad = ($elemento->ven_entidad == "") ? "Cuenta por cobrar": $elemento->ven_entidad?>
+					<td>{{$entidad}}</td>
 					<td align="right">{{ number_format ( $totalventa->ven_total , $decimals = 2 , "," , "." ) }}</td>
 					<td>{!!link_to_route('venta.show', $title = 'Ver Factura', $parameters = $totalventa->id, $attributes = ['class'=>'btn btn-success btn-xs'])!!}</td>
 				</tr>

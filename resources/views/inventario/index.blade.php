@@ -37,7 +37,7 @@
 				<td>{{$inventario->rec_nombre}}</td>
 				<td>{{$inventario->rec_unidad}}</td>		
 				<td>{{$inventario->pro_produccion}}</td>
-				<td>{{date("Y/m/d", strtotime($inventario->updated_at))}}</td>
+				<td>{{date("d/m/Y", strtotime($inventario->updated_at))}}</td>
 				<td>{!!link_to_route('produccion.show', $title = 'Ver Cardex', $parameters = $inventario->rec_nombre, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}</td>
 			</tbody>
 		@endforeach

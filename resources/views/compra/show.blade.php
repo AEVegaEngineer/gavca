@@ -11,7 +11,7 @@
 				<th>Documento de factura</th>	
 			</thead>
 			<tr class="warning">
-				<td>{{date("Y/m/d", strtotime($compra->comp_fecha))}}</td>
+				<td>{{date("d/m/Y", strtotime($compra->comp_fecha))}}</td>
 				<td>{{$compra->comp_proveedor}}</td>
 				<td>{{$compra->comp_doc}}</td>
 			</tr>

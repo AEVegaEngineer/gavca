@@ -22,7 +22,8 @@
 				<td>{{$proveedor->prov_rif}}</td>
 				<td>{{$proveedor->prov_direccion}}</td>
 				<td>{{$proveedor->prov_contacto}}</td>
-				<td>{{$proveedor->prov_condiciones}}</td>
+				<?php $observaciones = ($proveedor->prov_condiciones == "") ? "Ninguna": $proveedor->prov_condiciones?>
+				<td>{{$observaciones}}</td>
 				<?php $saldo=0; ?>
 				@foreach($cuentasxpagar as $ctas)
 				<?php 

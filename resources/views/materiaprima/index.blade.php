@@ -24,7 +24,7 @@
 				<td>{{$materiaprima->par_unidad}}</td>	
 				
 				<td>{{$materiaprima->mp_cantidad}}</td>
-				<td>{{date("Y/m/d", strtotime($materiaprima->updated_at))}}</td>
+				<td>{{date("d/m/Y", strtotime($materiaprima->updated_at))}}</td>
 				<td>
 					<div class="btn-group">
 						

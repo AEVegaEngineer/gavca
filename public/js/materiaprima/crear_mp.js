@@ -293,7 +293,7 @@ $(document).ready(function() {
 	            headers:{'X-CSRF-TOKEN': token},
 	            data: {entidad: entidad},
 	            error: function(){
-	                alert("Error. Intente escribir los datos de nuevo.");
+	                //alert("Error. Intente escribir los datos de nuevo.");
 	            },
 	            success: function( data ) {
 	            	console.log(data+" "+entidad+" "+token);
