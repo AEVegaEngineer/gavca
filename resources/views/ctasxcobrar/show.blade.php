@@ -52,8 +52,9 @@
 				<td></td>				
 			</tr>			
 		</table>
-
+		<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1'){ ?>
 		{!!link_to_route('cuentaxcobrar.edit', $title = 'Cobrar deuda', $parameters = $cliente, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
+		<?php } ?>
 		
 		
 	

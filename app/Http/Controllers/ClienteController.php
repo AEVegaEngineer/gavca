@@ -16,6 +16,7 @@ class ClienteController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('adminotipo1', ['except' => ['index']]);    
         
     }       
     /**
