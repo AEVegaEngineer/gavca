@@ -99,7 +99,7 @@
 				<input type="hidden" name="rec_nombre" value="{{$rec_nombre}}" id="rec_nombre">
 				<div class="row margenBotSm">	
 			    	<div class="col-xs-12 col-md-12">
-					    {!!Form::label('¿Este parámetro tomará su valor según la cantidad de producción? ')!!}			
+					    {!!Form::label('¿Desea especificar un requerimiento unitario por defecto para este parámetro? ')!!}			
 					</div>
 					<div class="col-xs-12 col-md-12">
 						<!--<input type="checkbox" name="par_default" checked="checked">-->
@@ -109,7 +109,7 @@
 				</div>
 				<div class="row escondido">
 					<div class="col-xs-12 col-md-12">
-					    {!!Form::label('Escribe la relación entre parámetro y producción, Ej: Escribe "12" si la relación es 12 a 1')!!}			
+					    {!!Form::label('Escribe el requerimiento unitario, es decir, cuántas unidades de este parámetro son requeridos por cada producto producido')!!}			
 					</div>
 					<div class="col-xs-12 col-md-4">
 						{!!Form::text('ing_ratio',1,['class'=>'form-control','placeholder'=>'Ej: 12','id'=>'ing_ratio','step'=>'0.0001','min'=>'0.0001'])!!}
@@ -130,7 +130,7 @@
 				</select>		
 				<div class="row margenBotSm">	
 			    	<div class="col-xs-12 col-md-12">
-					    {!!Form::label('¿Este insumo tomará su valor según la cantidad de producción? ')!!}			
+					    {!!Form::label('¿Desea especificar un requerimiento unitario por defecto para este insumo? ')!!}			
 					</div>
 					<div class="col-xs-12 col-md-12">
 						{!!Form::hidden('insing_default',0)!!}
@@ -139,7 +139,7 @@
 				</div>
 				<div class="row escondido-2">
 					<div class="col-xs-12 col-md-12">
-					    {!!Form::label('Escribe la relación entre insumo y producción, Ej: Escribe "12" si la relación es 12 a 1')!!}			
+					    {!!Form::label('Escribe el requerimiento unitario, es decir, cuántas unidades de este insumo son requeridos por cada producto producido')!!}			
 					</div>
 					<div class="col-xs-12 col-md-4">
 						{!!Form::text('insing_ratio',1,['class'=>'form-control','placeholder'=>'Ej: 12','id'=>'insing_ratio','step'=>'0.0001','min'=>'0.0001'])!!}					
