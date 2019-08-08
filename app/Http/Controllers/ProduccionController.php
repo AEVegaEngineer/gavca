@@ -233,6 +233,7 @@ class ProduccionController extends Controller
             ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
             ->where('dependencias.dep_padre',$rec_nombre)
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
+            ->orderBy('produccion.id','dsc')
             ->get();  
 
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')

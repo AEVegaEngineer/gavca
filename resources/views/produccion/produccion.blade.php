@@ -79,7 +79,7 @@
 			<tr>
 				<td>{{$dependencia->dep_hijo}}</td>
 				<td>{{$dependencia->rec_unidad}}</td>
-				<td align="right">{{bcdiv($costo, '1', 2)}}</td>		
+				<td align="right">{{number_format($costo,$decimals = 2 , "," , ".")}}</td>		
 				<td>{{number_format($req_total,$decimals = 2 , "," , ".")}}</td>
 				<td>{{number_format($req_unitario,$decimals = 4 , "," , ".")}}</td>
 				<td align="right">{{number_format($costo_total,$decimals = 2 , "," , ".")}}</td>
