@@ -102,8 +102,14 @@ $(document).ready(function() {
                 url: '/storeProveedor',
                 headers:{'X-CSRF-TOKEN': token},
                 data: {prov_codigo:proveedor, prov_nombre: prov_nombre, prov_rif: prov_rif, prov_direccion: prov_direccion, prov_contacto: prov_contacto, prov_condiciones: prov_condiciones, prov_retencion: prov_retencion, prov_cred_o_cont: prov_cred_o_cont},
-                error: function(){
-                    alert("Necesita ingresar todos los datos del formulario.");
+                error: function(data){
+                    var message = ""
+                    var errors = data.responseJSON;
+                    console.log(errors);
+                    $.each( errors, function( key, value ) {
+                        message += value + "\n";        
+                    });
+                    alert(message);
                 },
                 success: function( data ) {
                     if(data){

@@ -26,7 +26,7 @@ class ProveedorCreateRequest extends Request
         return [
             'prov_codigo' => 'required|unique:proveedors',
             'prov_nombre' => 'required|unique:proveedors',
-            'prov_rif' => 'required',
+            'prov_rif' => 'required|unique:proveedors',
             'prov_direccion' => 'required',
         ];
     }

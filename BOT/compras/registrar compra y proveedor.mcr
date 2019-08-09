@@ -5,7 +5,7 @@ DELAY : 500
 Mouse : 90 : 422 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 0 : 0 : Click : 0 : 1 : 0
-DELAY : 1000
+DELAY : 2000
 Mouse : 694 : 291 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 0 : 0 : Click : 0 : 1 : 0
