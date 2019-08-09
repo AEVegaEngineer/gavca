@@ -32,7 +32,7 @@ class BancoCreateRequest extends Request
         $id = $this->input('id');
         return [
             'ban_nombre.required' => 'El nombre del banco es requerido',
-            'ban_nombre.unique:bancos' => 'El banco ya esta registrado',
+            'ban_nombre.unique' => 'El banco ya esta registrado',
         ];
     }
 }

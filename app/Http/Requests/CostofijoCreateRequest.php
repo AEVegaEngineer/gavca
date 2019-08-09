@@ -48,7 +48,7 @@ class CostofijoCreateRequest extends Request
     {
         return [
             'cf_concepto.required' => 'El concepto es requerido',
-            'cf_concepto.unique:costofijos' => 'El concepto ya esta registrado',
+            'cf_concepto.unique' => 'El concepto ya esta registrado',
             'cf_montomes.required' => 'El monto es requerido',
         ];
     }

@@ -36,7 +36,7 @@ class RecetaUpdateRequest extends Request
     {
         return [
             'rec_nombre.required' => 'El nombre del proceso productivo es requerido',
-            'rec_nombre.unique:recetas' => 'El nombre del proceso productivo ya se encuentra registrado',
+            'rec_nombre.unique' => 'El nombre del proceso productivo ya se encuentra registrado',
             'rec_activo.required' => 'El status del proceso productivo es requerido',
             'rec_proc.required' => 'La etapa del proceso productivo es requerida',
             'rec_unidad.required' => 'La unidad del proceso productivo es requerida',

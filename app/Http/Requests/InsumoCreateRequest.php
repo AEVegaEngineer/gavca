@@ -33,7 +33,7 @@ class InsumoCreateRequest extends Request
     {
         return [
             'ins_nombre.required' => 'El nombre del insumo es requerido',
-            'ins_nombre.unique:insumos' => 'El nombre del insumo ya se encuentra registrado',
+            'ins_nombre.unique' => 'El nombre del insumo ya se encuentra registrado',
             'ins_unidad.required' => 'La unidad del insumo es requerida',
             'ins_costo.required' => 'El costo del insumo es requerido',
         ];

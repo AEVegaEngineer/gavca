@@ -14,3 +14,4 @@ PLAY MACRO : C:\xampp\htdocs\gavca\BOT\Proceso Productivo\registrar proceso prod
 WAIT FOR USER : 88 : 2 : 0 : 0
 PLAY MACRO : C:\xampp\htdocs\gavca\BOT\Proceso Productivo\agregar procesos productivos a ingredientes de presentacion.mcr
 WAIT FOR USER : 88 : 2 : 0 : 0
+PLAY MACRO : C:\xampp\htdocs\gavca\BOT\Proceso Productivo\correr produccion.mcr

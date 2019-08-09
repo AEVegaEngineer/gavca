@@ -36,11 +36,10 @@ class ClienteCreateRequest extends Request
     }
     public function messages()
     {
-        $id = $this->input('id');
         return [
             'cli_nombre.required' => 'El nombre del cliente es requerido',
             'cli_codigo.required' => 'El nombre del código es requerido',
-            'cli_codigo.unique:clientes,cli_codigo,'.$id => 'El código del cliente debe ser único',
+            'cli_codigo.unique' => 'El código del cliente debe ser único',
             'cli_rif.required' => 'El RIF es requerido',
             'cli_direccion.required' => 'La dirección es requerida',
             'cli_contacto.required' => 'El contácto es requerido',
