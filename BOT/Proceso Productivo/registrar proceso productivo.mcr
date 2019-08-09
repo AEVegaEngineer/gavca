@@ -10,13 +10,13 @@ Mouse : 610 : 244 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 0 : 0 : Click : 0 : 1 : 0
 DELAY : 200
-TYPE TEXT : Antipasto de Atún Presentación 500 Gr.
+TYPE TEXT : Producto Terminado para Tésis
 DELAY : 200
 Mouse : 619 : 299 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 1113 : 495 : Click : 0 : 1 : 0
 DELAY : 200
-Mouse : 610 : 380 : Move : 0 : 0 : 0
+Mouse : 584 : 362 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 1113 : 495 : Click : 0 : 1 : 0
 DELAY : 200

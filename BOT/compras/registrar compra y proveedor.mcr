@@ -131,8 +131,20 @@ DELAY : 100
 Keyboard : Tab : KeyPress
 DELAY : 100
 TYPE TEXT : 14
+DELAY : 500
+Mouse : 502 : 750 : Move : 0 : 0 : 0
+DELAY : 200
+Mouse : 0 : 0 : LeftButtonDown : 0 : 1 : 0
+DELAY : 200
+Mouse : 652 : 750 : Move : 0 : 0 : 0
+DELAY : 200
+Mouse : 0 : 0 : LeftButtonUp : 0 : 1 : 0
+DELAY : 200
+Mouse : 0 : 0 : Wheel : -1 : 1 : 0
+DELAY : 200
+Mouse : 0 : 0 : Wheel : -1 : 1 : 0
 WAIT FOR USER : 88 : 2 : 0 : 0
 DELAY : 100
-Mouse : 1108 : 320 : Move : 0 : 0 : 0
+Mouse : 1136 : 287 : Move : 0 : 0 : 0
 DELAY : 200
 Mouse : 0 : 0 : Click : 0 : 1 : 0

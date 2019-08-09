@@ -9,7 +9,7 @@
 		    {!!Form::label('Ingresa la cantidad que se ha producido: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-5">		    
-			{!!Form::text('pro_produccion',null,['class'=>'form-control','placeholder'=>'Ej: 456','required'=>'required'])!!}
+			{!!Form::number('pro_produccion',null,['class'=>'form-control','placeholder'=>'Ej: 456','min'=>'1','step'=>'0.1','required'=>'required'])!!}
 		</div>
     </div>
     <div class="row margenBotSm">
@@ -25,7 +25,7 @@
 		    {!!Form::label('Requerimiento total de mano de obra: ')!!}		
 		</div>
 		<div class="col-xs-12 col-md-5">	
-			{!!Form::text('pro_mano_obra',null,['class'=>'form-control','placeholder'=>'Ej:2.5','required'=>'required'])!!}	 
+			{!!Form::number('pro_mano_obra',null,['class'=>'form-control','placeholder'=>'Ej:2.5','min'=>'1','step'=>'0.1','required'=>'required'])!!}	 
 		</div>		
 	</div>
 	<?php $header = 0; ?>
