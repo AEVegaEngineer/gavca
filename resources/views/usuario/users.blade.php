@@ -1,4 +1,4 @@
-<h2 class="form-signin-heading">Base de datos de usuarios</h2>
+<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Base de datos de usuarios</h2>
 <table class="table">
 	<thead>
 		<th>Nombre</th>

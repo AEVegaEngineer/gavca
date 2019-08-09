@@ -2,7 +2,7 @@
 @section('content')
 	<div class="recetas">
 		@include('alerts.success')
-		<h2 class="form-signin-heading">Procesos Productivos</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Procesos Productivos</h2>
 
 		<table class="table">
 			<thead>

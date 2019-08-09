@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Venta con documento de factura Nro.{{$factura}}</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Venta con documento de factura Nro.{{$factura}}</h2>
 		{!!link_to_route('venta.reporte', $title = 'Generar reporte', array($parameters = "factura",$id=$totalventa_id), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
 			<thead>

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<h2 class="form-signin-heading">Actualización del usuario {!!$user->name!!}</h2>
+<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Actualización del usuario {!!$user->name!!}</h2>
 @include('alerts.request')
 <div class="row">
 	<div class="form-group">

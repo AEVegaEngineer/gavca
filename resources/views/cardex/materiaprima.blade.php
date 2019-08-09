@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Cardex de {{$who}}</h2>		
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Cardex de {{$who}}</h2>		
 		<table class="table">
 			<thead>
 				<th>Documento de compra</th>

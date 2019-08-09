@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Lista de parámetros</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Lista de parámetros</h2>
 		<table class="table fixed">
 			<thead>
 				<tr class="cheader" style="background-color: #cccccc">

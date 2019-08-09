@@ -4,7 +4,7 @@
 	<div class="users">
 	@include('alerts.success')
 	{!!Form::open(['route'=>'compra.store','method'=>'POST'])!!}
-		<h3 class="form-signin-heading margenBotSm">Ingrese las materias primas adquiridas con la compra</h3>
+		<h3 class="form-signin-heading margenBotSm"  style="display: inline-block; margin-right: 50px;">Ingrese las materias primas adquiridas con la compra</h3>
 		<div class="col-md-12">
 			<p>Para agregar productos a la compra seleccionalos de la lista desplegable y haz click en agregar producto a compra</p>
 			<div class="col-md-3">

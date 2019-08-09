@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Misceláneos</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Misceláneos</h2>
 		<div class="row">	
 			<div class="col-md-6 col-xs-12">
 				{!!link_to_route('miscelaneo.edit', $title = 'Modificar valores de las tablas', $parameters = 1, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
