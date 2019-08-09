@@ -21,6 +21,7 @@ use gavca\produccionb;
 use gavca\produccionc;
 use gavca\dependencia;
 use gavca\cardexmp;
+use gavca\costohijo;
 use Carbon\Carbon;
 use DB;
 use gavca\Http\Requests;
@@ -233,19 +234,18 @@ class ProduccionController extends Controller
         //para cada dependencia capturar el produccion.id e investigar cual fue el inmediato anterior con el mismo rec_nombre
         //actualmente los ids de las producciones que se deben tomar para los calculos se guardan temporalmente en dependencias.dep_produccion, pero luego se sobreescriben por los de la siguiente producción lo cual rompe la persistencia y genera perdida de datos
         //tabla costos hijos que guarde lo mismo que guarda dependencias.dep_produccion pero permanentemente y reflejarlo aqui
-        $arr = array();
-        foreach ($dependencias as $dependencia) {
-            $costo = 
-            array_push($arr, );
-        }
-        return $arr;
+        /*        
         $costos = DB::table('produccion')
             ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
             ->where('dependencias.dep_padre',$rec_nombre)
             ->select('produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
             ->orderBy('produccion.id','dsc')
             ->get();  
-        return $costos; 
+        */
+        $costos = produccion::leftjoin('costoshijos','costoshijos.id_hijo', '=', 'produccion.id')
+            ->where('costoshijos.id_produccion',$id_buscado)
+            ->select('produccion.id','produccion.pro_produccion', 'produccion.pro_costo', 'produccion.pro_mano_obra', 'produccion.rec_nombre')
+            ->get(); 
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
@@ -483,6 +483,23 @@ class ProduccionController extends Controller
             'pro_concepto' => 'Producción de '.$rec_nombre,
         ]); 
         /*FIN DE SECCION PARA GUARDAR LA PRODUCCIÓN EN CURSO*/
+
+        /*SECCIÓN PARA GUARDAR EL COSTOHIJO*/
+        $costos = DB::table('produccion')
+            ->join('dependencias', 'produccion.id', '=', 'dependencias.dep_produccion')
+            ->where('dependencias.dep_padre',$rec_nombre)
+            ->select('produccion.id')
+            ->orderBy('produccion.id','dsc')
+            ->get(); 
+        $id = produccion::max('id');
+        foreach ($costos as $costo) {
+            costohijo::create([
+                'id_produccion' => $id,
+                'id_hijo' => $costo->id
+            ]);
+        }
+        /*FIN DE SECCIÓN PARA GUARDAR EL COSTOHIJO*/
+
         /*
         Obtengo todos los ingredientes que pertenezcan a esta receta y creo sus campos de requerimientos, lo que significa que la fecha del requerimiento sera la misma fecha que la de la producción.
         */
