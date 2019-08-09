@@ -46,7 +46,9 @@
 					{!!Form::open(['route'=>['cliente.destroy',$cliente->id],'method'=>'DELETE'])!!}
 						<div class="btn-group">
 						{!!link_to_route('cuentaxcobrar.show', $title = 'Ver Ctas. x Cobrar', $parameters = $cliente->cli_codigo, $attributes = ['class'=>'btn btn-default btn-xs'])!!}
+						<?php if(Auth::user()->privilegio == 'admin' || Auth::user()->privilegio == 'tipo1'){ ?>
 						{!!link_to_route('cliente.edit', $title = 'Editar', $parameters = $cliente->id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}
+						<?php } ?>
 						</div>
 					{!!Form::close()!!}					
 				</td>

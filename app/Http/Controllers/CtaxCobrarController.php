@@ -13,6 +13,11 @@ use gavca\Http\Controllers\Controller;
 
 class CtaxCobrarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('adminotipo1', ['except' => ['show']]);         
+    }
     /**
      * Display a listing of the resource.
      *
