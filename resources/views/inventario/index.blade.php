@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
 @section('content')
-	<div class="inventarios">
 	@include('alerts.success')
+	<div class="inventarios">	
 		<?php 
 			if($proc == 'Proceso A'){
 				$proc = 'Productos Semiprocesados';
@@ -18,7 +18,7 @@
 				$p = 'PC';
 			}
 		?>
-		<h2 class="form-signin-heading">Inventario de {{$proc}}</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Inventario de {{$proc}}</h2>
 		<?php if(Auth::user()->privilegio == 'admin'){ ?>
 			
 			<!--<a href="/produccion/{{$p}}/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Productos de {{$proc}}</a>-->

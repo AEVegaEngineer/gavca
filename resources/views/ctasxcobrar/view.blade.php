@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Factura de cobro a cliente.</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Factura de cobro a cliente.</h2>
 		<table class="table">
 			<thead>
 				<th>Fecha de cobro</th>

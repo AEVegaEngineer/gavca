@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Lista de Ventas</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Lista de Ventas</h2>
 
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">

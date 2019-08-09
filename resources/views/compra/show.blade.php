@@ -2,7 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Compra con documento de factura Nro.{{$compra->comp_doc}}</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Compra con documento de factura Nro.{{$compra->comp_doc}}</h2>
 		{!!link_to_route('compra.reporte', $title = 'Generar reporte', array($parameters = "factura",$fecha="0",$id=$compra->id), $attributes = ['class'=>'btn btn-primary','id'=>'btn_reporte'])!!}
 		<table class="table">
 			<thead>

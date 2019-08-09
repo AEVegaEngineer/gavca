@@ -2,7 +2,7 @@
 @section('content')
 	<div class="salarios">
 		@include('alerts.success')
-		<h2 class="form-signin-heading">Cálculo de salarios</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Cálculo de salarios</h2>
 
 		
 		@foreach($salarios as $salario)

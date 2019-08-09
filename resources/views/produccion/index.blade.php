@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Historial de producciones</h2>		
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Historial de producciones</h2>		
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">
 				{!!Form::text('fecha',null,['class'=>'form-control datepicker','placeholder'=>'Click aquí para seleccionar el mes del reporte','required'=>'required', 'readonly'=>'readonly'])!!}

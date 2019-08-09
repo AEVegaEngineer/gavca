@@ -3,7 +3,7 @@
 @section('content')
 	<div class="materiasprimas">
 	@include('alerts.success')
-		<h2 class="form-signin-heading">Inventario de Materias Primas</h2>
+		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Inventario de Materias Primas</h2>
 		<?php if(Auth::user()->privilegio == 'admin'){ ?>
 			<!--<a href="/materiaprima/insert" class='btn btn-primary btn-sm'>Ajustar Inventario de Materias Primas</a>-->
 		<?php } ?>
