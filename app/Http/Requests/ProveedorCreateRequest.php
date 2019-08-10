@@ -26,16 +26,10 @@ class ProveedorCreateRequest extends Request
         return [
             'prov_codigo' => 'required|unique:proveedors',
             'prov_nombre' => 'required|unique:proveedors',
-            'prov_rif' => [
-                'required',
-                'unique:proveedors',
-                'regex:/^(?=.*[a-z|A-Z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
-            ],            
+            'prov_rif' => 'required|unique:proveedors|regex:/[jJ](-)?([0-9]){8}-?([0-9])/',                      
             'prov_direccion' => 'required',
         ];
     }
-    //nro de telefono
-    ///([0-9]){3}\w+-+([0-9]){7}
     public function messages()
     {
         return [
@@ -44,7 +38,7 @@ class ProveedorCreateRequest extends Request
             'prov_nombre.required' => 'El nombre del proveedor es requerido',
             'prov_nombre.unique' => 'El nombre del proveedor ya esta siendo utilizado',
             'prov_rif.required' => 'El RIF es requerido',
-            'prov_rif.regex' => 'El RIF debe tener un formato apropiado: J-00000000-0',
+            'prov_rif.regex' => 'El formato del RIF es erróneo, EJ. J-00000000-0',
             'prov_rif.unique' => 'El RIF es ya esta siendo utilizado',
             'prov_direccion.required' => 'La dirección del proveedor es requerida',
         ];

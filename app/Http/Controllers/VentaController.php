@@ -70,7 +70,10 @@ class VentaController extends Controller
             }               
             $bancos = banco::lists('ban_nombre', 'ban_nombre');
             $clientes = cliente::lists('cli_nombre', 'cli_codigo'); 
-            return view('venta.create',compact('bancos','clientes','fecha'));
+            $factura = venta::latest()->first();
+            $factura = ($factura !== null) ? (int)$factura->ven_factura+1 : 1000;
+
+            return view('venta.create',compact('bancos','clientes','fecha','factura'));
         }else{
             \Session::flash('message-error', 'Antes de registrar operaciones de compra, venta o producción debes seleccionar una fecha en caja, bajo la cual se registrarán las operaciones.');
             $hoy = Carbon::today()->toDateString();

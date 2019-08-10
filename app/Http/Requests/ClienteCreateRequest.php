@@ -28,7 +28,7 @@ class ClienteCreateRequest extends Request
             'cli_nombre' => 'required',
             'cli_codigo' => 'required|unique:clientes,cli_codigo,'.$id,
             /*'cli_nombre' => 'required|unique:clientes,cli_nombre,'.$id,*/
-            'cli_rif' => 'required',
+            'cli_rif' => 'required|unique:clientes|regex:/[jJ](-)?([0-9]){8}-?([0-9])/',  
             'cli_direccion' => 'required',
             'cli_contacto' => 'required',
             'cli_condiciones' => 'required',
@@ -41,6 +41,8 @@ class ClienteCreateRequest extends Request
             'cli_codigo.required' => 'El nombre del código es requerido',
             'cli_codigo.unique' => 'El código del cliente debe ser único',
             'cli_rif.required' => 'El RIF es requerido',
+            'cli_rif.unique' => 'El RIF ya se encuentra registrado',
+            'cli_rif.regex' => 'El formato del RIF es erróneo, EJ. J-00000000-0',
             'cli_direccion.required' => 'La dirección es requerida',
             'cli_contacto.required' => 'El contácto es requerido',
             'cli_condiciones.required' => 'La condición del cliente es requerida',

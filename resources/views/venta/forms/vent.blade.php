@@ -21,7 +21,7 @@
 		    {!!Form::label('Ingrese un número de factura: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-4">    
-			{!!Form::text('ven_factura',null,['class'=>'form-control','placeholder'=>'Nro. Factura','required'=>'required'])!!}
+			{!!Form::text('ven_factura',$factura,['readonly'=>'readonly','class'=>'form-control','placeholder'=>'Nro. Factura','required'=>'required'])!!}
 		</div>
 		<div class="col-xs-12 col-md-2">
 		    {!!Form::label('Condición de la venta (crédito o contado): ')!!}			

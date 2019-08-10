@@ -15,3 +15,10 @@ WAIT FOR USER : 88 : 2 : 0 : 0
 PLAY MACRO : C:\xampp\htdocs\gavca\BOT\Proceso Productivo\agregar procesos productivos a ingredientes de presentacion.mcr
 WAIT FOR USER : 88 : 2 : 0 : 0
 PLAY MACRO : C:\xampp\htdocs\gavca\BOT\Proceso Productivo\correr produccion.mcr
+WAIT FOR USER : 88 : 2 : 0 : 0
+PLAY MACRO : C:\xampp\htdocs\gavca\BOT\produccion\ver producciones.mcr
+WAIT FOR USER : 88 : 2 : 0 : 0
+PLAY MACRO : C:\xampp\htdocs\gavca\BOT\inventarios\ver inventario PT.mcr
+WAIT FOR USER : 88 : 2 : 0 : 0
+PLAY MACRO : C:\xampp\htdocs\gavca\BOT\ventas\registrar venta.mcr
+WAIT FOR USER : 88 : 2 : 0 : 0

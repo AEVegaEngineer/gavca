@@ -25,7 +25,7 @@ TYPE TEXT : Proveedor de Ejemplo
 DELAY : 100
 Keyboard : Tab : KeyPress
 DELAY : 100
-TYPE TEXT : J57869432-0
+TYPE TEXT : J-57869432-0
 DELAY : 100
 Keyboard : Tab : KeyPress
 DELAY : 100
