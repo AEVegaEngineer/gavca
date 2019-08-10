@@ -7,13 +7,13 @@
 			<thead>
 				<th>Nombre del Proveedor</th>
 				<th>Código del Proveedor</th>
-				<th>Rif</th>
+				<th width="12%">Rif</th>
 				<th>Dirección</th>
 				<th>Contacto</th>
 				<th>Observaciones</th>
 				<th>Saldo</th>
 				<!--<th>Credito o contado</th>-->
-				<th width="50%">Operaciones</th>
+				<th width="18%">Operaciones</th>
 			</thead>
 			@foreach($proveedores as $proveedor)
 			<tbody>

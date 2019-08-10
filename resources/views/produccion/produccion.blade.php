@@ -3,7 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
-		<h2 class="form-signin-heading margenBotLg">Producción de {!!$rec_nombre!!} de fecha {!!$req_fecha!!}</h2>
+		<h2 class="form-signin-heading margenBotLg">Producción de {!!$rec_nombre!!} de fecha {!!date("d/m/Y", strtotime($req_fecha))!!}</h2>
 		<div class="row">					
 			<div class="col-md-6 col-xs-12">
 				<?php if(0){ ?>
