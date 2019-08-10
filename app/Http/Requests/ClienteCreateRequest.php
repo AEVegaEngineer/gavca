@@ -28,7 +28,7 @@ class ClienteCreateRequest extends Request
             'cli_nombre' => 'required',
             'cli_codigo' => 'required|unique:clientes,cli_codigo,'.$id,
             /*'cli_nombre' => 'required|unique:clientes,cli_nombre,'.$id,*/
-            'cli_rif' => 'required|unique:clientes|regex:/[jJ](-)?([0-9]){8}-?([0-9])/',  
+            'cli_rif' => 'required|unique:clientes|regex:/[jJ](-)?([0-9]){8}-([0-9])/',  
             'cli_direccion' => 'required',
             'cli_contacto' => 'required',
             'cli_condiciones' => 'required',

@@ -26,7 +26,7 @@ class ProveedorCreateRequest extends Request
         return [
             'prov_codigo' => 'required|unique:proveedors',
             'prov_nombre' => 'required|unique:proveedors',
-            'prov_rif' => 'required|unique:proveedors|regex:/[jJ](-)?([0-9]){8}-?([0-9])/',                      
+            'prov_rif' => 'required|unique:proveedors|regex:/[jJ](-)?([0-9]){8}-([0-9])/',                      
             'prov_direccion' => 'required',
         ];
     }

@@ -26,11 +26,21 @@
 			<?php 
 				if($produccion->pro_costo!=null){
 			?>
+			
 			<tr>
 				<td>{{$produccion->rec_nombre}}</td>				
 				<td>{{date_format(date_create($produccion->pro_fecha),"d/m/Y")}}</td>
 				<td>{{$produccion->pro_produccion}}</td>
-				<td>{{$produccion->pro_etapa}}</td>
+				<td>
+					<?php 
+					if($produccion->pro_etapa == 'PA') 
+						echo "Semiprocesado";
+					else if($produccion->pro_etapa == 'PB') 
+						echo "Terminado";
+					else if($produccion->pro_etapa == 'PC') 
+						echo "Presentación";
+					?>
+				</td>
 				<td>{{number_format ( $produccion->pro_costo , $decimals = 2 , "," , "." )}}</td>
 				<td>					
 					<div class="btn-group">
