@@ -7,7 +7,7 @@
 			<thead>
 				<th>Nombre del cliente</th>
 				<th>Código del cliente</th>
-				<th>Rif</th>
+				<th width="120px">Rif</th>
 				<th>Dirección</th>
 				<th>Contacto</th>
 				<th>Condiciones</th>
