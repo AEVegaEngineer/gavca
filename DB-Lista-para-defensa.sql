@@ -1,28 +1,28 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
+-- version 4.2.11
+-- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-08-2019 a las 12:54:19
--- Versión del servidor: 10.1.30-MariaDB
--- Versión de PHP: 7.1.13
+-- Tiempo de generación: 11-08-2019 a las 17:30:15
+-- Versión del servidor: 5.6.21
+-- Versión de PHP: 5.6.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de datos: `gavca`
 --
 CREATE DATABASE IF NOT EXISTS `gavca` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `gavca`;
+
 -- --------------------------------------------------------
 
 --
@@ -238,11 +238,11 @@ CREATE TABLE IF NOT EXISTS `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `cli_codigo`, `cli_nombre`, `cli_rif`, `cli_direccion`, `cli_contacto`, `cli_condiciones`, `cli_saldo`, `created_at`, `updated_at`) VALUES
-(1, 'C00000', 'cliente 1', 'J3782462374', 'askjdhsakd', 'dajkshdjas asudhsaudh ', 'sdjjkhfjksd', '0.0000', '2018-01-11 20:34:13', '2019-04-16 21:12:51'),
-(2, 'C00001', 'cliente dos', 'J62626512962', 'Centro Av.5 con Calle 15, Edif. Juan Ramos, Local 2', '04169856865', 'Contado', '0.0000', '2019-04-05 03:40:45', '2019-07-31 03:02:24'),
-(3, 'C00002', 'cliente tres', 'J62626512', 'Centro Av.5 con Calle 15, Edif. Juan Ramos, Local 2', '04169856865', 'Contado', '0.0000', '2019-05-25 05:47:46', '2019-06-16 04:52:12'),
-(4, 'C00003', 'Client four', 'J-26845642', 'Mérida, edo. Mérida, Centro, Calle 20, Edificio Crisostomo, Local 3', '0274-3645364', 'Crédito', '0.0000', '2019-06-07 19:16:14', '2019-06-07 19:31:13'),
-(5, 'C00004', 'cliente 1', 'J62626512962', 'Mérida, edo. Mérida, Centro, Calle 20, Edificio Crisostomo, Local 3', '04169856865', 'Contado', '0.0000', '2019-06-18 11:28:23', '2019-06-18 11:28:23');
+(1, 'C00000', 'cliente 1', 'J-37824623-7', 'askjdhsakd', 'dajkshdjas asudhsaudh ', 'sdjjkhfjksd', '0.0000', '2018-01-11 20:34:13', '2019-08-11 14:45:20'),
+(2, 'C00001', 'cliente dos', 'J-62626512-9', 'Centro Av.5 con Calle 15, Edif. Juan Ramos, Local 2', '04169856865', 'Contado', '0.0000', '2019-04-05 03:40:45', '2019-08-11 14:45:35'),
+(3, 'C00002', 'cliente tres', 'J-62626512-6', 'Centro Av.5 con Calle 15, Edif. Juan Ramos, Local 2', '04169856865', 'Contado', '0.0000', '2019-05-25 05:47:46', '2019-08-11 14:45:54'),
+(4, 'C00003', 'Client four', 'J-26845642-3', 'Mérida, edo. Mérida, Centro, Calle 20, Edificio Crisostomo, Local 3', '0274-3645364', 'Crédito', '0.0000', '2019-06-07 19:16:14', '2019-08-11 14:46:09'),
+(5, 'C00004', 'cliente 1', 'J-62626123-9', 'Mérida, edo. Mérida, Centro, Calle 20, Edificio Crisostomo, Local 3', '04169856865', 'Contado', '0.0000', '2019-06-18 11:28:23', '2019-08-11 14:46:47');
 
 -- --------------------------------------------------------
 
