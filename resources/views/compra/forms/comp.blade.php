@@ -35,7 +35,7 @@
 		    {!!Form::label('Documento de factura: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-5">	
-			{!!Form::text('comp_doc', null,['class'=>'form-control','required'=>'','placeholder'=>'Ingresa el documento de factura'])!!}	 
+			{!!Form::text('comp_doc', null,['class'=>'form-control','required'=>'','placeholder'=>'Ingresa el documento de factura','maxlength'=>'16'])!!}	 
 		</div>
     </div>    
     <div class="row margenBotSm">	

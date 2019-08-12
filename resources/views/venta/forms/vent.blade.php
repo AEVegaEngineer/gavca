@@ -18,7 +18,7 @@
     </div>
     <div class="row margenBotSm">	
 		<div class="col-xs-12 col-md-2">
-		    {!!Form::label('Ingrese un número de factura: ')!!}			
+		    {!!Form::label('Número de factura: ')!!}			
 		</div>
 		<div class="col-xs-12 col-md-4">    
 			{!!Form::text('ven_factura',$factura,['readonly'=>'readonly','class'=>'form-control','placeholder'=>'Nro. Factura','required'=>'required'])!!}
