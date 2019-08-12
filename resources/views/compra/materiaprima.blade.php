@@ -32,7 +32,8 @@
 			<input type="hidden" name="banco_o_caja" value="{{$banco_o_caja}}" id="banco_o_caja">
 			<input type="hidden" name="banco" value="{{$banco}}" id="banco">
 			<input type="hidden" name="comp_monto" value="0" id="comp_monto">
-			<input type="hidden" name="token" value="{{csrf_token()}}" id="token">		
+			<input type="hidden" name="_token" value="{{csrf_token()}}" id="token">	
+			<!---->	
 			<input type="hidden" name="entidad" id="entidad" value="{{$entidad}}">
 
 		</div>

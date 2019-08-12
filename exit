@@ -1,0 +1,370 @@
+[33mcommit 955470eb309ddb2f88035943b5835574f5c9e899[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Aug 11 22:53:35 2019 -0400
+
+    Actualizados los formularios de venta y validado en html5 el campo de factura de registro de compras
+
+[33mcommit 950ed7fbf7a11e9290a8b2109a9490032e559933[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Aug 11 21:30:07 2019 -0400
+
+    Completado bot para defensas y hechos algunos ajustes menores
+
+[33mcommit 36e42b2bc35081c36b2166ebda9140dc189b02cb[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Aug 11 11:20:35 2019 -0400
+
+    Arreglado formato de lista de clientes y otros fixes menores
+
+[33mcommit 3cf402f85d7f63b1ee3fe7769ebdaee1e73ae495[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sat Aug 10 02:28:26 2019 -0400
+
+    fixes en regex y formatos
+
+[33mcommit 5519b72cf689827255750c24a887b2ea1ea3bef4[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sat Aug 10 02:13:48 2019 -0400
+
+    finalizando arreglos varios y terminada la primera versión del bot
+
+[33mcommit 09d67c24d6b2894f10827e849f2214c1f74ddfc3[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 20:13:50 2019 -0400
+
+    agregadas validaciones para facturas de ventas, regex para Rifs en varios formularios
+
+[33mcommit ad7112cd0607db72dc14051eb61595b8bdc70d36[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 08:05:36 2019 -0400
+
+    Arreglados los mensajes de validacion
+
+[33mcommit bf785c470a3009f695d05544d316d59f245f2919[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 06:56:09 2019 -0400
+
+    hotfix para el problema de dependencia.dep_produccion, es necesario reconstruir la base de datos con el archivo de fecha 09-08-19
+
+[33mcommit 727acc219a7fba12da2f23a2d15c9d4d27a02b82[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 05:44:10 2019 -0400
+
+    en el proceso para el hotfix de dependencias.dep_produccion
+
+[33mcommit e337a9d475f138fa03b455e49fdf67024beab64c[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 04:51:25 2019 -0400
+
+    arreglada validación html5 del formulario pass de corrida de producción y terminado el bot de corrida de producción
+
+[33mcommit 293a22645539bcef87320b25a03d23b66e0c9e62[m
+Merge: f84c69b 169ebd9
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 01:25:29 2019 -0400
+
+    Merge branch 'master' of https://github.com/Sulfur0/gavca
+    Merge para push retardado en desktop luego de hacer merge en laptop
+
+[33mcommit 169ebd9142194448e7796ce6fb8ace548cbe063a[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Aug 9 00:26:11 2019 -0400
+
+    Agregada validación detallada de la creación de proveedores al momento de crear una compra
+
+[33mcommit 9b2cbf9860f41752d9f2abfb99afac77254963c2[m
+Merge: b091385 a979c37
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 23:59:08 2019 -0400
+
+    Merge branch 'master' https://github.com/Sulfur0/gavca
+    
+    Se hicieron cambios en desktop sin hacer pull en la laptop
+
+[33mcommit b0913855845ff4fff7617930986cfce7f2b53a54[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 23:57:08 2019 -0400
+
+    Corrigiendo errores en macro de Compras y arreglados los errores en las hojas de estilos para registro de compras e ingredientes
+
+[33mcommit a49a80acc322ec59def3a1db46ee3b2fc0977767[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 21:49:17 2019 -0400
+
+    corregido artifact en el título de las páginas
+
+[33mcommit f84c69b977512d2fe959d848eda2ed2b14abc59d[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 18:52:27 2019 -0400
+
+    Arreglada ambiguedad en la agregación de parámetros e insumos y su respectivo requerimiento unitario
+
+[33mcommit a979c3798861e40524447879c4607935b6a6b2da[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 02:06:23 2019 -0400
+
+    Arreglados privilegios de usuario tipo 2 para cuentas por cobrar y pagar
+
+[33mcommit 5829c40fe3bdde293a3047981a57c57af22fc029[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 01:55:03 2019 -0400
+
+    modificando el guión
+
+[33mcommit 22d292dd3de9bc102a8d5cd66bb81255ae1a5cd1[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Aug 8 00:18:05 2019 -0400
+
+    primera versión de bot para presentación de tesis y guión
+
+[33mcommit cde77e1e23e381ea2a5de84aa18da2c5c1614ae0[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed Aug 7 21:30:31 2019 -0400
+
+    Corregido bug que invertía el orden de los costos de productos semiprocesados en Costos Directos
+
+[33mcommit fb833701c85f9acae88478baf196e7b5e1a66c05[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Aug 4 23:44:17 2019 -0400
+
+    Corregido el mensaje de error en compras
+
+[33mcommit a2319b75f7c2508e83b597092fe84fbd172bca2a[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Jul 30 23:22:37 2019 -0400
+
+    Agregado request para la solicitud de fechas para abrir cajas y finalizado el formateo de fechas
+
+[33mcommit c22c3b23d3105e11c654f514402b42d0036ad005[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Jul 30 21:40:00 2019 -0400
+
+    Algunos fixes en formato de fechas, comenzando el fix de las fechas de caja
+
+[33mcommit 5d430d1c046736ac0e5a046ce7d818ea8d8ab30d[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Jun 21 04:02:11 2019 -0400
+
+    Corregido bug con los costos unitarios de producción
+
+[33mcommit 1a329d9d8be805f2d2b8f637c80665f90f9dd075[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Jun 18 08:55:27 2019 -0400
+
+    Corregido bug de producción (aparentemente) y textos de las validaciones
+
+[33mcommit aca991ec9c6782758cbd1bc08cc15c7cf4256385[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Jun 17 03:50:33 2019 -0400
+
+    bugfix en registro de compras
+
+[33mcommit a22422cf8ecd995c465c0dc97be3ed45562b7672[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Jun 16 23:13:03 2019 -0400
+
+    quitados extras para presentación de tesis, bug fixes varios...
+
+[33mcommit d34feb7be6a75e14d5895216ab601e69b40c7f95[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Jun 9 19:22:01 2019 -0400
+
+    Fixes en varias vistas, request y controladores, Primera versión sin completar del bot
+
+[33mcommit 3227749c7991b3daa1cf637c69ab5bee80446a94[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed Jun 5 02:06:47 2019 -0400
+
+    Fixes en la reversión de compras, no actualizaba el cardex de mp
+
+[33mcommit a311eb9d5d72768bd4e13a7fe2afab4bfc316b66[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Jun 2 16:10:52 2019 -0400
+
+    Corregidos formatos de numeración en distintos formularios y nombres de carpetas de reportes
+
+[33mcommit 9441a0cca2d35f76b7b48abf69d9edd65ba9666e[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun Jun 2 02:06:43 2019 -0400
+
+    Arreglados los arreglos pedidos por William: cambiar los nombres de las etapas de producción y agregar insumos a las recetas, sólo falta cambiar los nombres de las carpetas de reportes y hacer una revisión de los demás formularios para corregir nombres
+
+[33mcommit cf0f3855d1e5f1b47d8452015b919cee506a1c4b[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed May 29 17:07:10 2019 -0400
+
+    Corregido el formato de las validaciones de creación y actualización de parámetros
+
+[33mcommit 3fbec5c3fb52ccda9fd29864ecd7e9c6831c3fb4[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed May 29 16:26:38 2019 -0400
+
+    Agregadas validaciones para generar entrada, generar salida y hacer transferencia en caja banco
+
+[33mcommit 17c3833ae69ce6f32c0809f76c08ef00782c35aa[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sun May 12 07:12:18 2019 -0400
+
+    Implementación de los permisos para tipo 2 en proceso
+
+[33mcommit ba91b8645826936bf8bc6df1c8e2c92c97a3b309[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri May 3 00:08:44 2019 -0400
+
+    Finalizando funcionalidad del correo de recuperación de contraseña
+
+[33mcommit a8b13b6ff5f67c863556e29e9f4c164c32ba99a6[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Apr 30 03:34:01 2019 -0400
+
+    Bug fixes y ajustes en Ajustes, Compras, Producciones, Materias Primas, Salarios y Users, en proceso de ajuste del password reset de laravel
+
+[33mcommit 08b960919ffdede6cad45d0c171167577877ed77[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Apr 29 01:01:05 2019 -0400
+
+    modificaciones a la actualización de usuarios en vista y controlador
+
+[33mcommit b1780e46b566229e2eb4b981d9dc1cd9491d6ea5[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Apr 26 00:43:51 2019 -0400
+
+    arreglado bug de compra donde se necesitaba registrar materia prima antes de cardexmp, arregladas todas las relaciones de la base de datos
+
+[33mcommit d351a533dae7b7285c2b91aad5d4b760dddbc1ba[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Apr 23 01:54:43 2019 -0400
+
+    Ajustes realizados a las vistas y controladores de los reportes
+
+[33mcommit 36b69abbba4a490509bc6551eb5a735fad82ee65[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Apr 19 04:40:34 2019 -0400
+
+    Listos los reportes para compras, facturas de compras, ventas, facturas de ventas y en proceso de creación de reportes para los cardex
+
+[33mcommit 30075e5c495851136b51c566557bbca233894f4d[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Apr 18 01:14:45 2019 -0400
+
+    Papelera de reciclaje de recetas vuelve a estar operativa
+
+[33mcommit fb53e2ed9d3f8aaa7e94a51a053be381f01d429b[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed Apr 17 20:28:39 2019 -0400
+
+    arreglado formulario de costos fijos y el despliegue de estos datos en los cálculos de costos directos de producción
+
+[33mcommit c44a9eef7aa8b353e9686ecdd88ec39902a20605[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Apr 16 22:52:42 2019 -0400
+
+    Corridas varias pruebas para producciones A, B y C y ventas, todo actualiza perfecto, arreglado el muestreo activo en formulario de pago de cuentas x pagar
+
+[33mcommit 136ed5845f0d4ee6a811649ec135c8021d4fc67c[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Apr 16 18:47:08 2019 -0400
+
+    Corregido pequeño error en cálculo de saldo en cuenta luego de revertir compras
+
+[33mcommit 268d36d67b6ba4d59b51e0727d713dbc47e540d9[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Tue Apr 16 18:04:54 2019 -0400
+
+    Revertir compras y ventas solo se permite si no se han hecho mas movimientos de caja luego de estos
+
+[33mcommit 8b27c210dabb256a4474851001d07d661f638ea4[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Apr 15 17:30:00 2019 -0400
+
+    Verificados los modelos en contraste con la base de datos, eliminados los fillables sobrantes, eliminados par_default y par_ratio de parametros, eliminados req_default y req_ratio de requerimientos, sólo era necesario tener estos campos en ingredientes
+
+[33mcommit 4b72521b0891ba92bbff8c9d1576d5f7be9ff048[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Apr 15 16:59:42 2019 -0400
+
+    El requerimiento ahora se coloca automáticamente si se tiene un campo ing_default = 1, y un ing_ratio en ingredientes
+
+[33mcommit e593d942c15c8439377c5603e35c293619f59049[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Apr 15 12:58:20 2019 -0400
+
+    Revisadas todas las instancias de producción y editadas para aplicar el nuevo campo pro_disponible, realizado filtrado para detectar cuando una producción puede ser modificada y cuando no, realizados todos los correctivos para reflejar cambios en todos los cardex e inventarios cuando se modifica una producción.
+
+[33mcommit 9400e6ce45d97fa58c7be3701ae999f9a2bd68c1[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sat Apr 13 18:55:33 2019 -0400
+
+    Reestructurada por completo sección de creación de compras, en compraController se generan números consecutivos usando un mejor algoritmo, logCardexMP eliminado por completo, ahora no se permite modificar el costo de un parámetro recién creado en compras, agregado boton de retorno en ctasxpagar y ctasxcobrar, agregado reporte que no registraba el cambio en el saldo de un Inicio decaja, Agregado logo al reporte de caja
+
+[33mcommit 8ce3c516c65aad216e6e967ee1deef7052181cd2[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Fri Apr 12 19:31:20 2019 -0400
+
+    Arreglada fecha de cobro y código de cliente dentro de la factura de Cobro de cuentas por cobrar, no se aceptan compras ni pagos de cuentas por pagar si no hay suficiente dinero en la entidad seleccionada
+
+[33mcommit 038470aa7e2e20237a69e0aeca06b6b2b26ecd63[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Apr 11 20:22:05 2019 -0400
+
+    Validada en front end las ctas x cobrar y x pagar, botones de modificación directa sólo disponibles para administradores, ya se puede quitar un producto hijo ingrediente de una receta padre
+
+[33mcommit 3f8c8eaf5d3d7e5486fe983a026b369cd8d3e380[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Apr 11 10:58:29 2019 -0400
+
+    Alineados los costos de las facturas de compra y venta a la derecha
+
+[33mcommit bd8c5a57a0c7b4285a4f60da2b4ac0620be22961[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Apr 11 10:45:18 2019 -0400
+
+    Agregada validación en front end para ventas, arreglado el formato de la suma de totales en las ventas, arreglados totales de factura de ventas, arreglada lista devuelta cuando se hace una venta, arreglados generar entrada, generar salida y hacer transferencia en caja, los campos en los requerimientos ahora son required
+
+[33mcommit 77d7e1cc24cac8b333bdbee7a4a49e460989255d[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Apr 8 02:48:32 2019 -0400
+
+    Realizado respaldo de la base de datos a la fecha 08-04-19
+
+[33mcommit dcbd34e2724e83f9d00473d8bf347be64b1f45ee[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Sat Apr 6 08:30:22 2019 -0400
+
+    arreglados bugs en cliente, materias primas, produccion, ventas, routes, script pb.js, y encontrados nuevos bugs, se agregó una receta.txt para ejecutar recetas con esos valores
+
+[33mcommit b6f93fd48d3fded8d9842c9fb6d78fde13d1f3c5[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Wed Apr 3 19:10:51 2019 -0400
+
+    Porcentajes de reporte de proceso B arreglados, autocompletación en compras arreglada, comenzando analisis de bases de datos
+
+[33mcommit 11a0624f02301a4bbf99e5d1998fe212d2c588d0[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Feb 14 20:26:47 2019 -0400
+
+    Resuelto problema en el que las facturas de venta no se mostraban
+
+[33mcommit 9b1f04e4ebcb2eebc6be4e77844e297ab26c2f55[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Thu Feb 14 12:44:37 2019 -0400
+
+    resueltos los problemas hasta ahora encontrados en cajabanco, formato de reportes, modificacion de valores en la venta de productos terminados, hace falta mas testeo y debugging
+
+[33mcommit 56999b6f87a3ff5d64af56fba7f3391138b8230a[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Feb 11 02:04:32 2019 -0400
+
+    Segunda actualización al readme.md
+
+[33mcommit 66ed12cb9230fdef2d6d6d38493fae1be79ff564[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Feb 11 02:03:21 2019 -0400
+
+    readme.md Actualizado
+
+[33mcommit 49727ad6398a004aa17a534081a0805336a0f286[m
+Author: Andres Vega <aevega1991@gmail.com>
+Date:   Mon Feb 11 01:48:03 2019 -0400
+
+    commit inicial de proyecto para Tesis
