@@ -213,8 +213,9 @@ class ProduccionController extends Controller
             ->take($rango+1)
             ->get();
         
-        
-        $modificable = verificarModificable($producciones,$produccion,$id_buscado);
+        $modificable = false;
+        //$modificable = verificarModificable($producciones,$produccion,$id_buscado);  
+        //ESTÁ RETORNANDO ERROR EN LA LINEA 1026 DEBIDO A Q NO ENCUENTRA COLA[0]      
         //return $modificable ? "true" : "false";
         
         /*FIN DE SECCIÓN PARA REVISAR QUE UNA PRODUCCIÓN SE PUEDA MODIFICAR*/
@@ -249,7 +250,7 @@ class ProduccionController extends Controller
         $parametros = parametro::leftJoin('requerimientos', 'requerimientos.req_ingrediente', '=', 'parametros.par_nombre')
             ->where('requerimientos.req_fecha', $req_fecha)
             ->where('requerimientos.rec_nombre', $rec_nombre)
-            ->select('requerimientos.req_total', 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+            ->select('requerimientos.req_total','requerimientos.req_costo', 'parametros.par_nombre', 'parametros.par_unidad')
             ->get(); 
         $insumosrequeridos = insumo::leftJoin('insumo_requerido', 'insumo_requerido.ins_req_insumo','=','insumos.ins_nombre')
             ->where('insumo_requerido.rec_nombre',$rec_nombre)
@@ -257,12 +258,12 @@ class ProduccionController extends Controller
             ->select('insumo_requerido.id','insumo_requerido.ins_req_total', 'insumos.ins_nombre', 'insumos.ins_unidad', 'insumos.ins_costo')
             ->get();
 
-        $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);
+        $costosUnitarios = calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$salarios,$produccion,$costos,$miscelaneo);        
         
         produccion::where('id',$id_buscado)
             ->update([
                 'pro_costo' => $costosUnitarios,
-            ]);  
+            ]);          
           
         return view('produccion.produccion',compact('aumentos','salarios','produccion','recetas','rec_nombre','req_fecha','parametros','miscelaneo','dependencias','costos','modificable','insumosrequeridos'));
 
@@ -506,15 +507,16 @@ class ProduccionController extends Controller
         /*
         ACTUALIZO LOS REQUERIMIENTOS DE LOS INGREDIENTES DE LA PRODUCCION (NO LAS DEPENDENCIAS)        
         */
-        $ingredientes = ingrediente::where('rec_nombre',$rec_nombre)->get();
         
-        $requerimientos = requerimiento::where('req_fecha',$fecha)->where('rec_nombre',$rec_nombre)->first();
         foreach ($request["req_ingrediente"] as $key => $ingrediente) {
+            $costo = parametro::where('par_nombre',$ingrediente)
+                ->select('par_costo')->first();
             requerimiento::create([
                 'req_fecha' => $fecha,
                 'rec_nombre' => $rec_nombre,
                 'req_ingrediente' => $request["req_ingrediente"][$key],
                 'req_total' => $request["req_total"][$key],
+                'req_costo' => $costo->par_costo,
             ]);
             
             $materiaprima = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
@@ -559,8 +561,7 @@ class ProduccionController extends Controller
         //ACTUALIZO LOS REQUERIMIENTOS DE LOS INSUMOS DE LA PRODUCCION      
         */
         $produccion = produccion::where('rec_nombre',$rec_nombre)->first();
-        $cantidad_produccion = $produccion->pro_produccion;
-        $requerimientos = requerimiento::where('rec_nombre',$rec_nombre)->where('req_fecha',$fecha)->get();        
+        $cantidad_produccion = $produccion->pro_produccion;    
         //return $cantidad_produccion;
         /**/
         /**/
@@ -1077,7 +1078,7 @@ function calcularCostosUnitarios($dependencias,$parametros,$insumosrequeridos,$s
     }
     foreach($parametros as $parametro)
     {
-        $costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);
+        $costosUnit+=$parametro->req_costo*($parametro->req_total/$prod);
 
     }
     foreach($insumosrequeridos as $insumorequerido)

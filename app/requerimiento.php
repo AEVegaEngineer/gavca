@@ -18,5 +18,5 @@ class requerimiento extends Model
      *
      * @var array
      */
-    protected $fillable = ['req_fecha', 'rec_nombre', 'req_ingrediente', 'req_total'];
+    protected $fillable = ['req_fecha', 'rec_nombre', 'req_ingrediente', 'req_total','req_costo'];
 }

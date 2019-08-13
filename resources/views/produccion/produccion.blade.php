@@ -104,7 +104,7 @@
 			<?php
 			
 			$req_total = $parametro->req_total;
-			$costo = $parametro->par_costo;
+			$costo = $parametro->req_costo;
 			$costo_total = $costo*$req_total;
 			$req_unitario = $req_total/$prod;
 
@@ -115,7 +115,7 @@
 				<td>{{$parametro->par_nombre}}</td>
 				<td>{{$parametro->par_unidad}}</td>			
 
-				<td align="right">{{number_format($parametro->par_costo,$decimals = 2 , "," , ".")}}</td>
+				<td align="right">{{number_format($costo,$decimals = 2 , "," , ".")}}</td>
 				<td>{{number_format($parametro->req_total,$decimals = 2 , "," , ".")}}</td>
 				<td>{{number_format($req_unitario,$decimals = 4 , "," , ".")}}</td>
 				<td align="right">{{number_format($costo_total,$decimals = 2 , "," , ".")}}</td>
@@ -124,8 +124,8 @@
 				
 			</tr>
 		<?php 
-			$costosTotales+=$parametro->par_costo*$parametro->req_total;
-			$costosUnit+=$parametro->par_costo*($parametro->req_total/$prod);	
+			$costosTotales+=$parametro->req_costo*$parametro->req_total;
+			$costosUnit+=$parametro->req_costo*($parametro->req_total/$prod);	
 			$i++;
 		?>
 		@endforeach
