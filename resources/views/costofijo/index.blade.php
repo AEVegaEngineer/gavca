@@ -6,7 +6,9 @@
 		<h2 class="form-signin-heading margenBotMd">Determinación del estándar de costos fijo por unidad de producto</h2>
 		<div class="row">	
 			<div class="col-md-6 col-xs-12">
+				<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 				<a href="{!!URL::to('/costofijo/create')!!}" class="btn btn-primary btn-sm">Agregar un nuevo costo fijo</a>
+				<?php } ?>
 			</div>
 		</div>
 		<table class="table">
@@ -35,10 +37,12 @@
 				<td>{{date_format($costofijo->updated_at,"d/m/Y")}}</td>
 				<td>
 					{!!Form::open(['route'=>['costofijo.destroy',$costofijo->id],'method'=>'DELETE'])!!}
+						<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 						<div class="btn-group-xs">
 						{!!link_to_route('costofijo.edit', $title = 'Editar', $parameters = $costofijo->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
 						{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-sm'])!!}
 						</div>
+						<?php } ?>
 					{!!Form::close()!!}
 				</td>
 			</tr>
@@ -54,8 +58,10 @@
 			</tr>
 		</table>
 		<div class="col-md-6 col-xs-12">
-				<a href="{!!URL::to('/produccionmes/1/edit')!!}" class="btn btn-primary btn-sm">Actualizar producción</a>
-			</div>
+			<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
+			<a href="{!!URL::to('/produccionmes/1/edit')!!}" class="btn btn-primary btn-sm">Actualizar producción</a>
+			<?php } ?>
+		</div>
 		<table class="table">
 			<thead>
 				<td>Producción ultimo mes actualizado en fecha</td>

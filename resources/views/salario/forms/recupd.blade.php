@@ -32,9 +32,11 @@
 	</div>
 	<div class="row margenBotLg">
 		<div class="col-md-2"></div>
+		<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 		<div class="col-md-4 col-xs-12">
 			{!!Form::submit('Actualizar',['class'=>'btn btn-success btn-block'])!!}
 		</div>
+		<?php } ?>
 		<div class="col-md-4 col-xs-12">
 			<a href="/salario" class="btn btn-success btn-block">Volver a Cálculo de Salarios</a>
 		</div>
@@ -45,9 +47,11 @@
 		
     
     <div class="row">	
+    	<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 		<div class="col-md-6 col-xs-12">
 			{!!link_to_route('aumento.create', $title = 'Registrar un nuevo aumento',null, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
 		</div>
+		<?php } ?>
 	</div>
     <table class="table table-bordered">
 		<thead>
@@ -62,11 +66,12 @@
 				<td>{{$aumento->aum_aumento}}%</td>
 				<td>
 					{!!Form::open(['route'=>['aumento.destroy',$aumento->id],'method'=>'DELETE'])!!}
+						<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 						<div class="btn-group">
 						{!!link_to_route('aumento.edit', $title = 'Editar',$parameters = $aumento->id, $attributes = ['class'=>'btn btn-primary btn-sm'])!!}
 						{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-sm'])!!}
 						</div>
-
+						<?php } ?>
 					{!!Form::close()!!}
 				</td>
 			</tr>
