@@ -68,12 +68,12 @@ class AjusteController extends Controller
         $diaAnterior = $ref->subDay()->toDateString();
 
         $bancos = banco::All();
-        $entidades = array(array("entidad" => "Caja Chica"));
+        $entidades = array(array("entidad" => null));
         $mezcla = array_merge($entidades, $bancos->toArray()); 
 
         foreach ($mezcla as $key => $value) {
             if($key == 0)
-                $entidad = "Caja Chica";
+                $entidad = null;
             else
                 $entidad = $value["ban_nombre"];
             cajabanco::create([

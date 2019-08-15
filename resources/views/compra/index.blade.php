@@ -31,7 +31,13 @@
 				<td>{{$compra->comp_doc}}</td>
 				<td>{{$compra->comp_proveedor}}</td>
 				<td>{{$compra->comp_cred_cont}}</td>
-				<?php $entidad = ($compra->comp_entidad == "") ? "Cuenta por pagar": $compra->comp_entidad?>
+				<?php				
+				if($compra->comp_entidad == ""){
+					$entidad = "Cuenta por pagar";
+					if($compra->comp_cred_cont == "contado")
+						$entidad = "Caja Chica";
+				}
+				?>
 				<td>{{$entidad}}</td>	
 
 				<td align="right">{{ number_format ( $compra->comp_monto , $decimals = 2 , "," , "." ) }}</td>

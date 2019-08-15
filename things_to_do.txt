@@ -155,6 +155,7 @@ NO SE DEBE ACTUALIZAR, cardex->car_costo es la referencia para cuando queremos v
 - (X) Agregar parámetros insumos (gas, luz, electricidad, etc) a recetas y producción
 - (X) Arreglar las carpetas de reportes para cardex e inventarios por los nuevos nombres
 
+
 CAMBIOS DE FILTRADO
 
 - del inventario de materias primas se quitó:
@@ -178,7 +179,12 @@ Corrí produccion de 48 productos terminados, tomé 25 ejemplos 2 y 26 ejemplos 
 - Arreglar privilegios de tipo 2 para generar reportes
 - Tipo2 no puede eliminar ni editar parametros
 
-
+(X) Terminar de arreglar los cambios de Caja Banco al vincular la tabla de bancos, falta:
+	(X) cuentas x cobrar, 
+	(X) reportes, 
+	(X) cierre de caja.
+() Modificaciones a los diagramas de tesis
+() hacer un manual sencillo
 
 car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)
 
@@ -222,3 +228,5 @@ tipo 1, tipo 2 y admin
 	- Ver parametros calculados
 Future edits:
 - Privilegios editables
+
+

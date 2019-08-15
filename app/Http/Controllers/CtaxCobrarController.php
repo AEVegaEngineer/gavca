@@ -50,7 +50,7 @@ class CtaxCobrarController extends Controller
         $cliente = $request["cliente"];
         $entidad;
         if($request["banco_o_caja"] == "caja"){
-            $entidad = "Caja Chica";
+            $entidad = null;
         }else{
             $entidad = $request["banco"];
         }
@@ -97,6 +97,8 @@ class CtaxCobrarController extends Controller
                 break;
             }
         }    
+        if($entidad == null)
+        	$entidad = "Caja Chica";
         ctaxcobrar::create([
             'cta_cli_codigo' => $cliente,
             'cta_monto' => $request['abono'],

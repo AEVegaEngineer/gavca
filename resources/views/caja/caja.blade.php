@@ -8,7 +8,7 @@
 			      	<a class="navbar-brand" href="#">Caja Banco</a>
 			    </div>
 			    <ul class="nav navbar-nav">
-			    	<?php if($caja == "Caja Chica"){ ?>
+			    	<?php if($caja == ""){ $caja = "Caja Chica";?>
 
 			    		<li class="active">{!!link_to_route('caja.show', $title = 'Caja Chica', $parameters = 'Caja Chica')!!}</li>
 

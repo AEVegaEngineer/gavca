@@ -30,11 +30,15 @@
 						}
 					 	?>
 					</td>
-					<td>
+					<td>						
 						<div class="btn-group">
 						{!!Form::open(['route'=>['insumo.show',$insumo->id],'method'=>'GET'])!!}
+							<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 							{!!link_to_route('insumo.edit', $title = 'Editar', $parameters = $insumo->id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}
-							{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-xs'])!!}							
+							<?php } ?>	
+							<?php if(Auth::user()->privilegio == "admin") { ?>
+							{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-xs'])!!}	
+							<?php } ?>							
 						{!!Form::close()!!}
 						</div>						
 					</td>

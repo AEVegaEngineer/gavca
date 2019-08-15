@@ -288,6 +288,8 @@ class CompraController extends Controller
             }else{   
                 
                 $dia_actual = new Carbon($request['comp_fecha']);
+                if($entidad == "Caja Chica")
+                    $entidad = null;
                 $existencia = cajabanco::where('cb_entidad',$entidad)
                     ->whereDate('cb_fecha','=',$dia_actual->toDateString())
                     ->latest()
@@ -337,6 +339,8 @@ class CompraController extends Controller
                     'comp_entidad' => $entidad,
                 ]);
                 $id = compra::max('id');
+                if($entidad == "Caja Chica")
+                    $entidad = null;
                 $saldo = cajabanco::where('cb_entidad',$entidad)                
                     ->orderBy('id','dsc')
                     ->take(1)

@@ -102,7 +102,12 @@ class BancoController extends Controller
      */
     public function destroy($id)
     {
-        banco::destroy($id);
-        return redirect('/banco')->with('message','Banco eliminado exitosamente');
+        $sujeto = banco::where('id',$id)->first()->ban_nombre;
+        if(cajabanco::where('cb_entidad',$sujeto)->first() !== null)
+        {
+            return redirect('/banco')->with('message-error', "Ya no se puede eliminar este banco ya que cuenta con transacciones hechas en el módulo de Caja Banco.");  
+        }        
+        banco::destroy($id);        
+            return redirect('/banco')->with('message','Banco eliminado exitosamente');      
     }
 }

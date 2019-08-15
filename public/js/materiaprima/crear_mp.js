@@ -280,23 +280,23 @@ $(document).ready(function() {
     {
     	var comp_cred_cont = $('#comp_cred_cont').val();
     	var entidad = $('#entidad').val();
-        //console.log('ejecutando getDisponible');
-        if(comp_cred_cont == 'credito')
+    	if(comp_cred_cont == 'credito')
         {
 			$(':input[type="submit"]').prop('disabled', false);
         }
         else
-        {
+        {        	
 	        $.ajax({
 	            type: "POST",
 	            url: '/getDisponible',
 	            headers:{'X-CSRF-TOKEN': token},
 	            data: {entidad: entidad},
-	            error: function(){
+	            error: function(e){
 	                //alert("Error. Intente escribir los datos de nuevo.");
+	                console.log(e);
 	            },
 	            success: function( data ) {
-	            	console.log(data+" "+entidad+" "+token);
+	            	console.log("exito: "+data+" "+entidad);
 	                if(data){
 	                	if(total > data)
 	                	{

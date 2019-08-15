@@ -33,6 +33,7 @@ class CajaBancoController extends Controller
      */
     public function index()
     {   
+        //return "trigger";
         $hoy = Carbon::today()->toDateString();
         //si tengo seleccionada una caja no me muestra el formulario para
         //seleccionar cajas, salta directamente a la fecha seleccionda.
@@ -50,8 +51,8 @@ class CajaBancoController extends Controller
         }
         $fecha = session('caja_fecha');        
         if(isset($fecha)){
-            $caja = 'Caja Chica';          
-            $saldo_existe = saldocaja::where('sc_entidad',$caja)
+            $caja = null;    
+            $saldo_existe = saldocaja::where('sc_entidad',($caja==null) ? "Caja Chica" : $caja)
                 ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
                 ->first();
             $records = cajabanco::where('cajabanco.cb_entidad',$caja)
@@ -82,12 +83,15 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function abrir(Request $request)
-    {        
+    {  
+        //return "test";     
         $caja;
         if(isset($request["entidad"])){
             $caja = $request["entidad"];
-        }else{
-            $caja = 'Caja Chica';
+            if ($request["entidad"] = "Caja Chica")
+                $caja = null;
+        }else{            
+            $caja = null;
         }
         //para determinar si escojo un dia en el futuro
         $hoy = Carbon::today()->toDateString();
@@ -122,7 +126,7 @@ class CajaBancoController extends Controller
         if($request["caja_fecha"] <= $hoy && $flag){
             session(['caja_fecha' => $request["caja_fecha"]]);   
             
-            $saldo_existe = saldocaja::where('sc_entidad',$caja)
+            $saldo_existe = saldocaja::where('sc_entidad', ($caja==null) ? "Caja Chica" : $caja)
                 ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
                 ->first();
             $records = cajabanco::where('cajabanco.cb_entidad',$caja)
@@ -140,7 +144,7 @@ class CajaBancoController extends Controller
                 ->first();
             if(isset($ultima_v_c))
                 $ultima_v_c = $ultima_v_c->id;            
-            //return $records." <br><br>".$ultima_v_c;
+            //return session('caja_fecha')." <br><br>".$records." <br><br>".$ultima_v_c;
             return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual','ultima_v_c'));
         }else{
             if($request["caja_fecha"] > $hoy){
@@ -161,7 +165,7 @@ class CajaBancoController extends Controller
      */
     public function create()
     {
-        $id = cajabanco::where('cb_entidad','Caja Chica')->max('id');
+        $id = cajabanco::where('cb_entidad','')->max('id');
         $record = cajabanco::where('id',$id)->first();
         $s_cajachica = 0;
         if($record !== null)
@@ -238,7 +242,7 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function volverfecha($entidad)
-    {
+    {        
         session()->forget('caja_fecha');
         $hoy = Carbon::today()->toDateString();
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
@@ -264,14 +268,16 @@ class CajaBancoController extends Controller
      */
     public function show($caja)
     {        
-            
+        //return "trigger";    
+        if($caja == "Caja Chica")
+            $caja = null;
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
         {
             $caja_actual = new Carbon($caja_actual->cb_fecha);
             $caja_actual = $caja_actual->toDateString();
         }
-        $saldo_existe = saldocaja::where('sc_entidad',$caja)
+        $saldo_existe = saldocaja::where('sc_entidad', ($caja==null) ? "Caja Chica" : $caja)
             ->whereDate('sc_fecha', '=' ,session('caja_fecha'))
             ->first();
         $records = cajabanco::where('cajabanco.cb_entidad',$caja)
@@ -310,16 +316,18 @@ class CajaBancoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function cerrarcaja($entidad, $fecha)
-    {       
-
+    {
+        //return "test";       
+        if($entidad == "Caja Chica")
+            $entidad = null;
         //itera a través de las entidades y cierra todas las cajas
         $bancos = banco::All();
-        $entidades = array(array("entidad" => "Caja Chica"));
+        $entidades = array(array("entidad" => ""));
         $mezcla = array_merge($entidades, $bancos->toArray());
 
         foreach ($mezcla as $key => $value) {
             if($key == 0)
-                $entidad = "Caja Chica";
+                $entidad = null;
             else
                 $entidad = $value["ban_nombre"];
         
@@ -339,7 +347,7 @@ class CajaBancoController extends Controller
                 //session()->forget('caja_fecha'); 
             }
             saldocaja::create([
-                'sc_entidad' => $entidad,
+                'sc_entidad' => ($entidad==null) ? "Caja Chica" : $entidad,
                 'sc_saldo' => $saldo,
                 'sc_fecha' => $fecha,
             ]);
@@ -362,7 +370,9 @@ class CajaBancoController extends Controller
                 'cb_saldo' => $saldo,
             ]);   
         }
-        //redirección  
+        //redirección     
+        return redirect('/caja/Caja%20Chica');
+        /* 
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();
         if($caja_actual !== null)
         {
@@ -370,7 +380,7 @@ class CajaBancoController extends Controller
             $caja_actual = $caja_actual->toDateString();
         }
         $saldo_existe = "caja_cerrada";      
-        $caja = 'Caja Chica';
+        
         $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
             ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
             ->where('cajabanco.cb_entidad',$caja)
@@ -378,6 +388,7 @@ class CajaBancoController extends Controller
             ->orderBy('cajabanco.id','asc')
             ->get();        
         return view('caja.caja',compact('bancos','caja','records','saldo_existe','caja_actual'))->with('message','Los registros de '.$entidad.' de fecha '.$fecha.' han sido cerrados. Ya no se pueden registrar operaciones en esta caja.');
+        */
     }
 
     /**
@@ -390,6 +401,8 @@ class CajaBancoController extends Controller
     {       
         //return "entidad: ".$entidad."<br> fecha: ".$fecha;
         $caja = $entidad;
+        if($caja == "Caja Chica")
+            $caja = null;
         $saldo_existe = "caja_cerrada";        
         $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
             ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
@@ -409,8 +422,10 @@ class CajaBancoController extends Controller
      */
     public function reporte($entidad, $fecha)
     {
-        //return "entidad: ".$entidad."<br> fecha: ".$fecha;
         $caja = $entidad;
+        //return "entidad: ".$entidad."<br> fecha: ".$fecha;
+        if($caja == "Caja Chica")
+            $caja = null;
         $records = cajabanco::leftJoin('compras', 'cajabanco.cb_compra_id', '=', 'compras.id')
             ->leftJoin('ventas', 'ventas.ven_factura', '=', 'cajabanco.cb_venta_id')
             ->where('cajabanco.cb_entidad',$caja)
@@ -447,6 +462,8 @@ class CajaBancoController extends Controller
      */
     public function maketransfer(MakeTransferRequest $request)
     {
+        if($request["entidad"] == "Caja Chica")
+            $request["entidad"] = null;
         //return "Destino: ".$request["destino"]."<br>Saldo: ".$request["saldo"]."<br>Entidad: ".$request["entidad"]."<br>Fecha: ".$request["fecha"];  
 
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
@@ -538,6 +555,8 @@ class CajaBancoController extends Controller
      */
     public function generarEntrada(MakeInOutRequest $request)
     {
+        if($request["entidad"] == "Caja Chica")
+            $request["entidad"] = null;
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
             ->whereDate('cb_fecha', '=',$request["fecha"])
             ->max('id');
@@ -588,6 +607,8 @@ class CajaBancoController extends Controller
      */
     public function generarSalida(MakeInOutRequest $request)
     {
+        if($request["entidad"] == "Caja Chica")
+            $request["entidad"] = null;
         $id_origen = cajabanco::where('cb_entidad',$request["entidad"])
             ->whereDate('cb_fecha', '=',$request["fecha"])
             ->max('id');
@@ -639,6 +660,9 @@ class CajaBancoController extends Controller
      */
     public function getDisponible(Request $request){
         //retorna por post
+        //return $request["entidad"];
+        if($request["entidad"] == "Caja Chica")
+            $request["entidad"] = null;
         if ($request->isMethod('post')){  
             $disponible = cajabanco::where('cb_entidad', $request["entidad"])
                 ->orderBy('id','dsc')

@@ -101,6 +101,29 @@ class ProduccionController extends Controller
             if($produccion_ya_existe!==null){
                 return redirect('/receta')->with('message','No puedes crear una producción para este proceso con esta fecha porque ya ha sido creada, modifícala o crea una nueva.');            
             }  
+            /*VALIDO SI ESTE PROCESO PRODUCTIVO TIENE AL MENOS UNA DEPENDENCIA O EN CASO DE UN SEMIPROCESADO, AL MENOS UN PARÁMETRO COMO REQUERIMIENTO DE PRODUCCIÓN*/
+            $etapa = receta::where('rec_nombre',$receta)->first()->rec_proc;
+            if($etapa == "PA")
+            {
+                $validacion = receta::join('ingredientes', 'recetas.rec_nombre', '=', 'ingredientes.rec_nombre')
+                    ->where('ingredientes.rec_nombre',$receta)
+                    ->first();
+                $mensaje = "No puedes crear una producción para este proceso ya que no hay ningún ingrediente registrado";           
+            }
+            else
+            {
+                $validacion = receta::join('dependencias', 'recetas.rec_nombre', '=', 'dependencias.dep_padre')
+                    ->where('dependencias.dep_padre',$receta)
+                    ->first();                     
+                if($etapa == "PB")
+                    $requiere = "Producto Semiprocesado";
+                else
+                    $requiere = "Producto Terminado";
+                $mensaje = "No puedes crear una producción para este proceso ya que no hay ninguna dependencia de ".$requiere." registrada"; 
+            }
+            if($validacion===null){
+                return redirect('/receta')->with('message',$mensaje);            
+            }
             return view('produccion.create',compact('receta','dependencias','producciones','fecha'));
         }else{
             $caja_actual = cajabanco::where('cb_activo',1)->latest()->first();

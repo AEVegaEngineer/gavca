@@ -111,7 +111,7 @@ class VentaController extends Controller
         if($ven_condicion == "contado"){
             $entidad;
             if($banco_o_caja == "caja"){
-                $entidad = 'Caja Chica';
+                $entidad = null;
             }else{
                 $entidad = $banco;
             }
@@ -253,7 +253,7 @@ class VentaController extends Controller
                 $banco = $request['banco'];
                 $entidad;
                 if($banco_o_caja == 'caja'){
-                    $entidad = 'Caja Chica';
+                    $entidad = null;
                 }else if($banco_o_caja == 'banco'){
                     $entidad = $banco;
                 }
@@ -462,7 +462,7 @@ class VentaController extends Controller
         $entidad = $ventas[0]->ven_entidad;        
 
         $caja_actual = cajabanco::where('cb_activo',1)->latest()->first()->cb_fecha;
-
+        
         $fecha = new Carbon($ventas[0]->ven_fecha);
         $caja = cajabanco::where('cb_entidad',$entidad)
             ->whereDate('cb_fecha', '=' , $caja_actual)

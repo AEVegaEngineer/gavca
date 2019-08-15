@@ -35,8 +35,12 @@
 					<td>
 						<div class="btn-group">
 						{!!Form::open(['route'=>['parametro.show',$parametro->id],'method'=>'GET'])!!}
+							<?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1") { ?>
 							{!!link_to_route('parametro.edit', $title = 'Editar', $parameters = $parametro->id, $attributes = ['class'=>'btn btn-primary btn-xs'])!!}
-							{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-xs'])!!}							
+							<?php } ?>	
+							<?php if(Auth::user()->privilegio == "admin") { ?>
+							{!!Form::submit('Eliminar',['class'=>'btn btn-danger btn-xs'])!!}	
+							<?php } ?>						
 						{!!Form::close()!!}
 						</div>
 						

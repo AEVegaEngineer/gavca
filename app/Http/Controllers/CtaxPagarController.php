@@ -45,7 +45,7 @@ class CtaxPagarController extends Controller
         $prov = $request["prov"];
         $entidad;
         if($request["banco_o_caja"] == "caja"){
-            $entidad = "Caja Chica";
+            $entidad = null;
         }else{
             $entidad = $request["banco"];
         }
