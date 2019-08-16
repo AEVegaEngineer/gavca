@@ -355,22 +355,23 @@ class ProduccionController extends Controller
         
 
         /*SE DEBE REVISAR SI HAY EXISTENCIA DE MATERIA PRIMA COMPRADA PARA CREAR LA PRODUCCION*/
-        foreach ($request["req_ingrediente"] as $key => $ingrediente) {
-            $materiaprima = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
-                ->where('parametros.par_nombre',$request["req_ingrediente"][$key])
-                ->first();
-            if($materiaprima === null){
-                return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$request["req_ingrediente"][$key].' para crear esta cantidad de producción!');  
-            }else{
-                $exist_mp = materiaprima::where('mp_codigo',$materiaprima->mp_codigo)
-                    ->first()
-                    ->mp_cantidad;
-            }
-            if($exist_mp === null || $exist_mp < $request["req_total"][$key]){
-                return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$request["req_ingrediente"][$key].' para crear esta cantidad de producción!');   
+        if(isset($request["req_ingrediente"])){
+            foreach ($request["req_ingrediente"] as $key => $ingrediente) {
+                $materiaprima = materiaprima::leftJoin('parametros', 'parametros.par_codigo', '=', 'materiasprimas.mp_codigo')
+                    ->where('parametros.par_nombre',$request["req_ingrediente"][$key])
+                    ->first();
+                if($materiaprima === null){
+                    return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$request["req_ingrediente"][$key].' para crear esta cantidad de producción!');  
+                }else{
+                    $exist_mp = materiaprima::where('mp_codigo',$materiaprima->mp_codigo)
+                        ->first()
+                        ->mp_cantidad;
+                }
+                if($exist_mp === null || $exist_mp < $request["req_total"][$key]){
+                    return redirect('produccion/'.$rec_nombre.'/create')->with('message-error', 'No hay suficiente '.$request["req_ingrediente"][$key].' para crear esta cantidad de producción!');   
+                }
             }
         }
-        
         /*
         REVISO CUALES SON LAS DEPENDENCIAS DE LA RECETA A CREAR Y CUALES SON LAS RECETAS HIJAS DE ESTA, SI HAY EXISTENCIA DE LAS RECETAS HIJAS SE PUEDE CREAR LA RECETA SI NO, NO.
         */
