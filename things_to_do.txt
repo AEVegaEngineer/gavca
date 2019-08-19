@@ -183,7 +183,8 @@ Corrí produccion de 48 productos terminados, tomé 25 ejemplos 2 y 26 ejemplos 
 	(X) cuentas x cobrar, 
 	(X) reportes, 
 	(X) cierre de caja.
-() Modificaciones a los diagramas de tesis
+(X) Modificaciones a los diagramas de tesis
+(X) Diccionario de datos
 () hacer un manual sencillo
 
 car_compra_id con un leftjoin, investigar. (R. este campo es una comprobación adicional de que los elementos de hecho, pertenecen a dicha factura que se realizó en dicha venta.)

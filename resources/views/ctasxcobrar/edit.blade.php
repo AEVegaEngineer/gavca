@@ -3,6 +3,8 @@
     {!!Html::style('css/bootstrap-datepicker3.css')!!}
 @section('content')
 	@include('alerts.success')
+	@include('alerts.request')
+	@include('alerts.errors')
 	{!!Form::open(['route'=>'cuentaxcobrar.store','method'=>'POST'])!!}
 		<h2 class="form-signin-heading margenBotLg">Cobrar deudas pendientes de cliente código: {{$cliente}}</h2>
 		<div class="row margenBotMd">

@@ -60,7 +60,7 @@ class recetaController extends Controller
             'rec_unidad' => $request['rec_unidad'],
             ]);
 
-        return redirect('/receta')->with('message','Receta creada exitosamente');
+        return redirect('/receta')->with('message','Proceso Productivo creado exitosamente');
     }
 
     /**
@@ -99,7 +99,7 @@ class recetaController extends Controller
         $receta->fill($request->all());
         $receta->save();
 
-        return redirect('/receta')->with('message','Receta actualizada exitosamente');
+        return redirect('/receta')->with('message','Proceso Productivo actualizado exitosamente');
     }
 
     /**
@@ -114,12 +114,12 @@ class recetaController extends Controller
         if($receta->rec_activo == 'si'){
             receta::where('id',$id)
                 ->update(['rec_activo' => 'no']);
-            return redirect('/receta/view_trash')->with('message','Receta desactivada correctamente');
+            return redirect('/receta/view_trash')->with('message','Proceso Productivo desactivada correctamente');
             
         }else{
             receta::where('id',$id)
                 ->update(['rec_activo' => 'si']);
-            return redirect('/receta')->with('message','Receta reactivada correctamente');
+            return redirect('/receta')->with('message','Proceso Productivo reactivada correctamente');
             
         }      
     }
@@ -150,6 +150,6 @@ class recetaController extends Controller
     public function destroy($id)
     {
         receta::destroy($id);
-        return redirect('/receta/view_trash')->with('message','Receta eliminada exitosamente');
+        return redirect('/receta/view_trash')->with('message','Proceso Productivo eliminado exitosamente');
     }
 }

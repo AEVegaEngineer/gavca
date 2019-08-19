@@ -9,12 +9,14 @@
 		<div class="col-md-6">
 			<table class="table table-bordered" id="content">			
 				<thead>
-					<th>Materia prima</th>				
+					<th>Materia prima</th>	
+					<th>Req. por defecto</th>			
 					<th>Operación</th>
 				</thead>	
 				@foreach($dependencias as $dependencia)
 				<tr>
-					<td>{{$dependencia->dep_hijo}}</td>				
+					<td>{{$dependencia->dep_hijo}}</td>	
+					<td></td>			
 					<td>		
 						<?php if(Auth::user()->privilegio != 'tipo2'){ ?>			
 						{!!Form::open(['route'=>['dependencia.destroy',$dependencia->id],'method'=>'DELETE'])!!}
@@ -28,7 +30,8 @@
 				@endforeach			
 				@foreach($parametros as $parametro)
 				<tr>
-					<td>{{$parametro->par_nombre}}</td>				
+					<td>{{$parametro->par_nombre}}</td>
+					<td>{{$parametro->ing_ratio}}</td>				
 					<td>	
 						<?php if(Auth::user()->privilegio != 'tipo2'){ ?>				
 						{!!Form::open(['route'=>['ingrediente.destroy',$parametro->id],'method'=>'DELETE'])!!}
@@ -43,12 +46,14 @@
 			</table>
 			<table class="table table-bordered" id="content">			
 				<thead>
-					<th>Insumos</th>				
+					<th>Insumos</th>	
+					<th>Req. por defecto</th>
 					<th>Operación</th>
 				</thead>							
 				@foreach($insumosusados as $insumousado)
 				<tr>
-					<td>{{$insumousado->insing_insumo}}</td>				
+					<td>{{$insumousado->insing_insumo}}</td>	
+					<td>{{$insumousado->insing_ratio}}</td>				
 					<td>	
 						<?php if(Auth::user()->privilegio != 'tipo2'){ ?>				
 						{!!Form::open(['route'=>['insumousado.destroy',$insumousado->id],'method'=>'DELETE'])!!}

@@ -18,5 +18,5 @@ class miscelaneo extends Model
      *
      * @var array
      */
-    protected $fillable = ['tru_cant', 'tru_cost_unit', 'tru_kilo','gas_porc_util','gas_cost_bomb'];
+    protected $fillable = ['std_x_frasco'];
 }

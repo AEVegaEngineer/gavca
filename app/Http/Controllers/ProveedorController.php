@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use gavca\Http\Requests;
 use gavca\Http\Requests\ProveedorCreateRequest;
-
+use gavca\Http\Requests\ProveedorUpdateRequest;
 use gavca\ctaxpagar;
 use gavca\proveedor;
 use gavca\Http\Controllers\Controller;
@@ -162,7 +162,7 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProveedorUpdateRequest $request, $id)
     {
         $proveedor = proveedor::find($id);
         $proveedor->fill($request->all());

@@ -168,7 +168,7 @@ class IngredienteController extends Controller
         $insumosusados = insumousado::where('rec_nombre',$id)->get();
         $parametros = parametro::leftJoin('ingredientes', 'ingredientes.ing_ingrediente', '=', 'parametros.par_nombre')
         ->where('ingredientes.rec_nombre', $id)
-        ->select("ingredientes.id", 'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
+        ->select("ingredientes.id", "ingredientes.ing_ratio",'parametros.par_nombre', 'parametros.par_unidad', 'parametros.par_costo')
         ->get();
         //return $salarios;
         $rec_nombre = $id;

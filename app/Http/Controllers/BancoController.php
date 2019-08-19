@@ -44,13 +44,12 @@ class BancoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BancoCreateRequest $request)
     {
         banco::create([
             'ban_nombre' => $request["ban_nombre"],
         ]);
-        $bancos = banco::paginate(15);
-        return view('banco.index',compact('bancos'));
+        return redirect('/banco')->with('message','Banco registrado exitosamente');
     }
 
     /**
@@ -83,7 +82,7 @@ class BancoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(BancoCreateRequest $request)
     {
         cajabanco::where('cb_entidad',$request['old_name'])
             ->update(['cb_entidad'=>$request['ban_nombre']]);

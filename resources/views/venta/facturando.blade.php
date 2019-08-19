@@ -22,9 +22,9 @@
 				<input type="hidden" name="pro_produccion[]" value="{{$produccion->pro_produccion}}">
 				<td id="ven_disponibilidad{{$key}}">{{$produccion->pro_produccion}}</td>
 				<input type="hidden" name="rec_nombre[]" value="{{$produccion->rec_nombre}}">
-				<td>{!!Form::text('ven_costo[]',$costos[$key],['class'=>'form-control','placeholder'=>'Debes especificar un costo'])!!}</td>
+				<td>{!!Form::number('ven_costo[]',$costos[$key],['class'=>'form-control','placeholder'=>'Debes especificar un costo','min'=>'1'])!!}</td>
 				<input type="hidden" id="ven_costo{{$key}}" value="{{$costos[$key]}}">
-				<td>{!!Form::text('ven_cantidad[]',null,['class'=>'form-control','placeholder'=>'No mayor a disponibilidad'])!!}</td>
+				<td>{!!Form::number('ven_cantidad[]',null,['class'=>'form-control','placeholder'=>'No mayor a disponibilidad','min'=>'1'])!!}</td>
 				<td id="suma{{$key}}" align="right">0</td>
 			</tr>
 			@endforeach

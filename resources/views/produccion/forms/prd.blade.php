@@ -54,8 +54,9 @@
 		</div>		
 	</div>
 	@endforeach
+	<?php if (isset($dependencias[0])){ ?>
 	<p>NOTA: Si el costo del producto no aparece en la lista desplegable para poder seleccionarlo, se debe a que no has creado producción para ese producto.</p>
-	
+	<?php } ?>
 	
     <input type="hidden" name="rec_nombre" value="{{$receta}}">
 </div>

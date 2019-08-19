@@ -19,7 +19,7 @@
 				{!!Form::text('concepto', null, ['class'=>'form-control','placeholder' => 'Ingrese el concepto aquí'])!!}
 			</div>
 			<div class="col-md-4 col-xs-12">		    
-				{!!Form::text('saldo', null, ['class'=>'form-control','placeholder' => 'Ingrese el monto aquí'])!!}
+				{!!Form::number('saldo', null, ['class'=>'form-control','placeholder' => 'Ingrese el monto aquí','min' => '1'])!!}
 			</div>
 		</div>
 	</div>

@@ -2,6 +2,8 @@
 
 @section('content')
 	@include('alerts.success')
+	@include('alerts.errors')
+
 		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Cardex de producto {{$producciones[0]->rec_nombre}}</h2>
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">

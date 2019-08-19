@@ -12,7 +12,7 @@
     <body>
         <img src="img/gavcalogo.png" alt="logo de la empresa" style="display: inline-block;">
         <h3  style="display: inline-block; vertical-align: middle; margin-left: 5px; width: 500px">
-        Reporte de Cardex de producto {{$producciones[0]->rec_nombre}} para el mes de {{$mes_long}} del año {{$fecha_formateada->year}}</h3>
+        Reporte de Cardex de producto {{isset($producciones[0]->rec_nombre)?$producciones[0]->rec_nombre:""}} para el mes de {{$mes_long}} del año {{$fecha_formateada->year}}</h3>
         <h3>Existencia Actual: {{number_format ( $existencia , $decimals = 2 , "," , "." )}}</h3>
         <table class="table">
             <tr>

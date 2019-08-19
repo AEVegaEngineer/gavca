@@ -119,7 +119,6 @@ class CardexMPController extends Controller
     {
         $fecha_formateada = Carbon::parse($fecha);   
         $mes_long = getMesLong($fecha);   
-        //Devuelve una vista distinta para las materias primas
         $cardexs = cardexmp::leftJoin('parametros', 'parametros.par_codigo', '=', 'cardexmp.mp_codigo')
                 ->leftJoin('compras', 'compras.id', '=', 'cardexmp.car_compra_id')
                 ->where('cardexmp.mp_codigo',$mp_codigo)
@@ -131,6 +130,11 @@ class CardexMPController extends Controller
                 ->whereMonth('comp_fecha','=',$fecha_formateada->month)
                 ->orderBy('cardexmp.id','dsc')
                 ->get();
+        //return $cardexs;
+        if(!isset($cardexs[0]))
+            return redirect('/cardexMP/'.$mp_codigo)->with('message-error','No existen movimientos de la materia prima '.$mp_codigo.' en la fecha seleccionada');
+        //Devuelve una vista distinta para las materias primas
+        
         $existencia = materiaprima::where('mp_codigo',$mp_codigo)->first()->mp_cantidad;
         $pdf = PDF::loadView('cardex.reporte-cardex', compact('cardexs','existencia','mes_long','fecha_formateada')); 
         $pdf->save(storage_path('reportes/Cardex/Materia Prima/Reporte '.$cardexs[0]->par_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));

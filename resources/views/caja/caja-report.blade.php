@@ -15,6 +15,8 @@
         <?php
             $time = strtotime($records[0]->cb_fecha);
             $date = date('Y-m-d',$time);
+            if($caja == "")
+                $caja = "Caja Chica";
         ?>
         Reporte de {{$caja}} de fecha {{$date}}</h3>
         <table class="table table-bordered">

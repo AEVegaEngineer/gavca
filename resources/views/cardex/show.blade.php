@@ -2,6 +2,7 @@
 
 @section('content')
 	@include('alerts.success')
+	@include('alerts.errors')
 		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Cardex de Materia Prima {{$cardexs[0]->par_nombre}}</h2>
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">

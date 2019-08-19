@@ -10,6 +10,7 @@ use gavca\ctaxpagar;
 use gavca\banco;
 use gavca\Http\Requests;
 use gavca\Http\Controllers\Controller;
+use gavca\Http\Requests\CtaXPagarCreateRequest;
 
 class CtaxPagarController extends Controller
 {
@@ -39,7 +40,7 @@ class CtaxPagarController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CtaXPagarCreateRequest $request)
     {
         //RESTANDO FONDOS A CAJABANCO
         $prov = $request["prov"];

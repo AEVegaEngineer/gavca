@@ -3,6 +3,7 @@
 @section('content')
 	<div class="users">
 	@include('alerts.success')
+	@include('alerts.errors')
 		<h2 class="form-signin-heading" style="display: inline-block; margin-right: 50px;">Historial de producciones</h2>		
 		<div class="col-md-12">
 			<div class="col-md-6 col-sm-12">
@@ -14,7 +15,7 @@
 		</div>
 		<table class="table">
 			<thead>
-				<th>Receta usada</th>
+				<th>Proceso productivo usado</th>
 				<th>Fecha de producción</th>
 				<th>Cantidad de producción</th>
 				<th>Etapa de la producción</th>

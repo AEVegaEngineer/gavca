@@ -497,6 +497,8 @@ class CajaBancoController extends Controller
             'cb_concepto' => 'Transferido hacia '.$request["destino"].', '.$request["concepto"],
         ]);
         //creo el registro para el destino
+        if($request["entidad"] == null)
+            $request["entidad"] = "Caja Chica";
         cajabanco::create([
             'cb_entidad' => $request["destino"],
             'cb_debe_haber' => 'DEBE',
@@ -505,6 +507,8 @@ class CajaBancoController extends Controller
             'cb_saldo' => $saldo_destino,
             'cb_concepto' => 'Transferido desde '.$request["entidad"].', '.$request["concepto"],
         ]);
+        if($request["entidad"] == "Caja Chica")
+            $request["entidad"] = null;
 
         //retorno vista
         $caja = $request["entidad"];

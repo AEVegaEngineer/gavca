@@ -5,6 +5,7 @@ namespace gavca\Http\Controllers;
 use Illuminate\Http\Request;
 
 use gavca\Http\Requests\ClienteCreateRequest;
+use gavca\Http\Requests\ClienteUpdateRequest;
 use gavca\Http\Requests;
 
 use gavca\cliente;
@@ -124,7 +125,7 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ClienteCreateRequest $request, $id)
+    public function update(ClienteUpdateRequest $request, $id)
     {
         $cliente = cliente::find($id);
         $cliente->fill($request->all());

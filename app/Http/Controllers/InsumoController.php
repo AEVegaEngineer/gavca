@@ -47,7 +47,7 @@ class InsumoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InsumoCreateRequest $request)
     {
         insumo::create([
             'ins_nombre' => $request['ins_nombre'],

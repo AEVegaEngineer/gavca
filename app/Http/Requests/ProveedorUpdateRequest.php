@@ -4,7 +4,7 @@ namespace gavca\Http\Requests;
 
 use gavca\Http\Requests\Request;
 
-class ProveedorCreateRequest extends Request
+class ProveedorUpdateRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,13 @@ class ProveedorCreateRequest extends Request
      * @return array
      */
     public function rules()
-    {
+    {      
+        $id = $this->input('id');
         return [
-            'prov_codigo' => 'required|max:255|unique:proveedors',
-            'prov_nombre' => 'required|max:255|unique:proveedors',
-            'prov_rif' => 'required|unique:proveedors|regex:/[jJ](-)?([0-9]){8}-([0-9])/',                      
+            'prov_nombre' => 'required|max:255|unique:proveedores,prov_nombre,'.$id,
+            'prov_codigo' => 'required|unique:proveedores,prov_codigo,'.$id,
+            /*'prov_nombre' => 'required|unique:proveedores,prov_nombre,'.$id,*/
+            'prov_rif' => 'required|regex:/[jJ](-)?([0-9]){8}-([0-9])/|unique:proveedores,prov_rif,'.$id,  
             'prov_direccion' => 'required|max:255',
             'prov_contacto' => 'max:255',
             'prov_observaciones' => 'max:255',
@@ -35,14 +37,15 @@ class ProveedorCreateRequest extends Request
     public function messages()
     {
         return [
-            'prov_codigo.required' => 'El código del proveedor es requerido',
-            'prov_codigo.unique' => 'El código del proveedor ya esta siendo utilizado',
             'prov_nombre.required' => 'El nombre del proveedor es requerido',
-            'prov_nombre.unique' => 'El nombre del proveedor ya esta siendo utilizado',
+            'cli_codigo.required' => 'El nombre del código es requerido',
+            'cli_codigo.unique' => 'El código del proveedor ya se encuentra registrado',
             'prov_rif.required' => 'El RIF es requerido',
+            'prov_rif.unique' => 'El RIF ya se encuentra registrado',
             'prov_rif.regex' => 'El formato del RIF es erróneo, EJ. J-00000000-0',
-            'prov_rif.unique' => 'El RIF es ya esta siendo utilizado',
-            'prov_direccion.required' => 'La dirección del proveedor es requerida',
+            'prov_direccion.required' => 'La dirección es requerida',
+            'cli_contacto.required' => 'El contácto es requerido',
+            'cli_condiciones.required' => 'La condición del proveedor es requerida',
             'prov_nombre.max' => 'El nombre del proveedor tiene como máximo 255 caracteres',
             'prov_direccion.max' => 'La dirección del proveedor tiene como máximo 255 caracteres',
             'prov_contacto.max' => 'El contacto del proveedor tiene como máximo 255 caracteres',

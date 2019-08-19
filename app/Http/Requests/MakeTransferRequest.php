@@ -26,7 +26,17 @@ class MakeTransferRequest extends Request
         return [
             'destino' => 'required',
             'concepto' => 'required',
-            'saldo' => 'required',
+            'saldo' => 'required|Numeric|min:1',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'destino.required' => 'La entidad de destino de la transferencia es requerida',
+            'concepto.required' => 'El concepto de la transferencia es requerido',
+            'saldo.required' => 'El monto de la transferencia es requerido',
+            'saldo.Numeric' => 'El monto de la transferencia debe ser numérico',
+            'saldo.min' => 'El monto de la transferencia no puede ser menor a 1',
         ];
     }
 }

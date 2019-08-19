@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use gavca\produccionmes;
 use gavca\Http\Requests;
 use gavca\Http\Controllers\Controller;
+use gavca\Http\Requests\ProduccionmesUpdateRequest;
 
 class ProduccionmesController extends Controller
 {
@@ -76,7 +77,7 @@ class ProduccionmesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProduccionmesUpdateRequest $request, $id)
     {
         $produccionmes = produccionmes::find($id);
         $produccionmes->fill($request->all());

@@ -715,8 +715,18 @@ class ProduccionController extends Controller
      */
     public function reporteCardex($fecha, $etapa, $rec_nombre)
     {
-        $rec_nombre = html_entity_decode($rec_nombre);
-        $fecha_formateada = Carbon::parse($fecha);   
+        //validando que la fecha entregada tenga registros 
+        $fecha_formateada = Carbon::parse($fecha); 
+        $rec_nombre = html_entity_decode($rec_nombre); 
+        $producciones = produccion::where('rec_nombre',$rec_nombre)
+            ->whereYear('pro_fecha','=',$fecha_formateada->year)
+            ->whereMonth('pro_fecha','=',$fecha_formateada->month)            
+            ->orderBy('id','dsc')                                
+            ->get();
+        //return $producciones;
+        if(!isset($producciones[0]))
+            return redirect('/produccion/'.$rec_nombre)->with('message-error','No existen producciones en la fecha seleccionada');
+                 
         $mes_long = getMesLong($fecha);   
 
         if($etapa == "PA")
@@ -731,11 +741,7 @@ class ProduccionController extends Controller
             ->orderBy('id','dsc')                
             ->take(1)
             ->pluck('pro_disponible');
-        $producciones = produccion::where('rec_nombre',$rec_nombre)
-            ->whereYear('pro_fecha','=',$fecha_formateada->year)
-            ->whereMonth('pro_fecha','=',$fecha_formateada->month)            
-            ->orderBy('id','dsc')                                
-            ->get();
+        
         $pdf = PDF::loadView('produccion.reporte-cardex', compact('producciones','existencia','mes_long','etapa','fecha_formateada')); 
         $pdf->save(storage_path('reportes/Cardex/'.$etapa.'/Reporte '.$rec_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
         return $pdf->stream('Reporte '.$rec_nombre.' '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
@@ -751,13 +757,14 @@ class ProduccionController extends Controller
     public function reporte($fecha)
     {
         $fecha_formateada = Carbon::parse($fecha);   
-        $mes_long = getMesLong($fecha);   
-
+        $mes_long = getMesLong($fecha);  
         $producciones = produccion::whereNotNull('pro_costo')
             ->whereYear('pro_fecha','=',$fecha_formateada->year)
             ->whereMonth('pro_fecha','=',$fecha_formateada->month)  
             ->orderBy('id', 'dsc')            
-            ->get();            
+            ->get();    
+        if(!isset($producciones[0]))
+            return redirect('/produccion')->with('message-error','No existen producciones en la fecha seleccionada');      
         $pdf = PDF::loadView('produccion.reporte-producciones', compact('producciones','mes_long','fecha_formateada')); 
         $pdf->save(storage_path('reportes/Produccion/Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf'));
         return $pdf->stream('Produccion '.$fecha_formateada->year.'-'.$mes_long.'.pdf');              
