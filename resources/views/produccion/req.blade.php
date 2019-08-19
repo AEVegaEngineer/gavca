@@ -46,7 +46,7 @@
 						?>
 						
 						<td>
-							<input type="number" min="1" step=".01" name="req_total[]" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
+							<input type="number" min="0" step=".01" name="req_total[]" class="form-control" value="{{$valor}}"  autocomplete="off" required="">
 						</td>	
 						<input type="hidden" name="req_ingrediente[]" value="{{$ingrediente->ing_ingrediente}}" required="">
 					</tr>			
