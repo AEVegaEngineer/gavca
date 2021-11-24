@@ -19,10 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `gavca`
+-- Base de datos: `if105j0s7afc6y5f`
 --
-CREATE DATABASE IF NOT EXISTS `gavca` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `gavca`;
+CREATE DATABASE IF NOT EXISTS `if105j0s7afc6y5f` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `if105j0s7afc6y5f`;
 
 -- --------------------------------------------------------
 

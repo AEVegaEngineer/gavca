@@ -180,10 +180,10 @@
                         </li>    
                         
                         <li>
-                            <a href="#"><i class="fa fa-cubes fa-fw"></i> Parámetros<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-cubes fa-fw"></i> Materias Primas<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{!!URL::to('/parametro')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Parámetros</a>
+                                    <a href="{!!URL::to('/parametro')!!}"><i class='fa fa-list-ol fa-fw'></i> Ver Materias Primas</a>
                                 </li>
                                 <?php if(Auth::user()->privilegio == "admin" || Auth::user()->privilegio == "tipo1"){?>
                                 <li>

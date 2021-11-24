@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<h3 class="form-signin-heading">Actualización del parámetro {!!$parametro->par_nombre!!}</h3>
+<h3 class="form-signin-heading">Actualización de la materia prima {!!$parametro->par_nombre!!}</h3>
 @include('alerts.request')
 <div class="row">
 	<div class="form-group">
